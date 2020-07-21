@@ -1,0 +1,22 @@
+{
+  "name": "tleweb",
+  "version": "0.0.1-alpha",
+  "description": "TLEWeb",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eperezf/TLEWeb.git"
+  },
+  "author": "Eduardo Pérez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eperezf/TLEWeb/issues"
+  },
+  "homepage": "https://github.com/eperezf/TLEWeb#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
