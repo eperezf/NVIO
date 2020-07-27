@@ -88,4 +88,4 @@ typings/
 .dynamodb/
 
 # .idea for WebStorm
-.idea/*
+.idea/
