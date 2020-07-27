@@ -5,7 +5,9 @@ const router = express.Router();
 //Index route
 router.get('/', (req, res) => {
   console.log("Index requested");
-  res.render('index');
+  var date = new Date();
+  var year = date.getFullYear();
+  res.render('index', {year: year, title: "NVIO"});
 });
 
 module.exports = router;
