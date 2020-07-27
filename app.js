@@ -17,7 +17,7 @@ app.use('/', mainRoutes);
 
 //Catch 404
 app.use((req,res)=> {
-  res.status(404).json({message: '404 - Not Found', status: 404});
+  res.status(404).render('404', {year: 2020, title: "NVIO"});
 });
 
 //Error handling
