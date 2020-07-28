@@ -1,10 +1,20 @@
 require('dotenv').config();
+require('./passport');
+
 const express = require('express')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const app = express()
 const port = process.env.PORT;
+
+const passport = require('passport');
+const auth = require('./routes/auth');
+const user = require('./routes/user');
+
+app.use('/auth', auth);
+app.use('/user', passport.authenticate('jwt', {session: false}), user);
+
 
 app.set('view engine', 'pug')
 app.set('views', './views')
