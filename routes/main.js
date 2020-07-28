@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
   console.log("Index requested");
   var date = new Date();
   var year = date.getFullYear();
-  res.render('index', {year: year, title: "NVIO"});
+  res.render('index', {title: "NVIO"});
 });
 
 module.exports = router;
