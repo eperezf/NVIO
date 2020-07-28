@@ -18,4 +18,13 @@ router.get('/quienes-somos', (req, res) => {
   res.render('quienes-somos', {title: "NVIO | Quienes Somos"});
 });
 
+//login route
+router.get('/login', (req, res) => {
+  console.log("Login requested");
+  var date = new Date();
+  var year = date.getFullYear();
+  res.render('login', {title: "NVIO | Login"});
+});
+
+
 module.exports = router;

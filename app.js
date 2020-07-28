@@ -30,6 +30,10 @@ dynamodb.listTables((err, data)=>{
 
 });
 
+// app.listen(port, () =>{
+//   console.log(`NVIO running @ ${port}`);
+// });
+
 
 //Set view engine and views route
 app.set('view engine', 'pug')
