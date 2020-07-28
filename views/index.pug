@@ -1,5 +1,27 @@
-html
-  head
-    title= "NVIO"
-  body
-    h1= "Bienvenido!"
+include includes/header.pug
+body
+  include includes/navbar.pug
+  //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
+  #jumbodiv
+    .jumbotron.sharp-jumbotron
+      h1.display-2 NVIO
+      p.lead
+        | El delivery lo hacemos juntos
+      hr
+      p
+        | ¿Te interesa saber más?
+      a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
+  //- These loops are just to add some placeholder content so scrolling can be tested
+  -for (var x=0; x<3; x++)
+    .container.landing-container#welcome
+      h1.landing-head Head
+      p.landing-paragraph
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  .container.landing-container#why
+    h1.landing-head ¿Por que preferirnos?
+    .row
+      -for (var x=1; x<=3; x++)
+        .col-md-4
+          h2= 'Header ' + x
+          p= x + ': Text'
+  include includes/footer.pug

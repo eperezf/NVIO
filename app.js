@@ -1,9 +1,9 @@
 require('dotenv').config();
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const aws = require("aws-sdk");
-const app = express()
+const app = express();
 const port = process.env.PORT;
 const mainRoutes = require('./routes/main');
 
@@ -38,10 +38,12 @@ app.set('views', './views')
 //Set index routes
 app.use('/', mainRoutes);
 
+//Static content pathing
+app.use(express.static('public'))
 
 //Catch 404
 app.use((req,res)=> {
-  res.status(404).json({message: '404 - Not Found', status: 404});
+  res.status(404).render('404', {year: 2020, title: "NVIO"});
 });
 
 //Error handling
