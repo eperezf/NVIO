@@ -6,6 +6,7 @@ const aws = require("aws-sdk");
 const app = express()
 const port = process.env.PORT;
 const mainRoutes = require('./routes/main');
+const authRoutes = require('./routes/auth');
 
 //Check if DynamoDB is running at endpoint
 aws.config.update({
@@ -41,6 +42,7 @@ app.set('views', './views')
 
 //Set index routes
 app.use('/', mainRoutes);
+app.use('/', authRoutes);
 
 
 //Catch 404
