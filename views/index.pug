@@ -3,6 +3,27 @@ html
   include includes/header.pug
   body
     include includes/navbar.pug
-    .container-fluid
-      h1 Inicio
+    //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
+    #jumbodiv(style='text-align: center; padding: 30px; background-color: rgb(170, 170, 170);')
+      .jumbotron(style='max-width: 1500px; padding: 40px; margin: auto; border-radius: 0px;')
+        h1.display-2 NVIO
+        p.lead
+          | El delivery lo hacemos juntos
+        hr
+        p
+          | ¿Te interesa saber más?
+        a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
+    //- This loop is just to add placeholder content so scrolling can be tested
+    -for (var x=0; x<3; x++)
+      .container#welcome(style='text-align: center; padding: 50px 0 60px;')
+        h1(style='font-weight: normal; margin-bottom: 30px;') Head
+        p(style='font-size: 20px; margin: auto;')
+          | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    .container#why(style='text-align: center; padding: 50px 0 60px;')
+      h1(style='font-weight: normal; margin-bottom: 30px;') ¿Por que preferirnos?
+      .row
+        -for (var x=1; x<=3; x++)
+          .col-md-4
+            h2= 'Header ' + x
+            p= x + ': Text'
     include includes/footer.pug
