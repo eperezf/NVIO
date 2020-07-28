@@ -1,0 +1,33 @@
+.fourohfour {
+    color: #CC0000;
+    text-align: center;
+    font-size: 80px;
+}
+
+.sharp-jumbotron {
+    max-width: 1500px;
+    padding: 40px;
+    margin: auto;
+    border-radius: 0px;
+}
+
+.landing-container {
+    text-align: center;
+    padding: 50px 0 60px;
+}
+
+.landing-head {
+    font-weight: normal;
+    margin-bottom: 30px;
+}
+
+.landing-paragraph {
+    font-size: 20px;
+    margin: auto;
+}
+
+#jumbodiv {
+    text-align: center;
+    padding: 30px;
+    background-color: #AAAAAA;
+}

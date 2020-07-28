@@ -1,19 +1,45 @@
 require('dotenv').config();
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
-const app = express()
+const aws = require("aws-sdk");
+const app = express();
 const port = process.env.PORT;
+const mainRoutes = require('./routes/main');
 
+//Check if DynamoDB is running at endpoint
+aws.config.update({
+  region: process.env.DBREGION,
+  endpoint: process.env.ENDPOINT
+})
+var dynamodb = new aws.DynamoDB();
+console.log("Waiting for database...");
+dynamodb.listTables((err, data)=>{
+  if (err) {
+    console.log("DB connection ERROR:");
+    console.log(err);
+  }
+  else {
+    console.log("DB connection OK. Here's a list of the tables:");
+    console.log(data);
+    //Listen to requests at port
+    app.listen(port, () =>{
+      console.log(`NVIO running @ ${port}`);
+    });
+  }
+
+});
+
+
+//Set view engine and views route
 app.set('view engine', 'pug')
 app.set('views', './views')
 
-const mainRoutes = require('./routes/main');
-
-//Setup router
+//Set index routes
 app.use('/', mainRoutes);
 
+//Static content pathing
+app.use(express.static('public'))
 
 //Catch 404
 app.use((req,res)=> {
@@ -24,8 +50,4 @@ app.use((req,res)=> {
 app.use((error, req, res, next)=> {
   console.log(error);
   res.status(error.status || 500).json({error: error.message, status: 500});
-});
-
-app.listen(port, () =>{
-  console.log(`NVIO running @ ${port}`);
 });
