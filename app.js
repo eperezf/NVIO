@@ -1,9 +1,9 @@
 require('dotenv').config();
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const app = express()
+const app = express();
 const port = process.env.PORT;
 
 app.set('view engine', 'pug')
@@ -14,6 +14,8 @@ const mainRoutes = require('./routes/main');
 //Setup router
 app.use('/', mainRoutes);
 
+//Static content pathing
+app.use(express.static('public'))
 
 //Catch 404
 app.use((req,res)=> {
