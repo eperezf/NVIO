@@ -15,7 +15,7 @@ router.get('/quienes-somos', (req, res) => {
   console.log("Quienes Somos requested");
   var date = new Date();
   var year = date.getFullYear();
-  res.render('quienes-somos', {title: "NVIO | Quienes Somos"});
+  res.render('quienes-somos', {year: year, title: "NVIO | Quienes Somos"});
 });
 
 module.exports = router;
