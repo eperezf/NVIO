@@ -45,6 +45,18 @@
     height: 30px;
 }
 
+.logo2-navbar {
+    width: auto;
+    height: 30px;
+}
+
+.jumbo-img{
+    width: 100%;
+    max-width: 315px;
+    min-width: 50px;
+    height: auto;
+}
+
 .sharp-jumbotron {
     max-width: 1500px;
     padding: 40px;
