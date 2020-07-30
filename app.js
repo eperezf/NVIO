@@ -6,6 +6,7 @@ const aws = require("aws-sdk");
 const app = express();
 const port = process.env.PORT;
 const mainRoutes = require('./routes/main');
+const authRoutes = require('./routes/auth');
 
 //Check if DynamoDB is running at endpoint
 aws.config.update({
@@ -30,6 +31,12 @@ dynamodb.listTables((err, data)=>{
 
 });
 
+//Use cookieParser
+app.use(cookieParser());
+
+//Require Passport
+require('./passport');
+
 
 //Set view engine and views route
 app.set('view engine', 'pug')
@@ -37,13 +44,14 @@ app.set('views', './views')
 
 //Set index routes
 app.use('/', mainRoutes);
+app.use('/', authRoutes);
 
 //Static content pathing
 app.use(express.static('public'))
 
 //Catch 404
 app.use((req,res)=> {
-  res.status(404).render('404', {year: 2020, title: "NVIO"});
+  res.status(404).render('404', { title: "NVIO"});
 });
 
 //Error handling
