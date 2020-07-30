@@ -98,6 +98,8 @@ typings/
 .idea/modules.xml
 .idea/NVIO.iml
 .idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
 
 # Generated files
 .idea/**/contentModel.xml

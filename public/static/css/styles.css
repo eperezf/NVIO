@@ -1,6 +1,6 @@
 /* General use code */
 .four-oh-four {
-    color: #CC0000;
+    color: #C00;
     text-align: center;
     font-size: 80px;
 }
@@ -9,24 +9,28 @@
     text-align: center;
 }
 
+.left-text {
+    text-align: left;
+}
+
 .white-link {
-    color: #FFFFFF;
+    color: #FFF;
     text-decoration: none;
 }
 
 .white-link:hover {
-    color: #FFFFFF;
+    color: #FFF;
     text-decoration:none;
     cursor:pointer;
 }
 
 .grey-link {
-    color: #AAAAAA;
+    color: #AAA;
     text-decoration: none;
 }
 
 .grey-link:hover {
-    color: #AAAAAA;
+    color: #AAA;
     text-decoration:none;
     cursor:pointer;
 }
@@ -45,7 +49,7 @@
     height: 30px;
 }
 
-.logo2-navbar {
+.logo-text-navbar {
     width: auto;
     height: 30px;
 }
@@ -82,12 +86,78 @@
 #jumbodiv {
     text-align: center;
     padding: 30px;
-    background-color: #AAAAAA;
+    background-color: #AAA;
+}
+    /* Screenreader-friendly hide class */
+.hide {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+/* Dashboard Sidebar */
+.dash-sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.dash-sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.dash-sidebar a.active {
+    background-color: #F859D7;
+    color: white;
+}
+
+.dash-sidebar a:hover:not(.active) {
+    background-color: #333;
+    color: white;
+}
+
+    /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.dash-content {
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
+}
+
+@media screen and (max-width: 991px) {
+    .dash-sidebar {
+        width: 100%;
+        height: auto;
+        position: absolute !important; /* Hide below 991px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .dash-sidebar a {
+        text-align: center;
+        float: none;
+    }
+    div.dash-content {margin-left: 0;}
+}
+
+@media screen and (min-width: 991px) {
+    .navbar-nav-dash { /* This will control only the dashboard navbar */
+        width: 100%;
+        height: auto;
+        position: absolute !important; /* Hide above 991px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
 }
 
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
 .footer-bs {
-    background-color: #3c3d41;
+    background-color: #333;
     padding: 60px 40px;
     color: rgba(255,255,255,1.00);
     margin-bottom: 20px;

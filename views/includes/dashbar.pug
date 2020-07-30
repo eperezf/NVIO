@@ -1,0 +1,61 @@
+include header
+body
+	nav.navbar.navbar-expand-lg.sticky-top.navbar-dark.bg-dark
+		a.navbar-brand(href='/')
+			img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
+			//- the following line has a blank character, ALT-255
+			| 
+			img.logo-text-navbar(src='/static/logo/text-white.png', alt='')
+		button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+			span.navbar-toggler-icon
+		#navbarSupportedContent.collapse.navbar-collapse.center-text
+			ul.navbar-nav.navbar-nav-dash.ml-auto
+				li.nav-item
+					a.nav-link.active(href='/dashboard')
+						span(data-feather='home')
+						|   Dashboard
+				li.nav-item
+					a.nav-link(href='#')
+						span(data-feather='send')
+						|   Nuevo Pedido
+				li.nav-item
+					a.nav-link(href='#')
+						span(data-feather='book-open')
+						|   Historial Pedidos
+				li.nav-item
+					a.nav-link(href='#')
+						span(data-feather='dollar-sign')
+						|   Historial Pagos
+				li.nav-item
+					a.nav-link(href='#')
+						span(data-feather='clipboard')
+						|   Tablas de Costos
+				li.nav-item
+					a.nav-link(href='#')
+						span(data-feather='help-circle')
+						|   Soporte o Ayuda
+	.container-fluid
+		.row
+			.dash-sidebar.col-md-12.left-text
+				a.nav-link.active(href='/dashboard')
+					span(data-feather='home')
+					|   Dashboard
+				a.nav-link(href='#')
+					span(data-feather='send')
+					|   Nuevo Pedido
+				a.nav-link(href='#')
+					span(data-feather='book-open')
+					|   Historial Pedidos
+				a.nav-link(href='#')
+					span(data-feather='dollar-sign')
+					|   Historial Pagos
+				a.nav-link(href='#')
+					span(data-feather='clipboard')
+					|   Tablas de Costos
+				a.nav-link(href='#')
+					span(data-feather='help-circle')
+					|   Soporte o Ayuda
+	.dash-content
+		block content
+	include bodyscript
+	include dashscript
