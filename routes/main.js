@@ -18,11 +18,23 @@ router.get('/quienes-somos', (req, res) => {
 
 //login route
 router.get('/login', (req, res) => {
+  var errormsg;
   console.log("Login requested");
   var date = new Date();
   var year = date.getFullYear();
-  res.render('login', {title: "NVIO | Login"});
+  console.log(req.cookies);
+  if (req.cookies.error == true) {
+    errormsg = "Correo o contraseña incorrectos";
+  }
+  res.render('login', {title: "NVIO | Login", error: errormsg});
+
 });
+
+router.get('/protected', passport.authenticate('jwt', {session: false}), (req,res)=> {
+  console.log(req.user);
+  return res.json(req.user);
+
+})
 
 
 module.exports = router;

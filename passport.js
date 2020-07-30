@@ -3,6 +3,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const passportJWT = require("passport-jwt");
+const JWTStrategy   = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
+
 //AWS Settings
 var aws = require("aws-sdk");
 aws.config.update({
@@ -37,7 +41,16 @@ function (email, password, cb) {
       console.log("Email Query succeeded.");
       data.Items.forEach(function(item) {
         userID = item.userID.S;
-        profileID = userID.replace("ADMIN", "PROFILE");
+        console.log("userID is: " + userID);
+        if (userID.includes("ADMIN")){
+          profileID = userID.replace("ADMIN", "PROFILE");
+        }
+        else if (userID.includes("DRIVER")) {
+          profileID = userID.replace("DRIVER", "PROFILE");
+        }
+        else {
+          profileID = userID.replace("COMPANY", "PROFILE");
+        }
         console.log("User is " + userID);
         params = {
           "TableName": "NVIO",
@@ -45,7 +58,6 @@ function (email, password, cb) {
           "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
           "ExpressionAttributeValues": {":cd420": {"S": userID},":cd421": {"S": profileID}}
         }
-
         docClient.query(params, function(err, data) {
           console.log("Looking for profile " + profileID);
           if (err) {
@@ -58,7 +70,7 @@ function (email, password, cb) {
               console.log("Comparing password with hash.");
               if (err) {
                 console.log("Error");
-                return cb(null, false, {message: 'Incorrect email or password.'});
+                return cb(null, false, {message: 'An error occured processing the request.'});
               }
               if (result) {
                 console.log("Password OK");
@@ -69,11 +81,28 @@ function (email, password, cb) {
                 return cb(null, false, {message: 'Incorrect email or password.'});
               }
             });
-
           }
         });
       });
     }
   });
-}
+}));
+
+var cookieExtractor = function(req) {
+    var token = null;
+    if (req && req.cookies)
+    {
+      token = req.cookies['token'];
+    }
+    return token;
+};
+
+passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey   : process.env.JWT_SECRET
+    },
+    function (jwtPayload, cb) {
+      console.log(jwtPayload);
+      return cb(null, jwtPayload, {message: 'Logged In Successfully'});
+    }
 ));

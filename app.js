@@ -31,6 +31,9 @@ dynamodb.listTables((err, data)=>{
 
 });
 
+//Use cookieParser
+app.use(cookieParser());
+
 //Require Passport
 require('./passport');
 
