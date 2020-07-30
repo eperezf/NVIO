@@ -1,47 +1,79 @@
-const passport    = require('passport');
-const passportJWT = require("passport-jwt");
-
-const ExtractJWT = passportJWT.ExtractJwt;
-
+const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const JWTStrategy   = passportJWT.Strategy;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+//AWS Settings
+var aws = require("aws-sdk");
+aws.config.update({
+  region: process.env.DBREGION,
+  endpoint: process.env.ENDPOINT
+});
+var docClient = new aws.DynamoDB();
+
 
 passport.use(new LocalStrategy({
-        usernameField: 'email',
-        passwordField: 'password'
-    },
-    function (email, password, cb) {
+  usernameField: 'email',
+  passwordField: 'password'
+},
+function (email, password, cb) {
+  console.log("====STARTED PASSPORT AUTH====");
+  console.log(email);
+  console.log(password);
+  var userID;
+  var profileID;
+  var hashedPassword;
 
-        //Assume there is a DB module pproviding a global UserModel
-        return UserModel.findOne({email, password})
-            .then(user => {
-                if (!user) {
-                    return cb(null, false, {message: 'Incorrect email or password.'});
-                }
+  var params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S":"EMAIL"},":cd421": {"S":"EMAIL#" + email}}
+  };
+  docClient.query(params, function(err, data) {
+    if (err) {
+        console.error("Unable to query. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("Email Query succeeded.");
+      data.Items.forEach(function(item) {
+        userID = item.userID.S;
+        profileID = userID.replace("ADMIN", "PROFILE");
+        console.log("User is " + userID);
+        params = {
+          "TableName": "NVIO",
+          "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+          "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+          "ExpressionAttributeValues": {":cd420": {"S": userID},":cd421": {"S": profileID}}
+        }
 
-                return cb(null, user, {
-                    message: 'Logged In Successfully'
-                });
-            })
-            .catch(err => {
-                return cb(err);
+        docClient.query(params, function(err, data) {
+          console.log("Looking for profile " + profileID);
+          if (err) {
+              console.error("Unable to query. Error JSON:", JSON.stringify(err, null, 2));
+          } else {
+            console.log("Profile Query succeeded.");
+            console.log("Hashed Password is " + data.Items[0].password.S);
+            hashedPassword = data.Items[0].password.S;
+            bcrypt.compare(password, hashedPassword, function(err, result) {
+              console.log("Comparing password with hash.");
+              if (err) {
+                console.log("Error");
+                return cb(null, false, {message: 'Incorrect email or password.'});
+              }
+              if (result) {
+                console.log("Password OK");
+                return cb(null, userID, {message: 'Logged In Successfully'});
+              }
+              else {
+                console.log("Password Not OK.");
+                return cb(null, false, {message: 'Incorrect email or password.'});
+              }
             });
-    }
-));
 
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey   : 'your_jwt_secret'
-    },
-    function (jwtPayload, cb) {
-
-        //find the user in db if needed
-        return UserModel.findOneById(jwtPayload.id)
-            .then(user => {
-                return cb(null, user);
-            })
-            .catch(err => {
-                return cb(err);
-            });
+          }
+        });
+      });
     }
+  });
+}
 ));

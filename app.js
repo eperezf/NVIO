@@ -1,9 +1,9 @@
 require('dotenv').config();
-const express = require('express')
+const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const aws = require("aws-sdk");
-const app = express()
+const app = express();
 const port = process.env.PORT;
 const mainRoutes = require('./routes/main');
 const authRoutes = require('./routes/auth');
@@ -31,9 +31,8 @@ dynamodb.listTables((err, data)=>{
 
 });
 
-// app.listen(port, () =>{
-//   console.log(`NVIO running @ ${port}`);
-// });
+//Require Passport
+require('./passport');
 
 
 //Set view engine and views route
@@ -44,10 +43,12 @@ app.set('views', './views')
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
 
+//Static content pathing
+app.use(express.static('public'))
 
 //Catch 404
 app.use((req,res)=> {
-  res.status(404).json({message: '404 - Not Found', status: 404});
+  res.status(404).render('404', { title: "NVIO"});
 });
 
 //Error handling

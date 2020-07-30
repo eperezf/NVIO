@@ -5,9 +5,7 @@ const router = express.Router();
 //Index route
 router.get('/', (req, res) => {
   console.log("Index requested");
-  var date = new Date();
-  var year = date.getFullYear();
-  res.render('index', {year: year, title: "NVIO | Inicio"});
+  res.render('index', {title: "NVIO | Inicio"});
 });
 
 //Quienes somos route
