@@ -12,7 +12,7 @@ const authRoutes = require('./routes/auth');
 aws.config.update({
   region: process.env.DBREGION,
   endpoint: process.env.ENDPOINT
-})
+});
 var dynamodb = new aws.DynamoDB();
 console.log("Waiting for database...");
 dynamodb.listTables((err, data)=>{
@@ -39,15 +39,15 @@ require('./passport');
 
 
 //Set view engine and views route
-app.set('view engine', 'pug')
-app.set('views', './views')
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 //Set index routes
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
 
 //Static content pathing
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 //Catch 404
 app.use((req,res)=> {
