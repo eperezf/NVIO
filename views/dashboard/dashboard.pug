@@ -1,0 +1,19 @@
+extends ../includes/dashbar
+append content
+	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
+	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
+		Inheritance works like this:
+			{dashboard-element-name}.pug <- dashbar.pug <- [header.pug, bodyscript.pug, dashscript.pug]
+		This is also all contained inside a dash-content class div
+	//- Define ID names here to change active tab style, these IDs are defined in dashbar.pug
+	script.
+		var topname = "linkDash-top";
+		var sidename = "linkDash-side";
+	h1.landing-head.text-center
+		| #{title}
+	p.landing-paragraph.text-center
+		| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+		| magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+		| consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+		| pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+		| est laborum.

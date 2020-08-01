@@ -16,15 +16,9 @@ router.get('/quienes-somos', (req, res) => {
   res.render('quienes-somos', {title: name});
 });
 
-//User Dashboard route
-router.get('/dashboard', (req,res) => {
-  const name = "Dashboard";
-  console.log("Dashboard requested");
-  res.render('dashboard', {title: name});
-});
-
-//login route
+//Login route
 router.get('/login', (req, res) => {
+  const name = "Login";
   var errormsg;
   console.log("Login requested");
   var date = new Date();
@@ -33,7 +27,7 @@ router.get('/login', (req, res) => {
   if (req.cookies.error == true) {
     errormsg = "Correo o contraseña incorrectos";
   }
-  res.render('login', {title: "NVIO | Login", error: errormsg});
+  res.render('login', {title: name, error: errormsg});
 
 });
 

@@ -5,14 +5,6 @@
     font-size: 80px;
 }
 
-.center-text {
-    text-align: center;
-}
-
-.left-text {
-    text-align: left;
-}
-
 .white-link {
     color: #FFF;
     text-decoration: none;
@@ -76,6 +68,7 @@
 .landing-head {
     font-weight: normal;
     margin-bottom: 30px;
+    margin-top: 50px;
 }
 
 .landing-paragraph {
@@ -89,10 +82,21 @@
     background-color: #AAA;
 }
     /* Screenreader-friendly hide class */
-.hide {
+.hidden {
     position: absolute !important;
     top: -9999px !important;
     left: -9999px !important;
+}
+
+@media screen and (max-width: 991.98px){ /* This decimal number abides by Bootstrap Responsiveness from their Docs */
+    .login-title {
+        margin: 40px 80px 200px;
+    }
+}
+@media screen and (min-width: 992px){
+    .login-title{
+        margin: 40px 0px 200px;
+    }
 }
 
 /* Dashboard Sidebar */
@@ -130,7 +134,8 @@ div.dash-content {
     height: 1000px;
 }
 
-@media screen and (max-width: 991px) {
+/* Screen size differences */
+@media screen and (max-width: 991.98px) {
     .dash-sidebar {
         width: 100%;
         height: auto;
@@ -145,7 +150,7 @@ div.dash-content {
     div.dash-content {margin-left: 0;}
 }
 
-@media screen and (min-width: 991px) {
+@media screen and (min-width: 992px) {
     .navbar-nav-dash { /* This will control only the dashboard navbar */
         width: 100%;
         height: auto;
@@ -160,10 +165,9 @@ div.dash-content {
     background-color: #333;
     padding: 60px 40px;
     color: rgba(255,255,255,1.00);
-    margin-bottom: 20px;
-    border-bottom-right-radius: 6px;
+    margin-bottom: 0px;
+    border-bottom-radius: 0px;
     border-top-left-radius: 0px;
-    border-bottom-left-radius: 6px;
 }
 .footer-bs .footer-brand, .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
     padding:10px 25px;
@@ -205,7 +209,8 @@ div.dash-content {
 }
 
 .footer-bs .footer-nav ul.list {
-    list-style:none; padding:0px;
+    list-style:none;
+    padding:0px;
 }
 
 .footer-bs .footer-nav ul.list li {
@@ -217,11 +222,13 @@ div.dash-content {
 }
 
 .footer-bs .footer-nav ul.list a:hover {
-    color:rgba(255,255,255,0.60); text-decoration:none;
+    color:rgba(255,255,255,0.60);
+    text-decoration:none;
 }
 
 .footer-bs .footer-social ul {
-    list-style:none; padding:0px;
+    list-style:none;
+    padding:0px;
 }
 
 .footer-bs .footer-social h4 {
@@ -230,9 +237,15 @@ div.dash-content {
     letter-spacing: 3px;
 }
 
-.footer-bs .footer-social li { padding:5px 4px;}
-.footer-bs .footer-social a { color:rgba(255,255,255,1.00);}
-.footer-bs .footer-social a:hover { color:rgba(255,255,255,0.80); text-decoration:none; }
+.footer-bs .footer-social li {
+    padding:5px 4px;
+}
+.footer-bs .footer-social a {
+    color:rgba(255,255,255,1.00);
+}
+.footer-bs .footer-social a:hover {
+    color:rgba(255,255,255,0.80); text-decoration:none;
+}
 
 .footer-bs .footer-ns h4 {
     font-size: 11px;
@@ -246,7 +259,8 @@ div.dash-content {
 }
 
 @media (min-width: 768px) {
-    .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns { border-left:solid 1px rgba(255,255,255,0.10); }
+    .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+        border-left:solid 1px rgba(255,255,255,0.10);
+    }
 }
-
 /* End of Footer */

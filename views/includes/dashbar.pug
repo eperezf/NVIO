@@ -3,58 +3,72 @@ body
 	nav.navbar.navbar-expand-lg.sticky-top.navbar-dark.bg-dark
 		a.navbar-brand(href='/')
 			img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
-			//- the following line has a blank character, ALT-255
+			//- the following line has a blank character, ALT-255. This is used to space icons and tab names
 			| 
 			img.logo-text-navbar(src='/static/logo/text-white.png', alt='')
 		button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
 			span.navbar-toggler-icon
-		#navbarSupportedContent.collapse.navbar-collapse.center-text
+		#navbarSupportedContent.collapse.navbar-collapse.text-left
 			ul.navbar-nav.navbar-nav-dash.ml-auto
 				li.nav-item
-					a.nav-link.active(href='/dashboard')
-						span(data-feather='home')
+					a#linkDash-top.nav-link(href='/dashboard')
+						i.fa.fa-home
 						|   Dashboard
 				li.nav-item
-					a.nav-link(href='#')
-						span(data-feather='send')
-						|   Nuevo Pedido
+					a#linkPerfil-top.nav-link(href='/dashboard/perfil')
+						i.fa.fa-user-circle
+						|   Mi Perfil
 				li.nav-item
-					a.nav-link(href='#')
-						span(data-feather='book-open')
+					a#linkEnvio-top.nav-link(href='/dashboard/nuevo-envio')
+						i.fa.fa-truck
+						|   Nuevo Envío
+				li.nav-item
+					a#linkHistPedidos-top.nav-link(href='/dashboard/hist-pedidos')
+						i.fa.fa-clipboard
 						|   Historial Pedidos
 				li.nav-item
-					a.nav-link(href='#')
-						span(data-feather='dollar-sign')
+					a#linkHistPagos-top.nav-link(href='/dashboard/hist-pagos')
+						i.fa.fa-usd
 						|   Historial Pagos
 				li.nav-item
-					a.nav-link(href='#')
-						span(data-feather='clipboard')
+					a#linkCostos-top.nav-link(href='/dashboard/costos')
+						i.fa.fa-table
 						|   Tablas de Costos
-				li.nav-item
-					a.nav-link(href='#')
-						span(data-feather='help-circle')
+				li#linkSoporte-top.nav-item
+					a.nav-link(href='/dashboard/soporte')
+						i.fa.fa-info-circle
 						|   Soporte o Ayuda
+				li#linkCerrarSesion-top.nav-item
+					a.nav-link(href='/')
+						i.fa.fa-times
+						|   Cerrar Sesión
 	.container-fluid
 		.row
 			.dash-sidebar.col-md-12.left-text
-				a.nav-link.active(href='/dashboard')
-					span(data-feather='home')
+				a#linkDash-side.nav-link(href='/dashboard')
+					i.fa.fa-home
 					|   Dashboard
-				a.nav-link(href='#')
-					span(data-feather='send')
+				a#linkPerfil-side.nav-link(href='/dashboard/perfil')
+					i.fa.fa-user-circle
+					|   Mi Perfil
+				a#linkEnvio-side.nav-link(href='/dashboard/nuevo-envio')
+					i.fa.fa-truck
 					|   Nuevo Pedido
-				a.nav-link(href='#')
-					span(data-feather='book-open')
+				a#linkHistPedidos-side.nav-link(href='/dashboard/hist-pedidos')
+					i.fa.fa-clipboard
 					|   Historial Pedidos
-				a.nav-link(href='#')
-					span(data-feather='dollar-sign')
+				a#linkHistPagos-side.nav-link(href='/dashboard/hist-pagos')
+					i.fa.fa-usd
 					|   Historial Pagos
-				a.nav-link(href='#')
-					span(data-feather='clipboard')
+				a#linkCostos-side.nav-link(href='/dashboard/costos')
+					i.fa.fa-table
 					|   Tablas de Costos
-				a.nav-link(href='#')
-					span(data-feather='help-circle')
+				a#linkSoporte-side.nav-link(href='/dashboard/soporte')
+					i.fa.fa-info-circle
 					|   Soporte o Ayuda
+				a#linkCerrarSesion-side.nav-link(href='/')
+					i.fa.fa-times
+					|   Cerrar Sesión
 	.dash-content
 		block content
 	include bodyscript

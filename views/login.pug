@@ -1,22 +1,22 @@
-doctype html
-html
-  include includes/header.pug
-  body
-    include includes/navbar.pug
-    block content
-      div.container
-        div.row
-          div.col-sm-6.col-md-4.col-md-offset-4
-            h1.text-center.login-title Iniciar sesión en NVIO
-              div.account-wall
-                img(class='profile-img', src='https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120')
-                form(class='form-signin', action='/login', method='POST' enctype='multipart/form-data')
-                  input(type='text', name='email' class='form-control', placeholder='Email',required, autofocus)
-                  input(type='password', name='password' class='form-control', placeholder='Password', required)
-                  button(class='btn btn-lg btn-primary btn-block', type='submit') Sign in
-                  span.clearfix
-              //a(href='/signup', class='text-center new-account') Create an account
-              //#message
-              //if message
-              //  h1.text-center.error-message #{message}
-    include includes/footer.pug
+include includes/header.pug
+body
+  include includes/navbar.pug
+  block content
+    .container.landing-container
+      .row
+        .col
+          h1.text-center.login-title
+            | Iniciar sesión en NVIO
+            .account-wall
+              form.login-form.form-signin(action='/login', method='POST' enctype='multipart/form-data')
+                input.form-control(type='text', name='email' placeholder='Email',required, autofocus style='margin: 20px 0px; 10px')
+                input.form-control(type='password', name='password' placeholder='Password', required style='margin: 10px 0px;')
+                button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+                span.clearfix
+          //-
+            a.text-center.new-account(href='/signup') Create an account
+            #message
+            if message
+              h1.text-center.error-message #{message}
+  include includes/footer.pug
+  include includes/bodyscript.pug

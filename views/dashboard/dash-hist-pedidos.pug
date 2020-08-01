@@ -1,12 +1,11 @@
-extends includes/dashbar.pug
+extends ../includes/dashbar
 append content
-	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
-		Inheritance works like this:
-			dashboard.pug <- dashbar.pug <- [header.pug, bodyscript.pug, dashscript.pug]
-
-	h1.landing-head.center-text(style='margin-top: 50px;')
-		| Placeholder Text
-	p.landing-paragraph.center-text
+	script.
+		var topname = "linkHistPedidos-top";
+		var sidename = "linkHistPedidos-side";
+	h1.landing-head.text-center
+		| #{title}
+	p.landing-paragraph.text-center
 		| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
 		| magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
 		| consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla

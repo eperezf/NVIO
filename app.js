@@ -7,6 +7,7 @@ const app = express();
 const port = process.env.PORT;
 const mainRoutes = require('./routes/main');
 const authRoutes = require('./routes/auth');
+const dashRoutes = require('./routes/dash');
 
 //Check if DynamoDB is running at endpoint
 aws.config.update({
@@ -45,6 +46,7 @@ app.set('views', './views');
 //Set index routes
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
+app.use('/dashboard/', dashRoutes)
 
 //Static content pathing
 app.use(express.static('public'));
