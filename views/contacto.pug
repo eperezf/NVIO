@@ -1,0 +1,13 @@
+include includes/header.pug
+body
+	include includes/navbar.pug
+	.container-fluid
+		.row.justify-content-center
+			h1.text-center.login-title
+				| Contáctanos
+				form.login-form.form-signin(action='mailto:contacto@nvio.cl' method='POST' enctype='multipart/form-data')
+					input.form-control(type='text' name='email' placeholder='Tu Email' required style='margin: 80px 0 0')
+					textarea.form-control(name='texto' placeholder='Tu Mensaje' required style='margin: 10px 0px; min-height: 270px; max-height: 2000px' rows='10' cols='100')
+					button.btn.btn-lg.btn-outline-secondary.btn-block(type='submit') Enviar
+	include includes/footer.pug
+	include includes/bodyscript.pug

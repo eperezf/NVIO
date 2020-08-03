@@ -16,6 +16,13 @@ router.get('/quienes-somos', (req, res) => {
   res.render('quienes-somos', {title: name});
 });
 
+//Contacto route
+router.get('/contacto', (req, res) => {
+  const name = "Contacto";
+  console.log("Contacto requested");
+  res.render('contacto', {title: name});
+});
+
 //Login route
 router.get('/login', (req, res) => {
   const name = "Login";

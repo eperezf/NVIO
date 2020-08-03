@@ -57,7 +57,7 @@
     max-width: 1500px;
     padding: 40px;
     margin: auto;
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 .landing-container {
@@ -73,7 +73,7 @@
 
 .landing-paragraph {
     font-size: 20px;
-    margin: auto;
+    margin: auto 30px;
 }
 
 #jumbodiv {
@@ -81,23 +81,62 @@
     padding: 30px;
     background-color: #AAA;
 }
-    /* Screenreader-friendly hide class */
-.hidden {
+
+.hidden { /* Screenreader-friendly hide class */
     position: absolute !important;
     top: -9999px !important;
     left: -9999px !important;
 }
 
-@media screen and (max-width: 991.98px){ /* This decimal number abides by Bootstrap Responsiveness from their Docs */
+@media screen and (max-width: 991.98px) { /* This decimal number abides by Bootstrap Responsiveness from their Docs */
     .login-title {
         margin: 40px 80px 200px;
     }
 }
-@media screen and (min-width: 992px){
+
+@media screen and (min-width: 992px) {
     .login-title{
-        margin: 40px 0px 200px;
+        margin: 40px 0 200px;
     }
 }
+/* Responsive Cards (for 'quienes-somos.pug') */
+@media screen and (max-width: 575.98px) { /* below 576 */
+    .landing-card-columns {
+        -webkit-column-count:1;
+        -moz-column-count:1;
+        column-count:1;
+    }
+    .card {
+        margin: 0;
+        padding: 0;
+        width: 270px;
+    }
+}
+
+@media screen and (min-width: 576px) { /* 576 and above */
+    .landing-card-columns {
+        -webkit-column-count:2;
+        -moz-column-count:2;
+        column-count:2;
+    }
+}
+
+@media screen and (min-width: 992px) { /* 992 and above */
+    .landing-card-columns {
+        -webkit-column-count:3;
+        -moz-column-count:3;
+        column-count:3;
+    }
+}
+
+@media screen and (min-width: 1200px) { /* 1200 and above */
+    .landing-card-columns {
+        -webkit-column-count:5;
+        -moz-column-count:5;
+        column-count:5;
+    }
+}
+
 
 /* Dashboard Sidebar */
 .dash-sidebar {
@@ -134,7 +173,7 @@ div.dash-content {
     height: 1000px;
 }
 
-/* Screen size differences */
+    /* Screen size differences (for dashbar.pug)*/
 @media screen and (max-width: 991.98px) {
     .dash-sidebar {
         width: 100%;
@@ -165,9 +204,8 @@ div.dash-content {
     background-color: #333;
     padding: 60px 40px;
     color: rgba(255,255,255,1.00);
-    margin-bottom: 0px;
-    border-bottom-radius: 0px;
-    border-top-left-radius: 0px;
+    margin-bottom: 0;
+    border-top-left-radius: 0;
 }
 .footer-bs .footer-brand, .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
     padding:10px 25px;
@@ -178,7 +216,7 @@ div.dash-content {
 }
 
 .footer-bs .footer-brand h2 {
-    margin:0px 0px 10px;
+    margin:0 0 10px;
 }
 
 .footer-bs .footer-brand p {
@@ -186,11 +224,11 @@ div.dash-content {
 }
 
 .footer-bs .footer-nav ul.pages {
-    list-style:none; padding:0px;
+    list-style:none; padding:0;
 }
 
 .footer-bs .footer-nav ul.pages li {
-    padding:5px 0px;
+    padding:5px 0;
 }
 
 .footer-bs .footer-nav ul.pages a {
@@ -210,11 +248,11 @@ div.dash-content {
 
 .footer-bs .footer-nav ul.list {
     list-style:none;
-    padding:0px;
+    padding:0;
 }
 
 .footer-bs .footer-nav ul.list li {
-    padding:5px 0px;
+    padding:5px 0;
 }
 
 .footer-bs .footer-nav ul.list a {
@@ -228,7 +266,7 @@ div.dash-content {
 
 .footer-bs .footer-social ul {
     list-style:none;
-    padding:0px;
+    padding:0;
 }
 
 .footer-bs .footer-social h4 {

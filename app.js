@@ -46,14 +46,14 @@ app.set('views', './views');
 //Set index routes
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
-app.use('/dashboard/', dashRoutes)
+app.use('/dashboard/', dashRoutes);
 
 //Static content pathing
 app.use(express.static('public'));
 
 //Catch 404
 app.use((req,res)=> {
-  res.status(404).render('404', { title: "NVIO"});
+  res.status(404).render('404', { title: "404"});
 });
 
 //Error handling
