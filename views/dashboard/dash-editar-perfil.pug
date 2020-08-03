@@ -1,0 +1,32 @@
+extends ../includes/dashbar
+append content
+	script.
+		var topname = "linkPerfil-top";
+		var sidename = "linkPerfil-side";
+	.container(style='margin-top: 40px;')
+		a(href='/dashboard/perfil' style='font-size: 30px;')
+			i.fa.fa-times.float-right
+		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
+		//- The action is the URL the post will be sent to
+		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post')
+			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
+			.form-group
+				label Nombre Empresa
+				input#companyName.form-control(type='text' value='')
+			.form-group
+				label RUT Empresa
+				input#companyRut.form-control(type='text' value='')
+			.form-group
+				label Giro Empresa
+				input#companyTurn.form-control(type='text' value='')
+				small Tu Giro de Empresa según el SII
+			.form-group
+				label Nombre Representante
+				input#companyRepresentative.form-control(type='text' value='')
+			.form-group
+				label Teléfono de Contacto
+				input#contactNumber.form-control(type='text' value='')
+			.form-group
+				label Email de Contacto
+				input#email.form-control(type='text' value='')
+			button.btn.btn-primary(type='button' onclick="location.href='/dashboard/perfil';") Guardar Cambios

@@ -51,4 +51,11 @@ router.get('/soporte', (req, res) => {
     res.render('dashboard/dash-soporte', {title: name});
 });
 
+// Dashboard Edit Profile
+router.get('/editar-perfil', (req, res) => {
+    const name = "Editar Perfil";
+    console.log("Dashboard Edit Profile Requested");
+    res.render('dashboard/dash-editar-perfil', {title: name})
+});
+
 module.exports = router;
