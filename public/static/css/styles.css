@@ -1,0 +1,266 @@
+/* General use code */
+.four-oh-four {
+    color: #C00;
+    text-align: center;
+    font-size: 80px;
+}
+
+.white-link {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.white-link:hover {
+    color: #FFF;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.grey-link {
+    color: #AAA;
+    text-decoration: none;
+}
+
+.grey-link:hover {
+    color: #AAA;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.logo-footer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-width: 80px;
+    height: auto;
+}
+
+.logo-navbar {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-text-navbar {
+    width: auto;
+    height: 30px;
+}
+
+.jumbo-img{
+    width: 100%;
+    max-width: 315px;
+    min-width: 50px;
+    height: auto;
+}
+
+.sharp-jumbotron {
+    max-width: 1500px;
+    padding: 40px;
+    margin: auto;
+    border-radius: 0px;
+}
+
+.landing-container {
+    text-align: center;
+    padding: 50px 0 60px;
+}
+
+.landing-head {
+    font-weight: normal;
+    margin-bottom: 30px;
+    margin-top: 50px;
+}
+
+.landing-paragraph {
+    font-size: 20px;
+    margin: auto;
+}
+
+#jumbodiv {
+    text-align: center;
+    padding: 30px;
+    background-color: #AAA;
+}
+    /* Screenreader-friendly hide class */
+.hidden {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+@media screen and (max-width: 991.98px){ /* This decimal number abides by Bootstrap Responsiveness from their Docs */
+    .login-title {
+        margin: 40px 80px 200px;
+    }
+}
+@media screen and (min-width: 992px){
+    .login-title{
+        margin: 40px 0px 200px;
+    }
+}
+
+/* Dashboard Sidebar */
+.dash-sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.dash-sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.dash-sidebar a.active {
+    background-color: #F859D7;
+    color: white;
+}
+
+.dash-sidebar a:hover:not(.active) {
+    background-color: #333;
+    color: white;
+}
+
+    /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.dash-content {
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
+}
+
+/* Screen size differences */
+@media screen and (max-width: 991.98px) {
+    .dash-sidebar {
+        width: 100%;
+        height: auto;
+        position: absolute !important; /* Hide below 991px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .dash-sidebar a {
+        text-align: center;
+        float: none;
+    }
+    div.dash-content {margin-left: 0;}
+}
+
+@media screen and (min-width: 992px) {
+    .navbar-nav-dash { /* This will control only the dashboard navbar */
+        width: 100%;
+        height: auto;
+        position: absolute !important; /* Hide above 991px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+}
+
+/* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
+.footer-bs {
+    background-color: #333;
+    padding: 60px 40px;
+    color: rgba(255,255,255,1.00);
+    margin-bottom: 0px;
+    border-bottom-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.footer-bs .footer-brand, .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+    padding:10px 25px;
+}
+
+.footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+    border-color: transparent;
+}
+
+.footer-bs .footer-brand h2 {
+    margin:0px 0px 10px;
+}
+
+.footer-bs .footer-brand p {
+    font-size:12px; color:rgba(255,255,255,0.70);
+}
+
+.footer-bs .footer-nav ul.pages {
+    list-style:none; padding:0px;
+}
+
+.footer-bs .footer-nav ul.pages li {
+    padding:5px 0px;
+}
+
+.footer-bs .footer-nav ul.pages a {
+    color:rgba(255,255,255,1.00); font-weight:bold; text-transform:uppercase;
+}
+
+.footer-bs .footer-nav ul.pages a:hover {
+    color:rgba(255,255,255,0.80); text-decoration:none;
+}
+
+.footer-bs .footer-nav h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom:10px;
+}
+
+.footer-bs .footer-nav ul.list {
+    list-style:none;
+    padding:0px;
+}
+
+.footer-bs .footer-nav ul.list li {
+    padding:5px 0px;
+}
+
+.footer-bs .footer-nav ul.list a {
+    color:rgba(255,255,255,0.80);
+}
+
+.footer-bs .footer-nav ul.list a:hover {
+    color:rgba(255,255,255,0.60);
+    text-decoration:none;
+}
+
+.footer-bs .footer-social ul {
+    list-style:none;
+    padding:0px;
+}
+
+.footer-bs .footer-social h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.footer-bs .footer-social li {
+    padding:5px 4px;
+}
+.footer-bs .footer-social a {
+    color:rgba(255,255,255,1.00);
+}
+.footer-bs .footer-social a:hover {
+    color:rgba(255,255,255,0.80); text-decoration:none;
+}
+
+.footer-bs .footer-ns h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom:10px;
+}
+
+.footer-bs .footer-ns p {
+    font-size:12px; color:rgba(255,255,255,0.70);
+}
+
+@media (min-width: 768px) {
+    .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+        border-left:solid 1px rgba(255,255,255,0.10);
+    }
+}
+/* End of Footer */

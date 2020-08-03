@@ -1,3 +1,33 @@
-footer#footer
-  .container-fluid
-    p Copyright (c) #{year} NVIO
+section(style='height:80px;')
+//- --------- Footer ----------
+footer.footer-bs#footer
+  .row
+    .col-md-4.footer-brand
+      a.white-link(href='/')
+        img.logo-footer(src='/static/logo/placeholder-logo.png', alt='')
+        img.logo-footer(src='/static/logo/text-white.png', alt='')
+      p.text-center El envío lo hacemos todos
+      p.text-center Copyright © #{new Date().getFullYear()} NVIO
+    .col-md-6.footer-nav
+      h4 Acerca de nosotros
+      .col-md-6
+        ul.pages
+          li
+            a(href='/quienes-somos') Quienes Somos
+          li
+            a(href='/contacto') Contacto
+      .col-md-6
+        ul.list
+          li
+            a(href='/tos') Términos y Condiciones
+          li
+            a(href='/privacidad') Política de Privacidad
+    .col-md-2.footer-social
+      h4 Siguenos
+      ul
+        li
+          a(href='#') Facebook
+        li
+          a(href='#') Twitter
+        li
+          a(href='#') Instagram

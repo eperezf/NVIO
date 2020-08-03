@@ -1,0 +1,106 @@
+include includes/header.pug
+body
+  include includes/navbar.pug
+  .container-fluid.landing-container
+    .row.justify-content-md-center
+      .col-12.text-center
+        h1.landing-head Quienes Somos
+      .col-md-8.col-sm-12
+        p.landing-paragraph
+          | Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+          | sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+          | nisi ut aliquip ex ea commodo consequat.
+          | Duis aute irure dolor in reprehenderit in voluptate velit esse
+          | cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+          | cupidatat non proident, sunt in culpa qui officia deserunt mollit
+          | anim id est laborum.
+      .col-12.text-center(style='padding-top: 80px; padding-bottom: 40px;')
+        h1.landing-head El equipo
+  .container
+    .centered
+      .row
+        .col
+          .card
+            img.card-img-top(src="https://via.placeholder.com/150")
+            .card-body
+              h5.card-title Max Quilodrán
+                //- Don't print his full name or it will mess with the card sizes, I spent 30 minutes trying to fix it
+                  but it's not worth bothering with right now
+                h6.card-text Cargo
+                p.card-text Breve descripción
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/maxquilodran")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @MaxQuilodran
+                  li
+                    a(href="mailto:max@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 max@nvio.cl
+        .col
+          .card
+            img.card-img-top(src="https://via.placeholder.com/150")
+            .card-body
+              h5.card-title Gonzalo Vidal
+                h6.card-text Cargo
+                p.card-text Breve descripción
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/#")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @arroba
+                  li
+                    a(href="mailto:gonzalo@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 gonzalo@nvio.cl
+        .col
+          .card
+            img.card-img-top(src="https://via.placeholder.com/150")
+            .card-body
+              h5.card-title Pía Moreau
+                h6.card-text Cargo
+                p.card-text Breve descripción
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/#")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @arroba
+                  li
+                    a(href="mailto:pia@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 pia@nvio.cl
+        .col
+          .card
+            img.card-img-top(src="https://via.placeholder.com/150")
+            .card-body
+              h5.card-title Angelo Romano
+                h6.card-text Cargo
+                p.card-text Breve descripción
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/#")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @arroba
+                  li
+                    a(href="mailto:angelo@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 angelo@nvio.cl
+        .col
+          .card
+            img.card-img-top(src="https://via.placeholder.com/150")
+            .card-body
+              h5.card-title Eduardo Pérez
+                h6.card-text Cargo
+                p.card-text Breve descripción
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/eperezf")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @eperezf
+                  li
+                    a(href="mailto:eduardo@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 eduardo@nvio.cl
+  include includes/footer.pug
+  include includes/bodyscript.pug
