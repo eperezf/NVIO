@@ -7,10 +7,10 @@ var upload = multer();
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    if (req.user.includes("ADMIN")){
+    if (req.user.user.includes("ADMIN")){
       return res.redirect('/');
     }
-    else if (req.user.includes("DRIVER")) {
+    else if (req.user.user.includes("DRIVER")) {
       return res.redirect('/');
     }
     else {
@@ -28,7 +28,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
     "TableName": "NVIO",
     "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
-    "ExpressionAttributeValues": {":cd420": {"S": req.user},":cd421": {"S": req.user.replace("COMPANY", "PROFILE")}}
+    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
@@ -98,7 +98,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
     "TableName": "NVIO",
     "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
-    "ExpressionAttributeValues": {":cd420": {"S": req.user},":cd421": {"S": req.user.replace("COMPANY", "PROFILE")}}
+    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
@@ -131,7 +131,7 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
   var docClient = new aws.DynamoDB.DocumentClient()
   params = {
     "TableName": "NVIO",
-    "Key": {"PK": req.user, "SK": req.user.replace("COMPANY", "PROFILE")},
+    "Key": {"PK": req.user.user, "SK": req.user.user.replace("COMPANY", "PROFILE")},
     "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215",
     "ExpressionAttributeValues": {
       ":6a210": req.body.companyName,
