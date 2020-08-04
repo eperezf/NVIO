@@ -43,7 +43,6 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       })
     }
   });
-
 });
 
 // Dashboard Make New Order
@@ -83,9 +82,37 @@ router.get('/soporte', passport.authenticate('jwt', {session: false, failureRedi
 
 // Dashboard Edit Profile
 router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    const name = "Editar Perfil";
-    console.log("Dashboard Edit Profile Requested");
-    res.render('dashboard/dash-editar-perfil', {title: name})
+  const name = "Editar Perfil";
+  params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S": req.user},":cd421": {"S": req.user.replace("COMPANY", "PROFILE")}}
+  }
+  var docClient = new aws.DynamoDB();
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("Query succeeded.");
+      var companyName = data.Items[0].companyName.S;
+      var companyRut = data.Items[0].companyRut.S;
+      var companyTurn = data.Items[0].companyTurn.S;
+      var companyRepresentative = data.Items[0].companyRepresentative.S;
+      var contactNumber = data.Items[0].contactNumber.N;
+      var companyEmail = data.Items[0].companyEmail.S;
+      console.log("Dashboard Edit Profile Requested");
+      res.render('dashboard/dash-editar-perfil', {
+        title: name,
+        companyName: companyName,
+        companyRut: companyRut,
+        companyTurn: companyTurn,
+        companyRepresentative: companyRepresentative,
+        contactNumber: contactNumber,
+        companyEmail: companyEmail
+      });
+    }
+  });
 });
 
 module.exports = router;
