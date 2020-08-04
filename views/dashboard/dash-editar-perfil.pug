@@ -8,25 +8,25 @@ append content
 			i.fa.fa-times.float-right
 		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
 		//- The action is the URL the post will be sent to
-		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post')
+		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
 			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
 			.form-group
 				label Nombre Empresa
-				input#companyName.form-control(type='text' value=companyName)
+				input#companyName.form-control(type='text' name='companyName' value=companyName)
 			.form-group
 				label RUT Empresa
-				input#companyRut.form-control(type='text' value=companyRut)
+				input#companyRut.form-control(type='text' name='companyRut' value=companyRut)
 			.form-group
 				label Giro Empresa
-				input#companyTurn.form-control(type='text' value=companyTurn)
+				input#companyTurn.form-control(type='text' name='companyTurn' value=companyTurn)
 				small Tu Giro de Empresa según el SII
 			.form-group
 				label Nombre Representante
-				input#companyRepresentative.form-control(type='text' value=companyRepresentative)
+				input#companyRepresentative.form-control(type='text' name='companyRepresentative' value=companyRepresentative)
 			.form-group
 				label Teléfono de Contacto
-				input#contactNumber.form-control(type='text' value=contactNumber)
+				input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber)
 			.form-group
 				label Email de Contacto
-				input#email.form-control(type='text' value=companyEmail)
-			button.btn.btn-primary(type='button' onclick="location.href='/dashboard/perfil';") Guardar Cambios
+				input#email.form-control(type='text' name='companyEmail' value=companyEmail)
+			button.btn.btn-primary(type='submit') Guardar Cambios

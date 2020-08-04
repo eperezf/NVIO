@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
+var multer  = require('multer');
+var upload = multer();
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -30,7 +32,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       var companyRut = data.Items[0].companyRut.S;
       var companyTurn = data.Items[0].companyTurn.S;
       var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var contactNumber = data.Items[0].contactNumber.N;
+      var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       res.render('dashboard/dash-perfil', {
         title: name,
@@ -38,7 +40,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
         companyRut: companyRut,
         companyTurn: companyTurn,
         companyRepresentative: companyRepresentative,
-        contactNumber: contactNumber,
+        companyContactNumber: companyContactNumber,
         companyEmail: companyEmail
       })
     }
@@ -83,6 +85,7 @@ router.get('/soporte', passport.authenticate('jwt', {session: false, failureRedi
 // Dashboard Edit Profile
 router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   const name = "Editar Perfil";
+  console.log("Dashboard Edit Profile Requested");
   params = {
     "TableName": "NVIO",
     "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
@@ -99,18 +102,53 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyRut = data.Items[0].companyRut.S;
       var companyTurn = data.Items[0].companyTurn.S;
       var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var contactNumber = data.Items[0].contactNumber.N;
+      var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
-      console.log("Dashboard Edit Profile Requested");
+
       res.render('dashboard/dash-editar-perfil', {
         title: name,
         companyName: companyName,
         companyRut: companyRut,
         companyTurn: companyTurn,
         companyRepresentative: companyRepresentative,
-        contactNumber: contactNumber,
+        companyContactNumber: companyContactNumber,
         companyEmail: companyEmail
       });
+    }
+  });
+});
+
+router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+  console.log("Edit Profile Save Requested");
+  var docClient = new aws.DynamoDB.DocumentClient()
+  params = {
+    "TableName": "NVIO",
+    "Key": {"PK": req.user, "SK": req.user.replace("COMPANY", "PROFILE")},
+    "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215",
+    "ExpressionAttributeValues": {
+      ":6a210": req.body.companyName,
+      ":6a211": req.body.companyRut,
+      ":6a212": req.body.companyTurn,
+      ":6a213": req.body.companyRepresentative,
+      ":6a214": parseInt(req.body.companyContactNumber),
+      ":6a215": req.body.companyEmail
+    },
+    "ExpressionAttributeNames": {
+      "#6a210": "companyName",
+      "#6a211": "companyRut",
+      "#6a212": "companyTurn",
+      "#6a213": "companyRepresentative",
+      "#6a214": "companyContactNumber",
+      "#6a215": "companyEmail"
+    },
+    ReturnValues:"UPDATED_NEW"
+  }
+  docClient.update(params, function(err, data) {
+    if (err) {
+      console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+      res.redirect('/dashboard/perfil');
     }
   });
 });
