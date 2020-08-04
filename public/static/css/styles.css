@@ -88,6 +88,7 @@
     left: -9999px !important;
 }
 
+/* Login Responsiveness */
 @media screen and (max-width: 991.98px) { /* This decimal number abides by Bootstrap Responsiveness from their Docs */
     .login-title {
         margin: 40px 80px 200px;
@@ -99,6 +100,7 @@
         margin: 40px 0 200px;
     }
 }
+
 /* Responsive Cards (for 'quienes-somos.pug') */
 @media screen and (max-width: 575.98px) { /* below 576 */
     .landing-card-columns {
@@ -186,13 +188,22 @@ div.dash-content {
         text-align: center;
         float: none;
     }
-    div.dash-content {margin-left: 0;}
+    div.dash-content {
+        margin-left: 0;
+    }
+    .hidden-if-small { /* Screenreader-friendly hide class */
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
 }
 
 @media screen and (min-width: 992px) {
     .navbar-nav-dash { /* This will control only the dashboard navbar */
         width: 100%;
         height: auto;
+    }
+    .nav-dash-top {
         position: absolute !important; /* Hide above 991px */
         top: -9999px !important;
         left: -9999px !important;

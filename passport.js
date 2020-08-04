@@ -39,6 +39,10 @@ function (email, password, cb) {
         console.error("Unable to query. Error JSON:", JSON.stringify(err, null, 2));
     } else {
       console.log("Email Query succeeded.");
+      if (data.Count == 0) {
+        console.log("User does not exist.");
+        return cb(null, false, {message: 'Incorrect email or password.'});
+      }
       data.Items.forEach(function(item) {
         userID = item.userID.S;
         console.log("userID is: " + userID);
@@ -102,7 +106,7 @@ passport.use(new JWTStrategy({
         ignoreExpiration: false
     },
     function (jwtPayload, cb) {
-      console.log(jwtPayload);
+      //console.log(jwtPayload);
       return cb(null, jwtPayload, {message: 'Logged In Successfully'});
     }
 ));

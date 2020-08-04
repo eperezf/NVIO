@@ -1,0 +1,35 @@
+extends ../includes/dashbar
+append content
+	script.
+		var topname = "linkPerfil-top";
+		var sidename = "linkPerfil-side";
+	.container(style='margin-top: 40px;')
+		a.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
+			| Cancelar 
+			i.fa.fa-times(style='font-size: 30px;')
+		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
+		//- The action is the URL the post will be sent to
+		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
+			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
+			.form-group
+				label Nombre Empresa
+				input#companyName.form-control(type='text' name='companyName' value=companyName required)
+			.form-group
+				label RUT Empresa
+				input#companyRut.form-control(type='text' name='companyRut' value=companyRut required)
+			.form-group
+				label Giro Empresa
+				input#companyTurn.form-control(type='text' name='companyTurn' value=companyTurn required)
+				small Tu Giro de Empresa según el SII
+			.form-group
+				label Nombre Representante
+				input#companyRepresentative.form-control(type='text' name='companyRepresentative' value=companyRepresentative required)
+			.form-group
+				label Teléfono de Contacto
+				input#contactNumber.form-control(type='tel' name='companyContactNumber' value=companyContactNumber required)
+			.form-group
+				label Email de Contacto
+				input#email.form-control(type='email' name='companyEmail' value=companyEmail required)
+				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo
+					| que usas para iniciar sesión aquí
+			button.btn.btn-primary(type='submit') Guardar Cambios

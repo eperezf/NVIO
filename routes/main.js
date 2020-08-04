@@ -34,6 +34,7 @@ router.get('/login', (req, res) => {
   if (req.cookies.error == true) {
     errormsg = "Correo o contraseña incorrectos";
   }
+  res.clearCookie('error');
   res.render('login', {title: name, error: errormsg});
 
 });
