@@ -24,7 +24,17 @@ router.post('/login', upload.none(), function (req, res, next) {
       }
       const token = jwt.sign(user, process.env.JWT_SECRET);
       res.cookie('token', token, {maxAge: 65876587658, secure: false, httpOnly: true,});
-      return res.json({user, token});
+
+      if (user.includes("ADMIN")){
+        return res.redirect('/');
+      }
+      else if (user.includes("DRIVER")) {
+        return res.redirect('/');
+      }
+      else {
+        return res.redirect('/dashboard');
+      }
+
     });
   })(req, res);
 });

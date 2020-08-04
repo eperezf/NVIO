@@ -7,9 +7,17 @@ var upload = multer();
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    const name = "Dashboard";
-    console.log("Dashboard Index Requested");
-    res.render('dashboard/dashboard', {title: name});
+    if (req.user.includes("ADMIN")){
+      return res.redirect('/');
+    }
+    else if (req.user.includes("DRIVER")) {
+      return res.redirect('/');
+    }
+    else {
+      const name = "Dashboard";
+      console.log("Dashboard Index Requested");
+      res.render('dashboard/dashboard', {title: name});
+    }
 });
 
 // Dashboard Profile
