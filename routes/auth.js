@@ -29,4 +29,9 @@ router.post('/login', upload.none(), function (req, res, next) {
   })(req, res);
 });
 
+router.get('/logout', (req, res, next) => {
+  res.clearCookie('token');
+  return res.redirect('/login');
+})
+
 module.exports = router;
