@@ -4,8 +4,9 @@ append content
 		var topname = "linkPerfil-top";
 		var sidename = "linkPerfil-side";
 	.container(style='margin-top: 40px;')
-		a(href='/dashboard/editar-perfil' style='font-size: 30px;')
-			i.fa.fa-edit.float-right
+		a.grey-link.float-right(href='/dashboard/editar-perfil' style='font-size: 25px;')
+			| Editar Perfil 
+			i.fa.fa-edit(style='font-size: 30px;')
 		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
 		//- Add values in the proper attribute through a query to the DB, maybe store them in cache
 		form#profileInfo(style='margin-top: 30px;')

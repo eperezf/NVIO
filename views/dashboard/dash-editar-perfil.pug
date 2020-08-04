@@ -4,8 +4,9 @@ append content
 		var topname = "linkPerfil-top";
 		var sidename = "linkPerfil-side";
 	.container(style='margin-top: 40px;')
-		a(href='/dashboard/perfil' style='font-size: 30px;')
-			i.fa.fa-times.float-right
+		a.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
+			| Cancelar 
+			i.fa.fa-times(style='font-size: 30px;')
 		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
 		//- The action is the URL the post will be sent to
 		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
@@ -29,4 +30,6 @@ append content
 			.form-group
 				label Email de Contacto
 				input#email.form-control(type='text' name='companyEmail' value=companyEmail)
+				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo
+					| que usas para iniciar sesión aquí
 			button.btn.btn-primary(type='submit') Guardar Cambios

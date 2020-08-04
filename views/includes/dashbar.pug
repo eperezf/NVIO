@@ -10,36 +10,36 @@ body
 			span.navbar-toggler-icon
 		#navbarSupportedContent.collapse.navbar-collapse.text-left
 			ul.navbar-nav.navbar-nav-dash.ml-auto
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkDash-top.nav-link(href='/dashboard')
 						i.fa.fa-home
 						|   Dashboard
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkPerfil-top.nav-link(href='/dashboard/perfil')
 						i.fa.fa-user-circle
 						|   Mi Perfil
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkEnvio-top.nav-link(href='/dashboard/nuevo-envio')
 						i.fa.fa-truck
 						|   Nuevo Envío
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkHistPedidos-top.nav-link(href='/dashboard/hist-pedidos')
 						i.fa.fa-clipboard
 						|   Historial Pedidos
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkHistPagos-top.nav-link(href='/dashboard/hist-pagos')
 						i.fa.fa-usd
 						|   Historial Pagos
-				li.nav-item
+				li.nav-item.nav-dash-top
 					a#linkCostos-top.nav-link(href='/dashboard/costos')
 						i.fa.fa-table
 						|   Tablas de Costos
-				li#linkSoporte-top.nav-item
-					a.nav-link(href='/dashboard/soporte')
+				li.nav-item.nav-dash-top
+					a#linkSoporte-top.nav-link(href='/dashboard/soporte')
 						i.fa.fa-info-circle
 						|   Soporte o Ayuda
-				li#linkCerrarSesion-top.nav-item
-					a.nav-link(href='/')
+				li-top.nav-item.nav-dash-top
+					a#linkCerrarSesion.nav-link(data-toggle='modal' data-target='#logoutModal')
 						i.fa.fa-times
 						|   Cerrar Sesión
 	.container-fluid
@@ -66,9 +66,22 @@ body
 				a#linkSoporte-side.nav-link(href='/dashboard/soporte')
 					i.fa.fa-info-circle
 					|   Soporte o Ayuda
-				a#linkCerrarSesion-side.nav-link(href='/logout')
+				a#linkCerrarSesion-side.nav-link(data-toggle='modal' data-target='#logoutModal')
 					i.fa.fa-times
 					|   Cerrar Sesión
+	// Modal
+	#logoutModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='logoutModal' aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#exampleModalLabel.modal-title Cerrar Sesión
+					button.close(type='button' data-dismiss='modal' aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					| ¿De verdad quieres cerrar sesión?
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-dismiss='modal') Cancelar
+					input.btn.btn-danger(type='button' onclick="location.href='/logout';" value='Cerrar Sesión')
 	.dash-content
 		block content
 	include bodyscript
