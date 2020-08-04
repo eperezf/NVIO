@@ -106,7 +106,7 @@ passport.use(new JWTStrategy({
         secretOrKey   : process.env.JWT_SECRET
     },
     function (jwtPayload, cb) {
-      console.log(jwtPayload);
+      //console.log(jwtPayload);
       return cb(null, jwtPayload, {message: 'Logged In Successfully'});
     }
 ));

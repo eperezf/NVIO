@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const router = express.Router();
+const aws = require("aws-sdk");
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -11,9 +12,38 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
 
 // Dashboard Profile
 router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    const name = "Mi Perfil";
-    console.log("Dashboard Profile Requested");
-    res.render('dashboard/dash-perfil', {title: name})
+  console.log("Dashboard Profile Requested");
+  const name = "Mi Perfil";
+  params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S": req.user},":cd421": {"S": req.user.replace("COMPANY", "PROFILE")}}
+  }
+  var docClient = new aws.DynamoDB();
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("Query succeeded.");
+      var companyName = data.Items[0].companyName.S;
+      var companyRut = data.Items[0].companyRut.S;
+      var companyTurn = data.Items[0].companyTurn.S;
+      var companyRepresentative = data.Items[0].companyRepresentative.S;
+      var contactNumber = data.Items[0].contactNumber.N;
+      var companyEmail = data.Items[0].companyEmail.S;
+      res.render('dashboard/dash-perfil', {
+        title: name,
+        companyName: companyName,
+        companyRut: companyRut,
+        companyTurn: companyTurn,
+        companyRepresentative: companyRepresentative,
+        contactNumber: contactNumber,
+        companyEmail: companyEmail
+      })
+    }
+  });
+
 });
 
 // Dashboard Make New Order
