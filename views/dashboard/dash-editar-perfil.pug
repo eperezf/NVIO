@@ -31,4 +31,16 @@ append content
 				label(for='email') Email de Contacto
 				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
+			.form-group#address-group
+				label(for='address') Dirección
+				input#address.form-control(type="text" name='address', value=address required)
+			.form-group#address-group
+				label(for='addressApart') Depto., Casa, Condominio.
+				input#addressApart.form-control(type="text" name='addressApart', value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
+			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
+			script(type="text/javascript")
+				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
+				|	var input = document.getElementById('address');
+				| var options = {componentRestrictions: {country: 'cl'}};
+				| autocomplete = new google.maps.places.Autocomplete(input, options);
