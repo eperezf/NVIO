@@ -93,17 +93,17 @@ function (email, password, cb) {
 }));
 
 var cookieExtractor = function(req) {
-    var token = null;
-    if (req && req.cookies)
-    {
-      token = req.cookies['token'];
-    }
-    return token;
+  var token = null;
+  if (req && req.cookies){
+    token = req.cookies['token'];
+  }
+  return token;
 };
 
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey   : process.env.JWT_SECRET
+        secretOrKey   : process.env.JWT_SECRET,
+        ignoreExpiration: false
     },
     function (jwtPayload, cb) {
       //console.log(jwtPayload);
