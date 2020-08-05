@@ -9,13 +9,13 @@ append content
 		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
 				label Dirección Remitente
-				input.form-control(type='text' name="fromAddress" required)
+				input.form-control(type='text' readonly value=companyAddress)
 			.form-group
 				label Apartado Remitente
-				input.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.')
+				input.form-control(type='text' readonly value=companyAddressApart)
 			.form-group
 				label Dirección Destinatario
-				input.form-control(type='text' name="toAddress" required)
+				input.form-control#toAddress(type='text' name="toAddress" required)
 			.form-group
 				label Apartado Destinatario
 				input.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
@@ -40,3 +40,9 @@ append content
 				label.form-check-label(for='tosAgree') Acepto los 
 					a(href='/tos' target='_blank') términos y condiciones
 			button.btn.btn-primary(type='submit' style='margin-top: 20px;') Enviar
+			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
+			script(type="text/javascript")
+				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
+				|	var input = document.getElementById('toAddress');
+				| var options = {componentRestrictions: {country: 'cl'}};
+				| autocomplete = new google.maps.places.Autocomplete(input, options);
