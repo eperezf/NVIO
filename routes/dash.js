@@ -2,6 +2,8 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
+const { v4: uuidv4 } = require('uuid');
+var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
 
@@ -57,9 +59,109 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
 
 // Dashboard Make New Order
 router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    const name = "Nuevo Envio";
-    console.log("Dashboard New Order Requested");
-    res.render('dashboard/dash-envio', {title: name});
+  var companyAddress;
+  var companyAddressApart;
+  var docClient = new aws.DynamoDB();
+  params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
+  }
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("Query succeeded.");
+      console.log(data);
+      companyAddress = data.Items[0].fromAddress.S;
+      companyAddressApart = data.Items[0].fromAddressApart.S;
+      const name = "Nuevo Envio";
+      console.log("Dashboard New Order Requested");
+      res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
+    }
+  });
+});
+
+router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+  var docClient = new aws.DynamoDB();
+  var companyAddress;
+  var companyAddressApart;
+  params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
+  }
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      console.log("Query succeeded.");
+      console.log(data);
+      companyAddress = data.Items[0].fromAddress.S;
+      companyAddressApart = data.Items[0].fromAddressApart.S;
+      colcheck();
+    }
+  });
+  function colcheck(){
+    orderID = nanoid(6);
+    //Check for ID colission
+    console.log("Checking for Order ID collision");
+    console.log("PK: "+ req.user.user +", SK: ORDER#"+orderID);
+    params = {
+      "TableName": "NVIO",
+      "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+      "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+      "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": "ORDER#"+orderID}}
+    }
+    var docClient = new aws.DynamoDB();
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        console.log(data);
+        if (data.Count == 0) {
+          console.log("No collision. Creating Order.");
+          uoid = req.user.user.replace("COMPANY#", "")+orderID;
+          console.log(req.body);
+          console.log(req.user.user);
+          console.log("ORDER#"+orderID);
+          console.log("UNIQUE ORDER ID: " + uoid);
+          docClient = new aws.DynamoDB.DocumentClient();
+          params = {
+            TableName:'NVIO',
+            Item:{
+                "PK": req.user.user,
+                "SK": "ORDER#"+orderID,
+                "fromAddress": companyAddress,
+                "fromApart": companyAddressApart,
+                "toAddress": req.body.toAddress,
+                "toApart": req.body.toApart,
+                "orderName": req.body.orderName,
+                "orderDesc": req.body.orderDesc,
+                "orderValue": parseInt(req.body.orderValue),
+                "status": 0
+            }
+          };
+          console.log("Adding a new item...");
+          docClient.put(params, function(err, data) {
+            if (err) {
+              console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+              console.log("Added item:", JSON.stringify(data, null, 2));
+              return res.redirect("/dashboard/hist-pedidos");
+            }
+          });
+        }
+        else {
+          colcheck();
+        }
+      }
+    });
+  }
+
+
 });
 
 // Dashboard Order History

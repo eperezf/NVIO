@@ -6,26 +6,26 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	.container
-		form(action='/nuevo-envio' method='POST' enctype='multipart/form-data')
+		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
 				label Dirección Remitente
-				input.form-control(type='text' required)
+				input.form-control(type='text' readonly value=companyAddress)
 			.form-group
 				label Apartado Remitente
-				input.form-control(type='text' placeholder='Número Depto, Condominio, Piso, etc.')
+				input.form-control(type='text' readonly value=companyAddressApart)
 			.form-group
 				label Dirección Destinatario
-				input.form-control(type='text' required)
+				input.form-control#toAddress(type='text' name="toAddress" required)
 			.form-group
 				label Apartado Destinatario
-				input.form-control(type='text' placeholder='Número Depto, Condominio, Piso, etc.')
+				input.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
 				label Nombre de tu Pedido
-				input.form-control(type='text' required)
+				input.form-control(type='text' name="orderName" required)
 				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
 				label ¿Qué es lo que envías?
-				input.form-control(type='text' required)
+				input.form-control(type='text' name="orderDesc" required)
 				small Describe aquí tu paquete, recuerda seguir nuestras 
 					a(href='/recomendaciones' target='_blank') recomendaciones
 			.form-group
@@ -33,10 +33,16 @@ append content
 				.input-group
 					.input-group-prepend
 						.input-group-text $
-					input.form-control(type='text' required)
+					input.form-control(type='number' name="orderValue" required)
 				small Valor en pesos chilenos
 			.form-check
-				input#tosAgree.form-check-input(type='checkbox')
-				label.form-check-label(for='tosAgree' required) Acepto los 
+				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
+				label.form-check-label(for='tosAgree') Acepto los 
 					a(href='/tos' target='_blank') términos y condiciones
-			button.btn.btn-primary(type='button' style='margin-top: 20px;') Enviar
+			button.btn.btn-primary(type='submit' style='margin-top: 20px;') Enviar
+			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
+			script(type="text/javascript")
+				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
+				|	var input = document.getElementById('toAddress');
+				| var options = {componentRestrictions: {country: 'cl'}};
+				| autocomplete = new google.maps.places.Autocomplete(input, options);
