@@ -9,27 +9,38 @@ append content
 			i.fa.fa-times(style='font-size: 30px;')
 		img.rounded.text-left(src='https://via.placeholder.com/250' alt='')
 		//- The action is the URL the post will be sent to
-		form#editProfileInfo(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
+		form#editProfileInfo.edit-profile-form(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
 			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
-			.form-group
-				label Nombre Empresa
-				input#companyName.form-control(type='text' name='companyName' value=companyName required)
-			.form-group
-				label RUT Empresa
-				input#companyRut.form-control(type='text' name='companyRut' value=companyRut required)
-			.form-group
-				label Giro Empresa
-				input#companyTurn.form-control(type='text' name='companyTurn' value=companyTurn required)
+			.form-group#companyName-group
+				label(for='companyName') Nombre Empresa
+				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
+			.form-group#companyRut-group
+				label(for='companyRut') RUT Empresa
+				input#companyRut.form-control(type='text' name='companyRut' value=companyRut required oninvalid='this.setCustomValidity("El formato del RUT no es válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='^0*(\\d{1,3}(\\.?\\d{3})*)\\-?([\\dkK])$')
+			.form-group#companyTurn-group
+				label(for='companyTurn') Giro Empresa
+				input#companyTurn.form-control(type='text' name='companyTurn' value=companyTurn required oninvalid='this.setCustomValidity("El giro de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
 				small Tu Giro de Empresa según el SII
-			.form-group
-				label Nombre Representante
-				input#companyRepresentative.form-control(type='text' name='companyRepresentative' value=companyRepresentative required)
-			.form-group
-				label Teléfono de Contacto
-				input#contactNumber.form-control(type='tel' name='companyContactNumber' value=companyContactNumber required)
-			.form-group
-				label Email de Contacto
-				input#email.form-control(type='email' name='companyEmail' value=companyEmail required)
-				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo
-					| que usas para iniciar sesión aquí
+			.form-group#companyRepresentative-group
+				label(for='companyRepresentative') Nombre Representante
+				input#companyRepresentative.form-control(type='text' name='companyRepresentative' value=companyRepresentative required oninvalid='this.setCustomValidity("El nombre del representante debe tener al menos tres caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\- ]{3,}')
+			.form-group#contactNumber-group
+				label(for='contactNumber') Teléfono de Contacto
+				input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber required oninvalid='this.setCustomValidity("El número debe tener al menos 7 caracteres numéricos")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{7,}')
+			.form-group#email-group
+				label(for='email') Email de Contacto
+				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
+			.form-group#address-group
+				label(for='address') Dirección
+				input#address.form-control(type="text" name='address', value=address required)
+			.form-group#address-group
+				label(for='addressApart') Depto., Casa, Condominio.
+				input#addressApart.form-control(type="text" name='addressApart', value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
+			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
+			script(type="text/javascript")
+				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
+				|	var input = document.getElementById('address');
+				| var options = {componentRestrictions: {country: 'cl'}};
+				| autocomplete = new google.maps.places.Autocomplete(input, options);

@@ -44,6 +44,8 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       var companyRepresentative = data.Items[0].companyRepresentative.S;
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
+      var address = data.Items[0].fromAddress.S;
+      var addressApart = data.Items[0].fromAddressApart.S;
       res.render('dashboard/dash-perfil', {
         title: name,
         companyName: companyName,
@@ -51,7 +53,9 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
         companyTurn: companyTurn,
         companyRepresentative: companyRepresentative,
         companyContactNumber: companyContactNumber,
-        companyEmail: companyEmail
+        companyEmail: companyEmail,
+        address: address,
+        addressApart: addressApart
       })
     }
   });
@@ -214,6 +218,8 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyRepresentative = data.Items[0].companyRepresentative.S;
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
+      var address = data.Items[0].fromAddress.S;
+      var addressApart = data.Items[0].fromAddressApart.S;
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
@@ -222,7 +228,9 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
         companyTurn: companyTurn,
         companyRepresentative: companyRepresentative,
         companyContactNumber: companyContactNumber,
-        companyEmail: companyEmail
+        companyEmail: companyEmail,
+        address: address,
+        addressApart: addressApart
       });
     }
   });
@@ -234,14 +242,16 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
   params = {
     "TableName": "NVIO",
     "Key": {"PK": req.user.user, "SK": req.user.user.replace("COMPANY", "PROFILE")},
-    "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215",
+    "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215, #6a216 = :6a216, #6a217 = :6a217",
     "ExpressionAttributeValues": {
       ":6a210": req.body.companyName,
       ":6a211": req.body.companyRut,
       ":6a212": req.body.companyTurn,
       ":6a213": req.body.companyRepresentative,
       ":6a214": parseInt(req.body.companyContactNumber),
-      ":6a215": req.body.companyEmail
+      ":6a215": req.body.companyEmail,
+      ":6a216": req.body.address,
+      ":6a217": req.body.addressApart
     },
     "ExpressionAttributeNames": {
       "#6a210": "companyName",
@@ -249,7 +259,9 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
       "#6a212": "companyTurn",
       "#6a213": "companyRepresentative",
       "#6a214": "companyContactNumber",
-      "#6a215": "companyEmail"
+      "#6a215": "companyEmail",
+      "#6a216": "fromAddress",
+      "#6a217": "fromAddressApart"
     },
     ReturnValues:"UPDATED_NEW"
   }
