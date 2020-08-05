@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
+var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
 
@@ -60,6 +61,60 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
     const name = "Nuevo Envio";
     console.log("Dashboard New Order Requested");
     res.render('dashboard/dash-envio', {title: name});
+});
+
+router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+  orderID = nanoid(6);
+  //Check for ID colission
+  console.log("Checking for Order ID colission");
+  console.log("PK: "+ req.user.user +", SK: ORDER#"+orderID);
+  params = {
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": "ORDER#"+orderID}}
+  }
+  var docClient = new aws.DynamoDB();
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      console.log(data);
+      if (data.Count == 0) {
+        console.log("No colission. Creating Order.");
+        uoid = req.user.user.replace("COMPANY#", "")+orderID;
+        console.log(req.body);
+        console.log(req.user.user);
+        console.log("ORDER#"+orderID);
+        console.log("UNIQUE ORDER ID: " + uoid);
+        docClient = new aws.DynamoDB.DocumentClient();
+        params = {
+          TableName:'NVIO',
+          Item:{
+              "PK": req.user.user,
+              "SK": "ORDER#"+orderID,
+              "fromAddress": req.body.fromAddress,
+              "fromApart": req.body.fromApart,
+              "toAddress": req.body.toAddress,
+              "toApart": req.body.toApart,
+              "orderName": req.body.orderName,
+              "orderDesc": req.body.orderDesc,
+              "orderValue": parseInt(req.body.orderValue),
+              "status": 0
+          }
+        };
+        console.log("Adding a new item...");
+        docClient.put(params, function(err, data) {
+          if (err) {
+            console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+          } else {
+            console.log("Added item:", JSON.stringify(data, null, 2));
+            return res.redirect("/dashboard/hist-pedidos");
+          }
+        });
+      }
+    }
+  });
 });
 
 // Dashboard Order History
