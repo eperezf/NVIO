@@ -172,7 +172,33 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
 router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
     const name = "Historial Pedidos";
     console.log("Dashboard Order History Requested");
-    res.render('dashboard/dash-hist-pedidos', {title: name});
+    var docClient = new aws.DynamoDB();
+    var params={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "ORDER"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
+    }
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        //res.json(data)
+        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
+      }
+    });
 });
 
 // Dashboard Payment History
