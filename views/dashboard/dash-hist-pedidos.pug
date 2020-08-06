@@ -24,23 +24,45 @@ append content
 	table.table.table-bordered.table-striped
 		thead
 			tr
-				th(scope='col') #
-				th(scope='col') One
-				th(scope='col') Two
-				th(scope='col') Three
+				th(scope='col') Tracking #
+				th(scope='col') Nombre Pedido
+				th(scope='col') Descripción
+				th(scope='col') Despachar en
+				th(scope='col') Fecha de creación
+				th(scope='col') Status
+				th(scope='col') Fecha de delivery
+				th(scope='col') Costo NVIO
 		tbody
 			tr
-				th(scope='row') 1
-				td Foo
-				td Bar
-				td Man
+				th(scope='row') #{companyId}#{orders[6].SK.S.replace("ORDER#","")}
+				td #{orders[6].orderName.S}
+				td #{orders[6].orderDesc.S}
+				td #{orders[6].toAddress.S}
+				- var d = new Date(parseInt(orders[6].createdAt.N));
+				- const day = d.getDate()
+				- const month = d.getMonth() + 1
+				- const year = d.getFullYear()
+				- const date = `${day}/${month}/${year}`
+				td #{date}
+				td #{orders[6].status.N}
+				td 07-08-2020
+				td 3.000
+
 			tr
 				th(scope='row') 2
 				td Yin
 				td Yang
 				td Yo
+				td Yo
+				td Yang
+				td Yo
+				td Yo
 			tr
 				th(scope='row') 3
 				td Poopity
 				td Scoop
+				td Scoopdiwoop
+				td Scoopdiwoop
+				td Scoop
+				td Scoopdiwoop
 				td Scoopdiwoop
