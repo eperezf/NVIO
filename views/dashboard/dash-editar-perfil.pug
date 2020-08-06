@@ -26,7 +26,10 @@ append content
 				input#companyRepresentative.form-control(type='text' name='companyRepresentative' value=companyRepresentative required oninvalid='this.setCustomValidity("El nombre del representante debe tener al menos tres caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\- ]{3,}')
 			.form-group#contactNumber-group
 				label(for='contactNumber') Teléfono de Contacto
-				input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber required oninvalid='this.setCustomValidity("El número debe tener al menos 7 caracteres numéricos")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{7,}')
+				.input-group
+					.input-group-prepend
+						.input-group-text +56 9
+					input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber required oninvalid='this.setCustomValidity("El número debe tener 8 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{8}')
 			.form-group#email-group
 				label(for='email') Email de Contacto
 				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
@@ -35,7 +38,7 @@ append content
 				label(for='address') Dirección
 				input#address.form-control(type="text" name='address', value=address required)
 			.form-group#addressApart-group
-				label(for='addressApart') Depto., Casa, Condominio.
+				label(for='addressApart') Casa, Condominio, Departamento
 				input#addressApart.form-control(type="text" name='addressApart', value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
 			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')

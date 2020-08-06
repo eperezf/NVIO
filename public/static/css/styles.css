@@ -170,13 +170,14 @@
 
     /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
 div.dash-content {
+    margin-top: 60px;
     margin-left: 200px;
     padding: 1px 16px;
     height: 1000px;
 }
 
     /* Screen size differences (for dashbar.pug)*/
-@media screen and (max-width: 991.98px) {
+@media screen and (max-width: 1109.98px) {
     .dash-sidebar {
         width: 100%;
         height: auto;
@@ -198,13 +199,18 @@ div.dash-content {
     }
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 1110px) {
     .navbar-nav-dash { /* This will control only the dashboard navbar */
         width: 100%;
         height: auto;
     }
     .nav-dash-top {
-        position: absolute !important; /* Hide above 991px */
+        position: absolute !important; /* Hide above 1110px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .sandwich-big { /* This will hide the sandwich menu view */
+        position: absolute !important; /* Hide above 1110px */
         top: -9999px !important;
         left: -9999px !important;
     }

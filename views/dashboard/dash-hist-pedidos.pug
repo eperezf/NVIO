@@ -1,13 +1,14 @@
 extends ../includes/dashbar
+append dash-postHead
+	link(rel='stylesheet' href='https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
 	script.
 		var topname = "linkHistPedidos-top";
 		var sidename = "linkHistPedidos-side";
-	script(src='/static/js/copy-on-click.js')
 	h1.landing-head.text-center
 		| #{title}
-	small(id = 'SMALLMAN').hidden  
-	table.table.table-bordered.table-striped
+	h6.text-center Haz click en el número de tracking para copiar un enlace de rastreo
+	table.table.table-bordered.table-hover.table-responsive-lg
 		thead
 			tr
 				th(scope='col') Tracking #
@@ -22,9 +23,7 @@ append content
 		tbody
 			each ORD, index in orders
 				tr
-					th(scope='row')
-						a(onclick='copyAsLink(this)').btn #{companyId + ORD.SK.S.replace("ORDER#","")}
-							span(id= 'BDG_' + index).badge.badge-pill.badge-success.hidden Enlace Copiado!
+					th(scope='row' onclick='copyAsLink(this)' id='TableHead_' + index)  #{companyId + ORD.SK.S.replace("ORDER#","")}
 					td #{ORD.orderName.S}
 					td #{ORD.orderDesc.S}
 					td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
@@ -33,3 +32,7 @@ append content
 					td #{ORD.status.N}
 					td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
 					td #{ORD.orderValue.N}
+append dash-viewscript
+	script(src='/static/js/copy-on-click.js')
+	script(src='https://code.jquery.com/jquery-3.3.1.min.js')
+	script(src='https://unpkg.com/@popperjs/core@2')
