@@ -279,8 +279,8 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
           "locality": geocodedData[3].long_name,
           "number": parseInt(geocodedData[0].long_name),
           "street": geocodedData[1].long_name,
-          "latitude": toString(location.lat),
-          "longitude": toString(location.lng)},
+          "latitude": location.lat,
+          "longitude": location.lng},
         ":6a217": req.body.addressApart
       },
       "ExpressionAttributeNames": {
