@@ -92,7 +92,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromAddressApart.S;
-      const name = "Nuevo Envio";
+      const name = "Nuevo Envío";
       console.log("Dashboard New Order Requested");
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
     }

@@ -28,8 +28,8 @@ append content
 				label(for='contactNumber') Teléfono de Contacto
 				.input-group
 					.input-group-prepend
-						.input-group-text +56 9
-					input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber required oninvalid='this.setCustomValidity("El número debe tener 8 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{8}')
+						.input-group-text +56
+					input#contactNumber.form-control(type='text' name='companyContactNumber' value=companyContactNumber required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{9}')
 			.form-group#email-group
 				label(for='email') Email de Contacto
 				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
