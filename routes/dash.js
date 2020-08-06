@@ -3,6 +3,7 @@ const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
 const { v4: uuidv4 } = require('uuid');
+const {Client, Status} = require("@googlemaps/google-maps-services-js");
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
@@ -22,7 +23,12 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
     }
 });
 
-// Dashboard Profile
+/**
+ * Name: Company profile
+ * Desc: Shows the company profile data
+ * URL: /dashboard/perfil
+ * Method: GET
+ */
 router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   console.log("Dashboard Profile Requested");
   const name = "Mi Perfil";
@@ -44,7 +50,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       var companyRepresentative = data.Items[0].companyRepresentative.S;
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.S;
+      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
       var addressApart = data.Items[0].fromAddressApart.S;
       res.render('dashboard/dash-perfil', {
         title: name,
@@ -61,7 +67,13 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
   });
 });
 
-// Dashboard Make New Order
+/**
+ * Name: New Order GET
+ * Desc: Render the new order form.
+ * URL: /dashboard/nuevo-envio
+ * Method: GET
+ */
+
 router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   var companyAddress;
   var companyAddressApart;
@@ -86,6 +98,13 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
     }
   });
 });
+
+/**
+ * Name: New Order POST
+ * Desc: Generates a new order with the parameters given from New Order GET
+ * URL: /dashboard/nuevo-envio
+ * Method: POST
+ */
 
 router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   var docClient = new aws.DynamoDB();
@@ -218,7 +237,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyRepresentative = data.Items[0].companyRepresentative.S;
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.S;
+      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
       var addressApart = data.Items[0].fromAddressApart.S;
 
       res.render('dashboard/dash-editar-perfil', {
@@ -238,41 +257,57 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
 
 router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   console.log("Edit Profile Save Requested");
-  var docClient = new aws.DynamoDB.DocumentClient()
-  params = {
-    "TableName": "NVIO",
-    "Key": {"PK": req.user.user, "SK": req.user.user.replace("COMPANY", "PROFILE")},
-    "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215, #6a216 = :6a216, #6a217 = :6a217",
-    "ExpressionAttributeValues": {
-      ":6a210": req.body.companyName,
-      ":6a211": req.body.companyRut,
-      ":6a212": req.body.companyTurn,
-      ":6a213": req.body.companyRepresentative,
-      ":6a214": parseInt(req.body.companyContactNumber),
-      ":6a215": req.body.companyEmail,
-      ":6a216": req.body.address,
-      ":6a217": req.body.addressApart
-    },
-    "ExpressionAttributeNames": {
-      "#6a210": "companyName",
-      "#6a211": "companyRut",
-      "#6a212": "companyTurn",
-      "#6a213": "companyRepresentative",
-      "#6a214": "companyContactNumber",
-      "#6a215": "companyEmail",
-      "#6a216": "fromAddress",
-      "#6a217": "fromAddressApart"
-    },
-    ReturnValues:"UPDATED_NEW"
-  }
-  docClient.update(params, function(err, data) {
-    if (err) {
-      console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-    } else {
-      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-      res.redirect('/dashboard/perfil');
+  var geocodedData;
+  var location;
+  const client = new Client({});
+  client.geocode({params: {key: process.env.GAPI, address: req.body.address}, timeout: 1000}).then(r => {
+    geocodedData = r.data.results[0].address_components;
+    location = r.data.results[0].geometry.location;
+    var docClient = new aws.DynamoDB.DocumentClient();
+    params = {
+      "TableName": "NVIO",
+      "Key": {"PK": req.user.user, "SK": req.user.user.replace("COMPANY", "PROFILE")},
+      "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215, #6a216 = :6a216, #6a217 = :6a217",
+      "ExpressionAttributeValues": {
+        ":6a210": req.body.companyName,
+        ":6a211": req.body.companyRut,
+        ":6a212": req.body.companyTurn,
+        ":6a213": req.body.companyRepresentative,
+        ":6a214": parseInt(req.body.companyContactNumber),
+        ":6a215": req.body.companyEmail,
+        ":6a216": {
+          "locality": geocodedData[3].long_name,
+          "number": parseInt(geocodedData[0].long_name),
+          "street": geocodedData[1].long_name,
+          "latitude": toString(location.lat),
+          "longitude": toString(location.lng)},
+        ":6a217": req.body.addressApart
+      },
+      "ExpressionAttributeNames": {
+        "#6a210": "companyName",
+        "#6a211": "companyRut",
+        "#6a212": "companyTurn",
+        "#6a213": "companyRepresentative",
+        "#6a214": "companyContactNumber",
+        "#6a215": "companyEmail",
+        "#6a216": "fromAddress",
+        "#6a217": "fromAddressApart"
+      },
+      ReturnValues:"UPDATED_NEW"
     }
+    docClient.update(params, function(err, data) {
+      if (err) {
+        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+      } else {
+        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+        res.redirect('/dashboard/perfil');
+      }
+    });
+  }).catch(e => {
+    console.log(e);
   });
+
+
 });
 
 module.exports = router;
