@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
+const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const { v4: uuidv4 } = require('uuid');
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 var { nanoid } = require("nanoid");
@@ -90,7 +91,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
     } else {
       console.log("Query succeeded.");
       console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
+      companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromAddressApart.S;
       const name = "Nuevo Envio";
       console.log("Dashboard New Order Requested");
@@ -110,23 +111,31 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var docClient = new aws.DynamoDB();
   var companyAddress;
   var companyAddressApart;
-  params = {
-    "TableName": "NVIO",
-    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
-    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
-    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
-  }
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-    } else {
-      console.log("Query succeeded.");
-      console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
-      colcheck();
+  const client = new Client({});
+  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress}, timeout: 1000}).then(r => {
+    console.log(r.data.results[0]);
+    geocodedData = r.data.results[0].address_components;
+    location = r.data.results[0].geometry.location;
+    params = {
+      "TableName": "NVIO",
+      "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
+      "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
+      "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
     }
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        console.log("Query succeeded.");
+        companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
+        companyAddressApart = data.Items[0].fromAddressApart.S;
+        colcheck();
+      }
+    });
+  }).catch(e => {
+    console.log(e);
   });
+
   function colcheck(){
     orderID = nanoid(6);
     //Check for ID colission
@@ -159,7 +168,13 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "SK": "ORDER#"+orderID,
                 "fromAddress": companyAddress,
                 "fromApart": companyAddressApart,
-                "toAddress": req.body.toAddress,
+                "toAddress": {
+                  "locality": geocodedData[3].long_name,
+                  "number": parseInt(geocodedData[0].long_name),
+                  "street": geocodedData[1].long_name,
+                  "latitude": location.lat,
+                  "longitude": location.lng
+                },
                 "toApart": req.body.toApart,
                 "orderName": req.body.orderName,
                 "orderDesc": req.body.orderDesc,
