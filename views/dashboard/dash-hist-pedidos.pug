@@ -14,6 +14,7 @@ append content
 				th(scope='col') Nombre Pedido
 				th(scope='col') Descripción
 				th(scope='col') Despacho hacia
+				th(scope='col') Comuna
 				th(scope='col') Fecha de creación
 				th(scope='col') Status
 				th(scope='col') Fecha de delivery
@@ -26,7 +27,8 @@ append content
 							span(id= 'BDG_' + index).badge.badge-pill.badge-success.hidden Enlace Copiado!
 					td #{ORD.orderName.S}
 					td #{ORD.orderDesc.S}
-					td #{ORD.toAddress.S}
+					td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
+					td #{ORD.toAddress.M.locality.S}
 					td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
 					td #{ORD.status.N}
 					td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
