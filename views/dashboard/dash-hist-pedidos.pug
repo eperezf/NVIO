@@ -3,24 +3,32 @@ append content
 	script.
 		var topname = "linkHistPedidos-top";
 		var sidename = "linkHistPedidos-side";
-	//-
-		script.
-			var copyText;
-			document.addEventListener('copy', function (e) {
-				e.clipboardData.setData('text/plain', 'http://nvio.cl/track/' + copyText.value);
-				e.preventDefault();
-			});
+	script.
+		var copyText;
+		var small;
+		document.addEventListener('copy', function (e) {
+			e.clipboardData.setData('text/plain', 'http://nvio.cl/track/' + copyText.value);
+			e.preventDefault();
+		});
 
-			function copyAsLink() {
-				copyText = document.getElementById('aId');
-				document.execCommand('copy');
-				alert('Copied the text: ' + copyText.value);
-			}
-		h1.landing-head.text-center
-			| #{title}
-		button#aId.btn.btn-primary(onclick='copyAsLink()' value='AAAAB') Copy Text
+		function copyAsLink() {
+			copyText = document.getElementById('aId');
+			document.execCommand('copy');
+			console.log('Copied the text: ' + copyText.value);
+
+			small = document.getElementById('bId');
+			small.innerText = 'Copied!';
+			setTimeout(clearSmall, 2000);
+		}
+
+		function clearSmall(){
+			small.innerText = '';
+		}
 	h1.landing-head.text-center
 		| #{title}
+	button#aId.btn.btn-primary(onclick='copyAsLink()' value='AAAAAAAA') Copy Text
+	small#bId
+//-
 	table.table.table-bordered.table-striped
 		thead
 			tr
