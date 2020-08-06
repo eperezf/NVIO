@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 var multer  = require('multer');
 var upload = multer();
+var validator = require('validator');
 
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
@@ -17,6 +18,14 @@ router.post('/login', upload.none(), function (req, res, next) {
     expiresIn = "1m";
   }
 
+  if (!validator.isEmail(req.body.email)){
+    return res.redirect('/login');
+  }
+
+  if (validator.isEmpty(req.body.password)){
+    return res.redirect('/login');
+  }
+
   //Passport Authentication
   passport.authenticate('local', {session: false}, (err, user, info) => {
     if (err || !user) {
@@ -30,9 +39,22 @@ router.post('/login', upload.none(), function (req, res, next) {
       }
       const token = jwt.sign({user, iat: Math.floor(Date.now()/1000)}, process.env.JWT_SECRET, {expiresIn: expiresIn, });
       res.cookie('token', token, {maxAge: maxAge, secure: false, httpOnly: true,});
-      return res.json({user, token});
+      if (user.includes("ADMIN")){
+        return res.redirect('/');
+      }
+      else if (user.includes("DRIVER")) {
+        return res.redirect('/');
+      }
+      else {
+        return res.redirect('/dashboard');
+      }
     });
   })(req, res);
 });
+
+router.get('/logout', (req, res, next) => {
+  res.clearCookie('token');
+  return res.redirect('/login');
+})
 
 module.exports = router;
