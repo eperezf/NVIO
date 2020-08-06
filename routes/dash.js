@@ -145,7 +145,8 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "orderName": req.body.orderName,
                 "orderDesc": req.body.orderDesc,
                 "orderValue": parseInt(req.body.orderValue),
-                "status": 0
+                "status": 0,
+                "createdAt": parseInt(Date.now())
             }
           };
           console.log("Adding a new item...");
