@@ -74,7 +74,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
     } else {
       console.log("Query succeeded.");
       console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
+      companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromAddressApart.S;
       const name = "Nuevo Envio";
       console.log("Dashboard New Order Requested");
@@ -98,8 +98,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
+      companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
       companyAddressApart = data.Items[0].fromAddressApart.S;
       colcheck();
     }
