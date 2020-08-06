@@ -179,7 +179,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "orderDesc": req.body.orderDesc,
                 "orderValue": parseInt(req.body.orderValue),
                 "status": 0,
-                "createdAt": new Date().toLocaleString("es-CL", {timeZone: "America/Santiago"})
+                "createdAt": Date.now()
             }
           };
           console.log("Adding a new item...");
