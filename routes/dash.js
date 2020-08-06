@@ -4,7 +4,6 @@ const router = express.Router();
 const aws = require("aws-sdk");
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const { v4: uuidv4 } = require('uuid');
-const {Client, Status} = require("@googlemaps/google-maps-services-js");
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
