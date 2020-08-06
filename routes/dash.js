@@ -4,6 +4,8 @@ const router = express.Router();
 const aws = require("aws-sdk");
 const { v4: uuidv4 } = require('uuid');
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
+const { validate, clean, format } = require('rut.js')
+var validator = require('validator');
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
@@ -260,6 +262,39 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
   var geocodedData;
   var location;
   const client = new Client({});
+
+  if (validator.isEmpty(req.body.companyName)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validate(req.body.companyRut)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.companyTurn)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.companyRepresentative)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isLength(req.body.companyContactNumber , {min:9, max: 9})){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isNumeric(req.body.companyContactNumber)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isEmail(req.body.companyEmail)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.address)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
   client.geocode({params: {key: process.env.GAPI, address: req.body.address}, timeout: 1000}).then(r => {
     geocodedData = r.data.results[0].address_components;
     location = r.data.results[0].geometry.location;
