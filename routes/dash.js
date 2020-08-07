@@ -9,6 +9,7 @@ var validator = require('validator');
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
+var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -40,6 +41,8 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
+  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
     if (err) {
@@ -53,9 +56,10 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      var addressApart = data.Items[0].fromApart.S;
       res.render('dashboard/dash-perfil', {
         title: name,
+        companyId: req.user.user.replace("COMPANY#",""),
         companyName: companyName,
         companyRut: companyRut,
         companyTurn: companyTurn,
@@ -63,7 +67,8 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
         companyContactNumber: companyContactNumber,
         companyEmail: companyEmail,
         address: address,
-        addressApart: addressApart
+        addressApart: addressApart,
+        logo: logo
       })
     }
   });
@@ -227,6 +232,8 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
+  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
     if (err) {
@@ -240,7 +247,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      var addressApart = data.Items[0].fromApart.S;
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
@@ -251,14 +258,36 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
         companyContactNumber: companyContactNumber,
         companyEmail: companyEmail,
         address: address,
-        addressApart: addressApart
+        addressApart: addressApart,
+        logo: logo
       });
     }
   });
 });
 
-router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   console.log("Edit Profile Save Requested");
+  if (req.file) {
+    console.log("FILE SAVING REQUESTED!!");
+    console.log(req.file);
+
+    var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+    var params = {
+      Bucket: "nviostatic",
+      Key: req.user.user.replace("COMPANY#","")+".png",
+      ACL: 'public-read',
+      Body: req.file.buffer
+    }
+    s3.putObject(params, function (err, data) {
+      if (err) {
+        console.log("Error: ", err);
+      } else {
+        //console.log(data);
+        //return res.json("ok");
+      }
+    });
+
+  }
   var geocodedData;
   var location;
   const client = new Client({});
