@@ -143,7 +143,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
         console.log("Query succeeded.");
-        companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
+        companyAddress = data.Items[0].fromAddress.M;
         companyAddressApart = data.Items[0].fromAddressApart.S;
         colcheck();
       }
@@ -182,7 +182,13 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
             Item:{
                 "PK": req.user.user,
                 "SK": "ORDER#"+orderID,
-                "fromAddress": companyAddress,
+                "fromAddress": {
+                  "locality": companyAddress.locality.S,
+                  "number": parseInt(companyAddress.number.N),
+                  "street": companyAddress.street.S,
+                  "latitude": companyAddress.latitude.N,
+                  "longitude": companyAddress.longitude.N
+                },
                 "fromApart": companyAddressApart,
                 "toAddress": {
                   "locality": geocodedData[3].long_name,
@@ -215,8 +221,6 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       }
     });
   }
-
-
 });
 
 // Dashboard Order History
@@ -246,8 +250,8 @@ router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failur
       if (err) {
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
-        //res.json(data)
-        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
+        res.json(data)
+        //res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
       }
     });
 });
