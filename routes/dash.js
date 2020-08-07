@@ -51,7 +51,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      var addressApart = data.Items[0].fromApart.S;
       res.render('dashboard/dash-perfil', {
         title: name,
         companyName: companyName,
@@ -91,7 +91,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.log("Query succeeded.");
       console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
+      companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envío";
       console.log("Dashboard New Order Requested");
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
@@ -279,7 +279,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      var addressApart = data.Items[0].fromApart.S;
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
@@ -332,7 +332,7 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
         "#6a214": "companyContactNumber",
         "#6a215": "companyEmail",
         "#6a216": "fromAddress",
-        "#6a217": "fromAddressApart"
+        "#6a217": "fromApart"
       },
       ReturnValues:"UPDATED_NEW"
     }
