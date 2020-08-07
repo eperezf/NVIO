@@ -138,7 +138,10 @@
         column-count:5;
     }
 }
-
+/* Dashboard General */
+#dashBody {
+    height: 100%;
+}
 
 /* Dashboard Sidebar */
 .dash-sidebar {
@@ -172,8 +175,8 @@
 div.dash-content {
     margin-top: 60px;
     margin-left: 200px;
-    padding: 1px 16px;
-    height: 1000px;
+    padding: 1px 16px 75px;
+    height: 100%;
 }
 
     /* Screen size differences (for dashbar.pug)*/
@@ -214,6 +217,50 @@ div.dash-content {
         top: -9999px !important;
         left: -9999px !important;
     }
+}
+
+/* Order History Snackbar */
+#snackbar {
+    visibility: hidden;
+    min-width: 200px;
+    max-width: 500px;
+    background-color: #62b859;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 10px;
+    position: fixed;
+    display: block;
+    z-index: 1;
+    font-size: 17px;
+    right: 10px;
+    bottom: 10px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {right: 0; opacity: 0;}
+    to {right: 10px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {right: 0; opacity: 0;}
+    to {right: 10px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {right: 10px; opacity: 1;}
+    to {right: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {right: 10px; opacity: 1;}
+    to {right: 0; opacity: 0;}
 }
 
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
