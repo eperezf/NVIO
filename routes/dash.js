@@ -44,14 +44,31 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      var companyName = data.Items[0].companyName.S;
-      var companyRut = data.Items[0].companyRut.S;
-      var companyTurn = data.Items[0].companyTurn.S;
-      var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var companyContactNumber = data.Items[0].companyContactNumber.N;
-      var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromApart.S;
+      if (data.Items[0].companyName) {
+        var companyName = data.Items[0].companyName.S;
+      }
+      if (data.Items[0].companyRut) {
+        var companyRut = data.Items[0].companyRut.S;
+      }
+      if (data.Items[0].companyTurn) {
+        var companyTurn = data.Items[0].companyTurn.S;
+      }
+      if (data.Items[0].companyRepresentative) {
+        var companyRepresentative = data.Items[0].companyRepresentative.S;
+      }
+      if (data.Items[0].companyContactNumber) {
+        var companyContactNumber = data.Items[0].companyContactNumber.N;
+      }
+      if (data.Items[0].companyEmail) {
+        var companyEmail = data.Items[0].companyEmail.S;
+      }
+      if (data.Items[0].fromAddress) {
+        var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
+      }
+      if (data.Items.fromApart){
+        var addressApart = data.Items[0].fromApart.S;
+      }
+
       res.render('dashboard/dash-perfil', {
         title: name,
         companyName: companyName,
