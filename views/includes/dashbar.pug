@@ -75,7 +75,6 @@ append postHead
 					a#linkCerrarSesion-side.nav-link(data-toggle='modal' data-target='#logoutModal')
 						i.fa.fa-times
 						|   Cerrar Sesión
-		// Modal
 		#logoutModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='logoutModal' aria-hidden='true')
 			.modal-dialog(role='document')
 				.modal-content
@@ -86,7 +85,7 @@ append postHead
 					.modal-body
 						| ¿De verdad quieres cerrar sesión?
 					.modal-footer
-						button.btn.btn-secondary(type='button', data-dismiss='modal') Cancelar
+						button.btn.btn-secondary(type='button' data-dismiss='modal') Cancelar
 						input.btn.btn-danger(type='button' onclick="location.href='/logout';" value='Cerrar Sesión')
 		.dash-content
 			block content

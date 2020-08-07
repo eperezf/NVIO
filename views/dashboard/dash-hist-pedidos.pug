@@ -9,7 +9,7 @@ append content
 		| #{title}
 	h6.text-center Haz click en el número de tracking para copiar su enlace de rastreo
 	.container.mb-5.mt-3
-		table.display.table-responsive-lg.text-center#orderHistory(style='width: 100%;')
+		table.display.table-responsive-lg.text-center#orderHistory
 			thead
 				tr
 					th(scope='col') Tracking #
@@ -21,6 +21,7 @@ append content
 					th(scope='col') Status
 					th(scope='col') Fecha de entrega
 					th(scope='col') Costo NVIO
+					th(scope='col') Ver Detalle
 			tbody
 				each ORD, index in orders
 					tr
@@ -38,6 +39,30 @@ append content
 						else
 							td #{new Date(parseInt(ORD.createdAt.N)).getDate()}-#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}-#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
 						td #{ORD.orderValue.N}
+						td
+							button.btn.btn-outline-info(id='InfoButton_' + index data-toggle='modal' data-target='#InfoModal_' + index) Detalle
+					.modal.fade(tabindex='-1' role='dialog' aria-labelledby='infoModal_' + + index aria-hidden='true' id='InfoModal_' + index)
+						.modal-dialog(role='document')
+							.modal-content
+								.modal-header
+									h5.modal-title(id='InfoModalLabel_' + index) Pedido ##{companyId + ORD.SK.S.replace("ORDER#","")}
+									button.close(type='button' data-dismiss='modal' aria-label='Close')
+										span(aria-hidden='true') ×
+								.modal-body
+									p Tracking ##{companyId + ORD.SK.S.replace("ORDER#","")}
+									p Nombre Pedido: #{ORD.orderName.S}
+									p Descripción: #{ORD.orderDesc.S}
+									p Dirección Destinatario: #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}, #{ORD.toAddress.M.locality.S}
+									p Fecha Creación: #{new Date(parseInt(ORD.createdAt.N)).getDate()}-#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}-#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
+									p Status Code: #{ORD.status.N}
+									if notDelivered
+										p Aún no entregado
+									else
+										p Fecha Entrega: #{new Date(parseInt(ORD.createdAt.N)).getDate()}-#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}-#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
+									p Valor de la orden: #{ORD.orderValue.N}
+								.modal-footer
+									button.btn.btn-secondary(type='button' data-dismiss='modal') Cerrar
+									input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#","") + "';")
 	#snackbar Enlace copiado!
 append dash-viewscript
 	script(src='/static/js/copy-on-click.js')

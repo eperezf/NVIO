@@ -23,6 +23,13 @@ $(document).ready(function () {
                 "sortAscending":  ": activar para organizar columna de forma ascendiente",
                 "sortDescending": ": activar para organizar columna de forma descendiente"
             }
-        }
+        },
+        "columnDefs": [
+            {
+                "orderable": false,
+                "targets": [0, 9]
+            }
+        ],
+        "order": [[ 5, "desc" ]]
     });
 });
