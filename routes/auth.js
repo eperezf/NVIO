@@ -2,6 +2,7 @@ const express = require('express');
 const router  = express.Router();
 var multer  = require('multer');
 var upload = multer();
+var validator = require('validator');
 
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
@@ -15,6 +16,14 @@ router.post('/login', upload.none(), function (req, res, next) {
     console.log("Remember Me activated");
     maxAge = 2629746000;
     expiresIn = "1m";
+  }
+
+  if (!validator.isEmail(req.body.email)){
+    return res.redirect('/login');
+  }
+
+  if (validator.isEmpty(req.body.password)){
+    return res.redirect('/login');
   }
 
   //Passport Authentication
