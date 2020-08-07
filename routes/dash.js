@@ -8,6 +8,7 @@ const {Client, Status} = require("@googlemaps/google-maps-services-js");
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
+var validator = require('validator');
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -92,10 +93,41 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.log("Query succeeded.");
       console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
+      companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envio";
       console.log("Dashboard New Order Requested");
+      if (validator.isEmpty(data.Items[0].companyContactNumber.N)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRepresentative.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].lastName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].fromAddress.M.street.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRut.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].email.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyEmail.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].firstName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyTurn.S)) {
+        return res.redirect('/dashboard/');
+      }
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
+
     }
   });
 });
@@ -112,7 +144,39 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var companyAddress;
   var companyAddressApart;
   const client = new Client({});
-  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress}, timeout: 1000}).then(r => {
+
+
+  //FORM VALIDATION
+  if (validator.isEmpty(req.body.toAddress)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.nameDest)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isLength(req.body.contactDest , {min:9, max: 9})){
+    return res.redirect('/dashboard/nuevo-envio')
+  }
+
+  if (validator.isEmpty(req.body.orderName)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.orderDesc)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isNumeric(req.body.orderValue)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!req.body.tos){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+
+  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
     console.log(r.data.results[0]);
     geocodedData = r.data.results[0].address_components;
     location = r.data.results[0].geometry.location;
@@ -128,7 +192,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       } else {
         console.log("Query succeeded.");
         companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
-        companyAddressApart = data.Items[0].fromAddressApart.S;
+        companyAddressApart = data.Items[0].fromApart.S;
         colcheck();
       }
     });
@@ -179,6 +243,9 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "orderName": req.body.orderName,
                 "orderDesc": req.body.orderDesc,
                 "orderValue": parseInt(req.body.orderValue),
+                "nameDest": req.body.nameDest,
+                "contactDest": req.body.contactDest,
+                "comment": req.body.comment,
                 "status": 0,
                 "createdAt": parseInt(Date.now())
             }
