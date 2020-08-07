@@ -80,7 +80,38 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envio";
       console.log("Dashboard New Order Requested");
+      if (validator.isEmpty(data.Items[0].companyContactNumber.N)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRepresentative.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].lastName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].fromAddress.M.street.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRut.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].email.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyEmail.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].firstName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyTurn.S)) {
+        return res.redirect('/dashboard/');
+      }
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
+
     }
   });
 });
@@ -91,6 +122,8 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var companyAddressApart;
   const client = new Client({});
 
+
+  //FORM VALIDATION
   if (validator.isEmpty(req.body.toAddress)){
     return res.redirect("/dashboard/nuevo-envio");
   }
@@ -112,6 +145,10 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   }
 
   if (!validator.isNumeric(req.body.orderValue)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!req.body.tos){
     return res.redirect("/dashboard/nuevo-envio");
   }
 
