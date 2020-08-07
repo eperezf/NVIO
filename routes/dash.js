@@ -90,7 +90,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var companyAddress;
   var companyAddressApart;
   const client = new Client({});
-  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress}, timeout: 1000}).then(r => {
+  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
     console.log(r.data.results[0]);
     geocodedData = r.data.results[0].address_components;
     location = r.data.results[0].geometry.location;
