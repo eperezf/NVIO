@@ -250,8 +250,8 @@ router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failur
       if (err) {
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
-        res.json(data)
-        //res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
+        //res.json(data)
+        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
       }
     });
 });
