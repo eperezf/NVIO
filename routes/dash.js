@@ -4,7 +4,6 @@ const router = express.Router();
 const aws = require("aws-sdk");
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const { v4: uuidv4 } = require('uuid');
-const {Client, Status} = require("@googlemaps/google-maps-services-js");
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
@@ -46,14 +45,31 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      var companyName = data.Items[0].companyName.S;
-      var companyRut = data.Items[0].companyRut.S;
-      var companyTurn = data.Items[0].companyTurn.S;
-      var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var companyContactNumber = data.Items[0].companyContactNumber.N;
-      var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      if (data.Items[0].companyName) {
+        var companyName = data.Items[0].companyName.S;
+      }
+      if (data.Items[0].companyRut) {
+        var companyRut = data.Items[0].companyRut.S;
+      }
+      if (data.Items[0].companyTurn) {
+        var companyTurn = data.Items[0].companyTurn.S;
+      }
+      if (data.Items[0].companyRepresentative) {
+        var companyRepresentative = data.Items[0].companyRepresentative.S;
+      }
+      if (data.Items[0].companyContactNumber) {
+        var companyContactNumber = data.Items[0].companyContactNumber.N;
+      }
+      if (data.Items[0].companyEmail) {
+        var companyEmail = data.Items[0].companyEmail.S;
+      }
+      if (data.Items[0].fromAddress) {
+        var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
+      }
+      if (data.Items.fromApart){
+        var addressApart = data.Items[0].fromApart.S;
+      }
+
       res.render('dashboard/dash-perfil', {
         title: name,
         companyName: companyName,
@@ -94,7 +110,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromApart.S;
-      const name = "Nuevo Envio";
+      const name = "Nuevo Envío";
       console.log("Dashboard New Order Requested");
       if (validator.isEmpty(data.Items[0].companyContactNumber.N)) {
         return res.redirect('/dashboard/');
@@ -191,7 +207,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
         console.log("Query succeeded.");
-        companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
+        companyAddress = data.Items[0].fromAddress.M;
         companyAddressApart = data.Items[0].fromApart.S;
         colcheck();
       }
@@ -230,7 +246,13 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
             Item:{
                 "PK": req.user.user,
                 "SK": "ORDER#"+orderID,
-                "fromAddress": companyAddress,
+                "fromAddress": {
+                  "locality": companyAddress.locality.S,
+                  "number": parseInt(companyAddress.number.N),
+                  "street": companyAddress.street.S,
+                  "latitude": companyAddress.latitude.N,
+                  "longitude": companyAddress.longitude.N
+                },
                 "fromApart": companyAddressApart,
                 "toAddress": {
                   "locality": geocodedData[3].long_name,
@@ -247,7 +269,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "contactDest": req.body.contactDest,
                 "comment": req.body.comment,
                 "status": 0,
-                "createdAt": parseInt(Date.now())
+                "createdAt": Date.now()
             }
           };
           console.log("Adding a new item...");
@@ -266,15 +288,39 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       }
     });
   }
-
-
 });
 
 // Dashboard Order History
 router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
     const name = "Historial Pedidos";
     console.log("Dashboard Order History Requested");
-    res.render('dashboard/dash-hist-pedidos', {title: name});
+    var docClient = new aws.DynamoDB();
+    var params={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "ORDER"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
+    }
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        //res.json(data)
+        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
+      }
+    });
 });
 
 // Dashboard Payment History
@@ -321,7 +367,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       var companyContactNumber = data.Items[0].companyContactNumber.N;
       var companyEmail = data.Items[0].companyEmail.S;
       var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromAddressApart.S;
+      var addressApart = data.Items[0].fromApart.S;
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
@@ -374,7 +420,7 @@ router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {sessi
         "#6a214": "companyContactNumber",
         "#6a215": "companyEmail",
         "#6a216": "fromAddress",
-        "#6a217": "fromAddressApart"
+        "#6a217": "fromApart"
       },
       ReturnValues:"UPDATED_NEW"
     }

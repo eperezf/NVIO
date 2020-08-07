@@ -25,13 +25,17 @@ append content
 				input#companyRepresentative.form-control(type='text' readonly value=companyRepresentative)
 			.form-group
 				label Teléfono de Contacto
-				input#contactNumber.form-control(type='text' readonly value=companyContactNumber)
+				.input-group
+					.input-group-prepend
+						.input-group-text +56
+					input#contactNumber.form-control(type='text' readonly value=companyContactNumber)
 			.form-group
 				label Email de Contacto
+
 				input#email.form-control(type='text' readonly value=companyEmail)
 			.form-group
 				label Dirección de despacho (remitente)
 				input#address.form-control(type='text' readonly value=address)
 			.form-group
-				label Depto., Casa, Condominio
+				label Casa, Condominio, Departamento
 				input#addressApart.form-control(type='text' readonly value=addressApart)
