@@ -52,6 +52,7 @@ append content
 									p Tracking ##{companyId + ORD.SK.S.replace("ORDER#","")}
 									p Nombre Pedido: #{ORD.orderName.S}
 									p Descripción: #{ORD.orderDesc.S}
+									p Dirección Remitente: #{ORD.fromAddress.M.street.S} #{ORD.fromAddress.M.number.N}, #{ORD.fromAddress.M.locality.S}
 									p Dirección Destinatario: #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}, #{ORD.toAddress.M.locality.S}
 									p Fecha Creación: #{new Date(parseInt(ORD.createdAt.N)).getDate()}-#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}-#{new Date(parseInt(ORD.createdAt.N)).getFullYear()}
 									p Status Code: #{ORD.status.N}
