@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
+var validator = require('validator');
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -76,7 +77,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.log("Query succeeded.");
       console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
+      companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envio";
       console.log("Dashboard New Order Requested");
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
@@ -105,7 +106,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       } else {
         console.log("Query succeeded.");
         companyAddress = JSON.stringify(data.Items[0].fromAddress.M);
-        companyAddressApart = data.Items[0].fromAddressApart.S;
+        companyAddressApart = data.Items[0].fromApart.S;
         colcheck();
       }
     });
@@ -156,6 +157,9 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "orderName": req.body.orderName,
                 "orderDesc": req.body.orderDesc,
                 "orderValue": parseInt(req.body.orderValue),
+                "nameDest": req.body.nameDest,
+                "contactDest": req.body.contactDest,
+                "comment": req.body.comment,
                 "status": 0,
                 "createdAt": parseInt(Date.now())
             }

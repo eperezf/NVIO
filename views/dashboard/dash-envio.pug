@@ -20,6 +20,15 @@ append content
 				label Apartado Destinatario
 				input.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
+				label Nombre Destinatario
+				input.form-control(type='text' name="nameDest" required)
+			.form-group
+				label Teléfono Destinatario
+				.input-group
+					.input-group-prepend
+						.input-group-text +56
+					input.form-control(type='text' name="contactDest" required)
+			.form-group
 				label Nombre de tu Pedido
 				input.form-control(type='text' name="orderName" required)
 				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
@@ -35,6 +44,10 @@ append content
 						.input-group-text $
 					input.form-control(type='number' name="orderValue" required)
 				small Valor en pesos chilenos
+			.form-group
+				label Comentarios adicionales
+				input.form-control(type='text' name="comment")
+				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
 				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
 				label.form-check-label(for='tosAgree') Acepto los 
