@@ -90,6 +90,32 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var companyAddress;
   var companyAddressApart;
   const client = new Client({});
+
+  if (validator.isEmpty(req.body.toAddress)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.nameDest)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isLength(req.body.contactDest , {min:9, max: 9})){
+    return res.redirect('/dashboard/nuevo-envio')
+  }
+
+  if (validator.isEmpty(req.body.orderName)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.orderDesc)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isNumeric(req.body.orderValue)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+
   client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
     console.log(r.data.results[0]);
     geocodedData = r.data.results[0].address_components;
