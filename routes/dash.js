@@ -4,10 +4,12 @@ const router = express.Router();
 const aws = require("aws-sdk");
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const { v4: uuidv4 } = require('uuid');
+var validator = require('validator');
+const { validate, clean, format } = require('rut.js')
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
-var validator = require('validator');
+var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 
 // Dashboard Index
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
@@ -39,6 +41,8 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
+  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
     if (err) {
@@ -72,6 +76,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
 
       res.render('dashboard/dash-perfil', {
         title: name,
+        companyId: req.user.user.replace("COMPANY#",""),
         companyName: companyName,
         companyRut: companyRut,
         companyTurn: companyTurn,
@@ -79,7 +84,8 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
         companyContactNumber: companyContactNumber,
         companyEmail: companyEmail,
         address: address,
-        addressApart: addressApart
+        addressApart: addressApart,
+        logo: logo
       })
     }
   });
@@ -354,6 +360,8 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
+  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
     if (err) {
@@ -378,17 +386,72 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
         companyContactNumber: companyContactNumber,
         companyEmail: companyEmail,
         address: address,
-        addressApart: addressApart
+        addressApart: addressApart,
+        logo: logo
       });
     }
   });
 });
 
-router.post('/editar-perfil', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
   console.log("Edit Profile Save Requested");
+  if (req.file) {
+    console.log("FILE SAVING REQUESTED!!");
+    console.log(req.file);
+
+    var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+    var params = {
+      Bucket: "nviostatic",
+      Key: req.user.user.replace("COMPANY#","")+".png",
+      ACL: 'public-read',
+      Body: req.file.buffer
+    }
+    s3.putObject(params, function (err, data) {
+      if (err) {
+        console.log("Error: ", err);
+      } else {
+        //console.log(data);
+        //return res.json("ok");
+      }
+    });
+
+  }
   var geocodedData;
   var location;
   const client = new Client({});
+
+  if (validator.isEmpty(req.body.companyName)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validate(req.body.companyRut)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.companyTurn)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.companyRepresentative)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isLength(req.body.companyContactNumber , {min:9, max: 9})){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isNumeric(req.body.companyContactNumber)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (!validator.isEmail(req.body.companyEmail)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
+  if (validator.isEmpty(req.body.address)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
   client.geocode({params: {key: process.env.GAPI, address: req.body.address}, timeout: 1000}).then(r => {
     geocodedData = r.data.results[0].address_components;
     location = r.data.results[0].geometry.location;
