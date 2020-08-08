@@ -4,10 +4,10 @@ append content
 		var topname = "linkPerfil-top";
 		var sidename = "linkPerfil-side";
 	.container(style='margin-top: 40px;')
-		a.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
+		a#profileEdit.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
 			| Cancelar 
 			i.fa.fa-times(style='font-size: 30px;')
-		img.rounded.text-left(src=logo alt='')
+		img#profilePicture.rounded.text-left(src=logo alt='')
 		//- The action is the URL the post will be sent to
 		form#editProfileInfo.edit-profile-form(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
 			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
