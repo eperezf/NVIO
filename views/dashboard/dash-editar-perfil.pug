@@ -4,15 +4,17 @@ append content
 		var topname = "linkPerfil-top";
 		var sidename = "linkPerfil-side";
 	.container(style='margin-top: 40px;')
-		a.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
+		a#profileEdit.grey-link.float-right(href='/dashboard/perfil' style='font-size: 25px;')
 			| Cancelar 
 			i.fa.fa-times(style='font-size: 30px;')
-		img.rounded.text-left(src=logo alt='')
+		img#profilePicture.rounded.text-left(src=logo alt='')
 		//- The action is the URL the post will be sent to
 		form#editProfileInfo.edit-profile-form(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
 			//- Add values in the proper attribute through a query to the DB, maybe store them in cache
 			.form-group
-				input#logo(type='file' name='logo')
+				label(for='logo') La imagen debe ser PNG:
+				p
+					input#logo(type='file' name='logo' accept="image/png")
 			.form-group#companyName-group
 				label(for='companyName') Nombre Empresa
 				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')

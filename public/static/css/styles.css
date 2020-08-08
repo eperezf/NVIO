@@ -263,6 +263,20 @@ div.dash-content {
     to {right: 0; opacity: 0;}
 }
 
+/* Profile View IDs */
+#profilePicture {
+    max-width:300px !important;
+    max-height:300px !important;
+    min-width: 100px;
+    min-height: 100px;
+    height: auto;
+    width:auto;
+}
+
+#profileEdit {
+    font-size: 25px;
+}
+
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
 .footer-bs {
     background-color: #333;

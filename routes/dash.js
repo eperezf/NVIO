@@ -399,22 +399,27 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
     console.log("FILE SAVING REQUESTED!!");
     console.log(req.file);
 
-    var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
-    var params = {
-      Bucket: "nviostatic",
-      Key: req.user.user.replace("COMPANY#","")+".png",
-      ACL: 'public-read',
-      Body: req.file.buffer
-    }
-    s3.putObject(params, function (err, data) {
-      if (err) {
-        console.log("Error: ", err);
-      } else {
-        //console.log(data);
-        //return res.json("ok");
-      }
-    });
+    if (req.file.mimetype == "image/png") {
 
+      var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+      var params = {
+        Bucket: "nviostatic",
+        Key: req.user.user.replace("COMPANY#","")+".png",
+        ACL: 'public-read',
+        Body: req.file.buffer
+      }
+      s3.putObject(params, function (err, data) {
+        if (err) {
+          console.log("Error: ", err);
+        } else {
+          //console.log(data);
+          //return res.json("ok");
+        }
+      });
+
+    } else {
+      return res.redirect('/dashboard/editar-perfil')
+    }
   }
   var geocodedData;
   var location;
