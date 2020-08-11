@@ -8,7 +8,7 @@ append content
 			i.fa.fa-times(style='font-size: 30px;')
 			|  Cancelar
 		img#profilePicture.rounded.mx-auto.d-block.img-fluid(src=logo alt='Tu Logo')
-		form#editProfileInfo.edit-profile-form(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data')
+		form#editProfileInfo.edit-profile-form(action='/dashboard/editar-perfil' style='margin-top: 30px;' method='post' enctype='multipart/form-data' autocomplete='off')
 			.form-group
 				.text-center
 					label(for='logo') La imagen debe ser PNG:
@@ -39,10 +39,10 @@ append content
 				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
 			.form-group#address-group
 				label(for='address') Dirección
-				input#address.form-control(type="text" name='address', value=address required)
+				input#address.form-control(type="text" name='address' value=address required autocomplete='off')
 			.form-group#addressApart-group
 				label(for='addressApart') Casa, Condominio, Departamento
-				input#addressApart.form-control(type="text" name='addressApart', value=addressApart)
+				input#addressApart.form-control(type="text" name='addressApart' value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
 			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
 			script(type="text/javascript")
