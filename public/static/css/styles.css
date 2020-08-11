@@ -64,6 +64,8 @@
 .landing-container {
     text-align: center;
     padding: 50px 0 60px;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
 }
 
 .landing-head {
