@@ -2,7 +2,7 @@ include includes/header.pug
 body
   include includes/navbar.pug
   block content
-    .container.landing-container
+    .container.landing-container.login-container.text-center
       .row
         .col
           h1.text-center.login-title
@@ -15,7 +15,7 @@ body
               .form-check
                 input#remember_me.form-check-input(type='checkbox' value='true')
                 label.form-check-label(for='remember_me')  Mantener mi sesión iniciada
-              button.btn.btn-lg.btn-outline-primary.btn-block(type='submit') Ingresar
+              button.btn.btn-lg.btn-primary.btn-block.login-button(type='submit') Ingresar
           //-
             a.text-center.new-account(href='/signup') Create an account
             #message

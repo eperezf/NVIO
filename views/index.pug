@@ -3,14 +3,14 @@ body
   include includes/navbar.pug
   //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
   #jumbodiv
-    .jumbotron.sharp-jumbotron
-      img.jumbo-img(src='/static/logo/text-black.png', alt='')
+    .jumbotron.landing-jumbotron
+      img.jumbo-img(src='/static/logo/text-black.png' alt='')
       p.lead
-        | El delivery lo hacemos juntos
+        | El envío lo hacemos todos
       hr
       p
         | ¿Te interesa saber más?
-      a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
+      a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Quienes Somos
   //- These loops are just to add some placeholder content so scrolling can be tested
   -for (var x=0; x<3; x++)
     .container.landing-container#welcome
