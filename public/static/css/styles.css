@@ -97,6 +97,21 @@
     left: -9999px !important;
 }
 
+/* Contact Form Styles */
+.contact-email {
+    margin: 80px 0 0;
+}
+
+.contact-subject {
+    margin: 10px 0px;
+}
+
+.contact-text {
+    margin: 10px 0px;
+    min-height: 270px;
+    max-height: 2000px
+}
+
 /* Login Responsiveness */
 @media screen and (max-width: 991.98px) { /* This decimal number abides by Bootstrap Responsiveness from their Docs */
     .login-title {
@@ -244,7 +259,7 @@ div.dash-content {
     }
 }
 
-/* Order History Snackbar */
+/* Snackbar (this is the default snackbar, it will work in other places) */
 #snackbar {
     visibility: hidden;
     min-width: 200px;
@@ -288,7 +303,11 @@ div.dash-content {
     to {right: 0; opacity: 0;}
 }
 
-/* Profile View*/
+.snack-red { /* This is to override non-confirmation snackbars */
+    background-color: #f8532c !important;
+}
+
+/* Profile View */
 #profilePicture {
     max-width:300px !important;
     max-height:300px !important;
