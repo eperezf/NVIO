@@ -202,6 +202,9 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
     console.log(r.data.results[0]);
     geocodedData = r.data.results[0].address_components;
     location = r.data.results[0].geometry.location;
+    if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
+      return res.redirect('/dashboard/nuevo-envio');
+    }
     params = {
       "TableName": "NVIO",
       "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
