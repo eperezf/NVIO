@@ -113,7 +113,6 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      console.log(data);
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envío";
@@ -169,6 +168,14 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
 
 
   //FORM VALIDATION
+  if (validator.isEmpty(req.body.fromAddress)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.fromApart)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
   if (validator.isEmpty(req.body.toAddress)){
     return res.redirect("/dashboard/nuevo-envio");
   }
@@ -197,29 +204,24 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
     return res.redirect("/dashboard/nuevo-envio");
   }
 
-
-  client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
-    console.log(r.data.results[0]);
-    geocodedData = r.data.results[0].address_components;
-    location = r.data.results[0].geometry.location;
+  client.geocode({params: {key: process.env.GAPI, address: req.body.fromAddress+", Santiago"}, timeout: 1000}).then(r => {
+    fromGeocodedData = r.data.results[0].address_components;
+    fromLocation = r.data.results[0].geometry.location;
     if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
       return res.redirect('/dashboard/nuevo-envio');
+      console.log("INVALID FROM ADDRESS");
     }
-    params = {
-      "TableName": "NVIO",
-      "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
-      "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
-      "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
-    }
-    docClient.query(params, function(err, data) {
-      if (err) {
-        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-      } else {
-        console.log("Query succeeded.");
-        companyAddress = data.Items[0].fromAddress.M;
-        companyAddressApart = data.Items[0].fromApart.S;
-        colcheck();
+    client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
+      console.log(r.data.results[0]);
+      toGeocodedData = r.data.results[0].address_components;
+      toLocation = r.data.results[0].geometry.location;
+      if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
+        console.log("INVALID TO ADDRESS");
+        return res.redirect('/dashboard/nuevo-envio');
       }
+      colcheck();
+    }).catch(e => {
+      console.log(e);
     });
   }).catch(e => {
     console.log(e);
@@ -256,19 +258,19 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                 "PK": req.user.user,
                 "SK": "ORDER#"+orderID,
                 "fromAddress": {
-                  "locality": companyAddress.locality.S,
-                  "number": parseInt(companyAddress.number.N),
-                  "street": companyAddress.street.S,
-                  "latitude": companyAddress.latitude.N,
-                  "longitude": companyAddress.longitude.N
+                  "locality": fromGeocodedData[3].long_name,
+                  "number": parseInt(fromGeocodedData[0].long_name),
+                  "street": fromGeocodedData[1].long_name,
+                  "latitude": fromLocation.lat,
+                  "longitude": fromLocation.lng
                 },
-                "fromApart": companyAddressApart,
+                "fromApart": req.body.fromApart,
                 "toAddress": {
-                  "locality": geocodedData[3].long_name,
-                  "number": parseInt(geocodedData[0].long_name),
-                  "street": geocodedData[1].long_name,
-                  "latitude": location.lat,
-                  "longitude": location.lng
+                  "locality": toGeocodedData[3].long_name,
+                  "number": parseInt(toGeocodedData[0].long_name),
+                  "street": toGeocodedData[1].long_name,
+                  "latitude": toLocation.lat,
+                  "longitude": toLocation.lng
                 },
                 "toApart": req.body.toApart,
                 "orderName": req.body.orderName,
