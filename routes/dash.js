@@ -113,6 +113,9 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
+      if (!data.Items[0].fromAddress) {
+        return res.redirect('/dashboard/');
+      }
       companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
       companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envío";
