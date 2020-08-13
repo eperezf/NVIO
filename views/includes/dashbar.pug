@@ -40,7 +40,7 @@ append postHead
 						li.nav-item.nav-dash-top
 							a#linkSoporte-top.nav-link(href='/dashboard/soporte')
 								i.fa.fa-info-circle
-								|   Soporte o Ayuda
+								|   Ayuda y Soporte
 						li-top.nav-item.nav-dash-top
 							a#linkCerrarSesion.nav-link(data-toggle='modal' data-target='#logoutModal')
 								i.fa.fa-times
@@ -71,7 +71,7 @@ append postHead
 						|   Tablas de Costos
 					a#linkSoporte-side.nav-link(href='/dashboard/soporte')
 						i.fa.fa-info-circle
-						|   Soporte o Ayuda
+						|   Ayuda y Soporte
 					a#linkCerrarSesion-side.nav-link(data-toggle='modal' data-target='#logoutModal')
 						i.fa.fa-times
 						|   Cerrar Sesión
@@ -79,11 +79,11 @@ append postHead
 			.modal-dialog(role='document')
 				.modal-content
 					.modal-header
-						h5#exampleModalLabel.modal-title Cerrar Sesión
+						h5#exampleModalLabel.modal-title Estás a punto de cerrar sesión
 						button.close(type='button' data-dismiss='modal' aria-label='Close')
 							span(aria-hidden='true') ×
 					.modal-body
-						| ¿De verdad quieres cerrar sesión?
+						| ¿Realmente quieres cerrar sesión?
 					.modal-footer
 						button.btn.btn-secondary(type='button' data-dismiss='modal') Cancelar
 						input.btn.btn-danger(type='button' onclick="location.href='/logout';" value='Cerrar Sesión')
