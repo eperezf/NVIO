@@ -3,12 +3,11 @@ append content
 	script.
 		var topname = "linkPerfil-top";
 		var sidename = "linkPerfil-side";
-	.container(style='margin-top: 40px;')
-		a#profileEdit.grey-link.float-right(href='/dashboard/editar-perfil')
-			| Editar Perfil 
+	.container.profile-container
+		a#profileEdit.grey-link(href='/dashboard/editar-perfil')
 			i.fa.fa-edit(style='font-size: 30px;')
-		img#profilePicture.rounded.text-left(src=logo alt='')
-		//- Add values in the proper attribute through a query to the DB, maybe store them in cache
+			|  Editar Perfil 
+		img#profilePicture.rounded.mx-auto.d-block.img-fluid(src=logo alt='Tu Logo')
 		form#profileInfo(style='margin-top: 30px;')
 			.form-group
 				label Nombre Empresa

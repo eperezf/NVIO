@@ -1,4 +1,4 @@
-/* General use code */
+/* General use and Landing Page code */
 .four-oh-four {
     color: #C00;
     text-align: center;
@@ -53,16 +53,19 @@
     height: auto;
 }
 
-.sharp-jumbotron {
+.landing-jumbotron {
     max-width: 1500px;
     padding: 40px;
     margin: auto;
     border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.75);
 }
 
 .landing-container {
     text-align: center;
     padding: 50px 0 60px;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
 }
 
 .landing-head {
@@ -79,13 +82,34 @@
 #jumbodiv {
     text-align: center;
     padding: 30px;
-    background-color: #AAA;
+    background-image: url("../indexspread.png");
+    background-color: #cccccc;
+    height: 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
 }
 
 .hidden { /* Screenreader-friendly hide class */
     position: absolute !important;
     top: -9999px !important;
     left: -9999px !important;
+}
+
+/* Contact Form Styles */
+.contact-email {
+    margin: 80px 0 0;
+}
+
+.contact-subject {
+    margin: 10px 0px;
+}
+
+.contact-text {
+    margin: 10px 0px;
+    min-height: 270px;
+    max-height: 2000px
 }
 
 /* Login Responsiveness */
@@ -99,6 +123,15 @@
     .login-title{
         margin: 40px 0 200px;
     }
+}
+
+.login-container {
+    max-width: 500px;
+    padding: 0 20px 0;
+}
+
+.login-button {
+    margin-top: 5px;
 }
 
 /* Responsive Cards (for 'quienes-somos.pug') */
@@ -138,6 +171,13 @@
         column-count:5;
     }
 }
+
+/* Override Primary Buttons */
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #F859D7 !important;
+    border-color: #ff83e0 !important;
+}
+
 /* Dashboard General */
 #dashBody {
     height: 100%;
@@ -219,7 +259,7 @@ div.dash-content {
     }
 }
 
-/* Order History Snackbar */
+/* Snackbar (this is the default snackbar, it will work in other places) */
 #snackbar {
     visibility: hidden;
     min-width: 200px;
@@ -263,7 +303,11 @@ div.dash-content {
     to {right: 0; opacity: 0;}
 }
 
-/* Profile View IDs */
+.snack-red { /* This is to override non-confirmation snackbars */
+    background-color: #f8532c !important;
+}
+
+/* Profile View */
 #profilePicture {
     max-width:300px !important;
     max-height:300px !important;
@@ -271,10 +315,15 @@ div.dash-content {
     min-height: 100px;
     height: auto;
     width:auto;
+    margin: 0 auto;
 }
 
 #profileEdit {
     font-size: 25px;
+}
+
+.profile-container {
+    margin-top: 40px;
 }
 
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */

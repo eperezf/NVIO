@@ -1,7 +1,7 @@
 {
-  "name": "tleweb",
-  "version": "0.0.1-alpha",
-  "description": "TLEWeb",
+  "name": "nvio",
+  "version": "0.1.0",
+  "description": "NVIO",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eperezf/TLEWeb.git"
+    "url": "git+https://github.com/eperezf/NVIO.git"
   },
   "author": "Eduardo Pérez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eperezf/TLEWeb/issues"
+    "url": "https://github.com/eperezf/NVIO/issues"
   },
-  "homepage": "https://github.com/eperezf/TLEWeb#readme",
+  "homepage": "https://github.com/eperezf/NVIO#readme",
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.1.5",
     "aws-sdk": "^2.717.0",
@@ -32,9 +32,10 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
     "pug": "^3.0.0",
     "validator": "^13.1.1",
     "rut.js": "^1.0.2"
-  }
+  },
+  "devDependencies": {}
 }
