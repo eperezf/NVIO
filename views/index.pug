@@ -3,30 +3,63 @@ body
   include includes/navbar.pug
   //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
   #jumbodiv
-    .jumbotron.sharp-jumbotron
-      img.jumbo-img(src='/static/logo/text-black.png', alt='')
-      p.lead
-        | El delivery lo hacemos juntos
-      hr
-      p
-        | ¿Te interesa saber más?
-      a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
-  //- These loops are just to add some placeholder content so scrolling can be tested
-  -for (var x=0; x<3; x++)
-    .container.landing-container#welcome
-      h1.landing-head Head
-      p.landing-paragraph
-        | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        | magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        | consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-        | pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-        | est laborum.
-  .container.landing-container#why
-    h1.landing-head ¿Por que preferirnos?
+    .jumbotron.sharp-jumbotron.mx-auto
+      header.py-5.mb-5
+        .container.h-100
+          .row.h-100.align-items-center
+            .col-lg-8
+              h1.display-4.mb-2.d-none.d-sm-block El Envío lo hacemos todos
+              h1.display-6.mb-2.d-sm-none El Envío lo hacemos todos
+              hr
+              p.lead.mb-5.text-50
+                | NVIO te permite llevar productos a tus clientes de manera fácil, óptima y con un servicio de calidad a un precio justo y fijo. Nos preocupamos de la calidad del servicio que entregan nuestros repartidores porque sabemos que este es el último paso de tu cadena de valor
+              a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
+            .col-lg-4#landing-image
+              img.img-fluid(src='/static/logo/placeholder-logo.png')
+  .container.landing-container
+    h1.landing-head En NVIO ganamos todos
+    hr
     .row
-      -for (var x=1; x<=3; x++)
-        .col-md-4
-          h2= 'Header ' + x
-          p= x + ': Text'
+      #pyme.col-lg-6.landing-info
+        h4 PYME
+        p Ten un ahorro de tiempo y preocupación en el proceso de despacho al tener todo organizado en un solo lugar. Mejora y controla el nivel de servicio entregado a tus clientes, debido a que manejas en todo momento la ubicación y estado de los envíos y nuestros repartidores tienen siempre presente que el trato con el cliente es fundamental en su experiencia de compra. Tenemos un sistema de costos específico, es decir, que dependiendo del radio de reparto (comunas) un cobro preestablecido y conocido de antemano.
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/logo/placeholder-logo.png')
+    .row
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/logo/placeholder-logo.png')
+      #repartidor.col-lg-6.landing-info
+        h4 Repartidores
+        p Elimina la incertidumbre, ten conocimiento previo de la cantidad de pedidos, tus ganancias y el tiempo a invertir cada día, sin exponerte a traslados innecesarios, logrando ahorros monetarios y de tiempo. Modelo de pago a través de un polinomio, donde se vaya sumando su dinero por cantidad de kilómetros a recorrer (conocida previamente) y cantidad de paquetes entregados.
+    .row
+      #clienteFinal.col-lg-6.landing-info
+        h4 Cliente Final
+        p Un tracking de tus pedidos en tiempo real con la capacidad de contactar al repartidor mientras el despacho esté en curso. Manejo de tiempos estimados de llegada certeros y con ventanas de tiempo reducidas.
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/logo/placeholder-logo.png')
+  .fluid-container(style='background-color: #F859D7; padding-bottom: 80px;')
+    .container.landing-container
+      h1.landing-head Como lo hacemos
+      hr.mb-5
+      .row
+        .col-lg-3
+          i.fas.fa-user-alt(style='font-size: 80px')
+          h4.mt-3 Registra tu pedido
+          p.mb-5 Dirección de retiro, entrega y otros datos
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fa.fa-tasks(style='font-size: 80px')
+          h4.mt-3 Asignamos tu pedido
+          p.mb-5 Sabrás qué repartidor y a qué hora pasará por tu pedido
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fa.fa-truck(style='font-size: 80px')
+          h4.mt-3 Retiramos tu pedido
+          p.mb-5 Tú y tu cliente podrán acceder al tracking en cualquier momento
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fas.fa-hand-holding-heart(style='font-size: 80px')
+          h4.mt-3 Entregamos al cliente
+          p.mb-5 Aseguramos entregas en 48 horas y una gran experiencia de compra
   include includes/footer.pug
   include includes/bodyscript.pug

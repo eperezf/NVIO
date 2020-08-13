@@ -53,16 +53,9 @@
     height: auto;
 }
 
-.sharp-jumbotron {
-    max-width: 1500px;
-    padding: 40px;
-    margin: auto;
-    border-radius: 0;
-}
-
 .landing-container {
     text-align: center;
-    padding: 50px 0 60px;
+    padding: 60px 0 60px;
 }
 
 .landing-head {
@@ -76,10 +69,62 @@
     margin: auto 30px;
 }
 
-#jumbodiv {
-    text-align: center;
-    padding: 30px;
-    background-color: #AAA;
+.sharp-jumbotron {
+    display: block;
+    max-width: 1500px;
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 991.98px) {
+    #jumbodiv {
+        text-align: center;
+        padding: 30px;
+        background-color: #aaa;
+    }
+    #landing-image {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .landing-info-image {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .landing-info {
+        margin: 20px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #jumbodiv {
+        text-align: left;
+        padding: 30px;
+        background-color: #aaa;
+    }
+    #landing-image {
+        width: inherit;
+        max-height: 340px;
+    }
+    .landing-info {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .how-hr {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    #pyme {
+        transform: translate(0%, 6%);
+    }
+    #repartidor {
+        transform: translate(0%, 12%);
+    }
+    #clienteFinal {
+        transform: translate(0%, 25%);
+    }
 }
 
 .hidden { /* Screenreader-friendly hide class */
