@@ -171,39 +171,52 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
 
 
   //FORM VALIDATION
+
+  //Dirección Remitente
   if (validator.isEmpty(req.body.fromAddress)){
+    console.log("Dirección Remitente")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
-  if (validator.isEmpty(req.body.fromApart)){
-    return res.redirect("/dashboard/nuevo-envio");
-  }
-
+  //Dirección Destinatario
   if (validator.isEmpty(req.body.toAddress)){
+    console.log("Dirección Destinatario")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
+  //Nombre Destinatario
   if (validator.isEmpty(req.body.nameDest)){
+    console.log("Nombre Destinatario")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
+  //Teléfono Destinatario
   if (!validator.isLength(req.body.contactDest , {min:9, max: 9})){
+    console.log("Teléfono Destinatario")
     return res.redirect('/dashboard/nuevo-envio')
   }
 
+  //Nombre de tu Pedido
   if (validator.isEmpty(req.body.orderName)){
+    console.log("Nombre de tu Pedido")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
+  //¿Qué es lo que envías?
   if (validator.isEmpty(req.body.orderDesc)){
+    console.log("¿Qué es lo que envías?")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
+  //Valor de lo que envías
   if (!validator.isNumeric(req.body.orderValue)){
+    console.log("Valor de lo que envías")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
+  //Acepto los términos y condiciones
   if (!req.body.tos){
+    console.log("TOS")
     return res.redirect("/dashboard/nuevo-envio");
   }
 
