@@ -117,13 +117,13 @@
         left: -9999px !important;
     }
     #pyme {
-        transform: translate(0%, 6%);
+        transform: translate(0%, 18%);
     }
     #repartidor {
-        transform: translate(0%, 12%);
+        transform: translate(0%, 25%);
     }
     #clienteFinal {
-        transform: translate(0%, 25%);
+        transform: translate(0%, 30%);
     }
 }
 
@@ -157,6 +157,14 @@
         margin: 0;
         padding: 0;
         width: 270px;
+    }
+    .landing-card-img {
+        max-width: 500px !important;
+        max-height: 500px !important;
+        min-width: 100px;
+        min-height: 100px;
+        height: auto;
+        width:auto;
     }
 }
 
