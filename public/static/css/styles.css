@@ -72,8 +72,8 @@
 .sharp-jumbotron {
     display: block;
     max-width: 1500px;
-    border-radius: 0;
-    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.85);
 }
 
 @media screen and (max-width: 991.98px) {
@@ -218,7 +218,7 @@
 
 /* Override Primary Buttons */
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: #F859D7 !important;
+    background-color: coral !important;
     border-color: #ff83e0 !important;
 }
 

@@ -2,19 +2,20 @@ include includes/header.pug
 body
   include includes/navbar.pug
   //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
-  #jumbodiv
+  #jumbodiv(style='background-image: url("static/background.jpg"); background-attachment: fixed; background-repeat: no-repeat; background-size: cover;')
     .jumbotron.sharp-jumbotron.mx-auto
       header.py-5.mb-5
         .container.h-100
           .row.h-100.align-items-center
             .col-lg-8
-              h1.display-4.mb-2.d-none.d-sm-block El Envío lo hacemos todos
-              h1.display-6.mb-2.d-sm-none El Envío lo hacemos todos
+              h1.display-4.mb-2.d-none.d-sm-block El delivery lo hacemos todos
+              h1.display-6.mb-2.d-sm-none El delivery lo hacemos todos
               hr
               p.lead.mb-5.text-50
                 | NVIO te permite llevar productos a tus clientes de manera fácil, óptima y con un servicio de calidad a un precio justo y fijo. Nos preocupamos de la calidad del servicio que entregan nuestros repartidores porque sabemos que este es el último paso de tu cadena de valor
               a.btn.btn-primary.btn-lg(href='/quienes-somos', role='button') Más Información
             .col-lg-4#landing-image
+              //- i.fas.fa-route(style="font-size:20em")
               img.img-fluid(src='/static/logo/placeholder-logo.png')
   .container.landing-container
     h1.landing-head Con NVIO ganamos todos
@@ -37,7 +38,7 @@ body
         p Rastrea tus pedidos en tiempo real con la capacidad de contactar al repartidor mientras el despacho esté en curso. Recibe tiempos estimados de llegada más certeros y más cortos.
       .col-lg-6.landing-info-image
         img.img-fluid(src='/static/landing-page/clientes-finales.jpg')
-  .fluid-container(style='background-color: #F859D7; padding-bottom: 80px;')
+  .fluid-container(style='background-color: coral; padding-bottom: 80px;')
     .container.landing-container.text-white
       h1.landing-head ¿Cómo lo hacemos?
       hr.mb-5
