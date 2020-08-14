@@ -3,8 +3,10 @@ body
   include includes/navbar.pug
   block content
     .container.login-container.text-center
-      h1.text-center.login-title
+      h1.text-center.mb-5.mt-5
         | Iniciar sesión en NVIO
+      h1
+        i.fas.fa-user-circle.mt-4(style="font-size:5em; color:coral")
       .account-wall
         form(action='/login' method='POST' enctype='multipart/form-data')
           .form-group
