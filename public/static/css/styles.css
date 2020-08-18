@@ -217,9 +217,13 @@
 }
 
 /* Override Primary Buttons */
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: coral !important;
-    border-color: #ff83e0 !important;
+.btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: #ff7f50 !important;
+    border-color: #ff7f50 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ff4200 !important;
 }
 
 /* Dashboard General */
@@ -246,7 +250,7 @@
 }
 
 .dash-sidebar a.active {
-    background-color: #F859D7;
+    background-color: #ff7f50;
     color: white;
 }
 
