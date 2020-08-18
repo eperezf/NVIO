@@ -1,88 +1,97 @@
-include header
-body
-	nav.navbar.navbar-expand-lg.sticky-top.navbar-dark.bg-dark
-		a.navbar-brand(href='/')
-			img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
-			//- the following line has a blank character, ALT-255. This is used to space icons and tab names
-			| 
-			img.logo-text-navbar(src='/static/logo/text-white.png', alt='')
-		button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-			span.navbar-toggler-icon
-		#navbarSupportedContent.collapse.navbar-collapse.text-left
-			ul.navbar-nav.navbar-nav-dash.ml-auto
-				li.nav-item.nav-dash-top
-					a#linkDash-top.nav-link(href='/dashboard')
+extends header
+append postHead
+	block dash-postHead
+	body#dashBody
+		div
+			nav.navbar.fixed-top.navbar-dark.bg-dark
+				a.navbar-brand(href='/dashboard')
+					img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
+					//- the following line has a blank character, ALT-255. This is used to space icons and tab names
+					| 
+					img.logo-text-navbar(src='/static/logo/text-white.png', alt='')
+				button.navbar-toggler.sandwich-big(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+					span.navbar-toggler-icon
+				#navbarSupportedContent.collapse.navbar-collapse.text-left
+					ul.navbar-nav.navbar-nav-dash.ml-auto
+						li.nav-item.nav-dash-top
+							a#linkDash-top.nav-link(href='/dashboard')
+								i.fa.fa-home
+								|   Dashboard
+						li.nav-item.nav-dash-top
+							a#linkPerfil-top.nav-link(href='/dashboard/perfil')
+								i.fa.fa-user-circle
+								|   Mi Perfil
+						li.nav-item.nav-dash-top
+							a#linkEnvio-top.nav-link(href='/dashboard/nuevo-envio')
+								i.fa.fa-truck
+								|   Nuevo Envío
+						li.nav-item.nav-dash-top
+							a#linkHistPedidos-top.nav-link(href='/dashboard/hist-pedidos')
+								i.fa.fa-clipboard
+								|   Historial Pedidos
+						li.nav-item.nav-dash-top
+							a#linkHistPagos-top.nav-link(href='/dashboard/hist-pagos')
+								i.fa.fa-usd
+								|   Historial Pagos
+						li.nav-item.nav-dash-top
+							a#linkCostos-top.nav-link(href='/dashboard/costos')
+								i.fa.fa-table
+								|   Tablas de Costos
+						li.nav-item.nav-dash-top
+							a#linkSoporte-top.nav-link(href='/dashboard/soporte')
+								i.fa.fa-info-circle
+								|   Ayuda y Soporte
+						li-top.nav-item.nav-dash-top
+							a#linkCerrarSesion.nav-link(data-toggle='modal' data-target='#logoutModal')
+								i.fa.fa-times
+								|   Cerrar Sesión
+		.container-fluid
+			.row
+				.dash-sidebar.col-md-12.left-text
+					//- This empty link element is here for spacing
+					a
+						| 
+					a#linkDash-side.nav-link(href='/dashboard')
 						i.fa.fa-home
 						|   Dashboard
-				li.nav-item.nav-dash-top
-					a#linkPerfil-top.nav-link(href='/dashboard/perfil')
+					a#linkPerfil-side.nav-link(href='/dashboard/perfil')
 						i.fa.fa-user-circle
 						|   Mi Perfil
-				li.nav-item.nav-dash-top
-					a#linkEnvio-top.nav-link(href='/dashboard/nuevo-envio')
+					a#linkEnvio-side.nav-link(href='/dashboard/nuevo-envio')
 						i.fa.fa-truck
 						|   Nuevo Envío
-				li.nav-item.nav-dash-top
-					a#linkHistPedidos-top.nav-link(href='/dashboard/hist-pedidos')
+					a#linkHistPedidos-side.nav-link(href='/dashboard/hist-pedidos')
 						i.fa.fa-clipboard
 						|   Historial Pedidos
-				li.nav-item.nav-dash-top
-					a#linkHistPagos-top.nav-link(href='/dashboard/hist-pagos')
+					a#linkHistPagos-side.nav-link(href='/dashboard/hist-pagos')
 						i.fa.fa-usd
 						|   Historial Pagos
-				li.nav-item.nav-dash-top
-					a#linkCostos-top.nav-link(href='/dashboard/costos')
+					a#linkCostos-side.nav-link(href='/dashboard/costos')
 						i.fa.fa-table
 						|   Tablas de Costos
-				li.nav-item.nav-dash-top
-					a#linkSoporte-top.nav-link(href='/dashboard/soporte')
+					a#linkSoporte-side.nav-link(href='/dashboard/soporte')
 						i.fa.fa-info-circle
-						|   Soporte o Ayuda
-				li-top.nav-item.nav-dash-top
-					a#linkCerrarSesion.nav-link(data-toggle='modal' data-target='#logoutModal')
+						|   Ayuda y Soporte
+					a#linkCerrarSesion-side.nav-link(data-toggle='modal' data-target='#logoutModal')
 						i.fa.fa-times
 						|   Cerrar Sesión
-	.container-fluid
-		.row
-			.dash-sidebar.col-md-12.left-text
-				a#linkDash-side.nav-link(href='/dashboard')
-					i.fa.fa-home
-					|   Dashboard
-				a#linkPerfil-side.nav-link(href='/dashboard/perfil')
-					i.fa.fa-user-circle
-					|   Mi Perfil
-				a#linkEnvio-side.nav-link(href='/dashboard/nuevo-envio')
-					i.fa.fa-truck
-					|   Nuevo Pedido
-				a#linkHistPedidos-side.nav-link(href='/dashboard/hist-pedidos')
-					i.fa.fa-clipboard
-					|   Historial Pedidos
-				a#linkHistPagos-side.nav-link(href='/dashboard/hist-pagos')
-					i.fa.fa-usd
-					|   Historial Pagos
-				a#linkCostos-side.nav-link(href='/dashboard/costos')
-					i.fa.fa-table
-					|   Tablas de Costos
-				a#linkSoporte-side.nav-link(href='/dashboard/soporte')
-					i.fa.fa-info-circle
-					|   Soporte o Ayuda
-				a#linkCerrarSesion-side.nav-link(data-toggle='modal' data-target='#logoutModal')
-					i.fa.fa-times
-					|   Cerrar Sesión
-	// Modal
-	#logoutModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='logoutModal' aria-hidden='true')
-		.modal-dialog(role='document')
-			.modal-content
-				.modal-header
-					h5#exampleModalLabel.modal-title Cerrar Sesión
-					button.close(type='button' data-dismiss='modal' aria-label='Close')
-						span(aria-hidden='true') ×
-				.modal-body
-					| ¿De verdad quieres cerrar sesión?
-				.modal-footer
-					button.btn.btn-secondary(type='button', data-dismiss='modal') Cancelar
-					input.btn.btn-danger(type='button' onclick="location.href='/logout';" value='Cerrar Sesión')
-	.dash-content
-		block content
-	include bodyscript
-	include dashscript
+		#logoutModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='logoutModal' aria-hidden='true')
+			.modal-dialog(role='document')
+				.modal-content
+					.modal-header
+						h5#exampleModalLabel.modal-title Estás a punto de cerrar sesión
+						button.close(type='button' data-dismiss='modal' aria-label='Close')
+							span(aria-hidden='true') ×
+					.modal-body
+						| ¿Realmente quieres cerrar sesión?
+					.modal-footer
+						button.btn.btn-secondary(type='button' data-dismiss='modal') Cancelar
+						input.btn.btn-danger(type='button' onclick="location.href='/logout';" value='Cerrar Sesión')
+		.dash-content
+			block content
+		include bodyscript
+		include dashscript
+		block dash-viewscript
+		//- Bodyscript is general scripts for any view
+		//- Dashscript is scripts for all dashboard views
+		//- The viewscript block is for view-specific script appending, usually from /static/js/

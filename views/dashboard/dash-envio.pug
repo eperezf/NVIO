@@ -6,7 +6,7 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	.container
-		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
+		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data' autocomplete='off')
 			.form-group
 				label Nombre Destinatario
 				input.form-control(type='text' name="nameDest" required)
