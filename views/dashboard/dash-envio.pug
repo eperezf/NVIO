@@ -6,19 +6,28 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	.container
-		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
+		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data' autocomplete='off')
 			.form-group
 				label Dirección Remitente
-				input.form-control(type='text' readonly value=companyAddress)
+				input.form-control#fromAddress(type='text' name="fromAddress" value=companyAddress required autocomplete='off')
 			.form-group
 				label Apartado Remitente
-				input.form-control(type='text' readonly value=companyAddressApart)
+				input.form-control#fromApart(type='text' name="fromApart" value=companyAddressApart)
 			.form-group
 				label Dirección Destinatario
-				input.form-control#toAddress(type='text' name="toAddress" required)
+				input.form-control#toAddress(type='text' name="toAddress" required autocomplete='off')
 			.form-group
 				label Apartado Destinatario
-				input.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
+				input.form-control#toApart(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
+			.form-group
+				label Nombre Destinatario
+				input.form-control(type='text' name="nameDest" required)
+			.form-group
+				label Teléfono Destinatario
+				.input-group
+					.input-group-prepend
+						.input-group-text +56
+					input.form-control(type='text' name="contactDest" required)
 			.form-group
 				label Nombre de tu Pedido
 				input.form-control(type='text' name="orderName" required)
@@ -35,6 +44,10 @@ append content
 						.input-group-text $
 					input.form-control(type='number' name="orderValue" required)
 				small Valor en pesos chilenos
+			.form-group
+				label Comentarios adicionales
+				input.form-control(type='text' name="comment")
+				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
 				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
 				label.form-check-label(for='tosAgree') Acepto los 
@@ -43,6 +56,8 @@ append content
 			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
 			script(type="text/javascript")
 				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
-				|	var input = document.getElementById('toAddress');
+				|	var toInput = document.getElementById('toAddress');
+				| var fromInput = document.getElementById('fromAddress');
 				| var options = {componentRestrictions: {country: 'cl'}};
-				| autocomplete = new google.maps.places.Autocomplete(input, options);
+				| fromAutocomplete = new google.maps.places.Autocomplete(fromInput, options);
+				| toAutocomplete = new google.maps.places.Autocomplete(toInput, options);

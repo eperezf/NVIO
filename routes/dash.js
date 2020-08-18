@@ -2,10 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const aws = require("aws-sdk");
-const { v4: uuidv4 } = require('uuid');
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
-const { validate, clean, format } = require('rut.js')
+const { v4: uuidv4 } = require('uuid');
 var validator = require('validator');
+const { validate, clean, format } = require('rut.js')
 var { nanoid } = require("nanoid");
 var multer  = require('multer');
 var upload = multer();
@@ -49,14 +49,31 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      var companyName = data.Items[0].companyName.S;
-      var companyRut = data.Items[0].companyRut.S;
-      var companyTurn = data.Items[0].companyTurn.S;
-      var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var companyContactNumber = data.Items[0].companyContactNumber.N;
-      var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromApart.S;
+      if (data.Items[0].companyName) {
+        var companyName = data.Items[0].companyName.S;
+      }
+      if (data.Items[0].companyRut) {
+        var companyRut = data.Items[0].companyRut.S;
+      }
+      if (data.Items[0].companyTurn) {
+        var companyTurn = data.Items[0].companyTurn.S;
+      }
+      if (data.Items[0].companyRepresentative) {
+        var companyRepresentative = data.Items[0].companyRepresentative.S;
+      }
+      if (data.Items[0].companyContactNumber) {
+        var companyContactNumber = data.Items[0].companyContactNumber.N;
+      }
+      if (data.Items[0].companyEmail) {
+        var companyEmail = data.Items[0].companyEmail.S;
+      }
+      if (data.Items[0].fromAddress) {
+        var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N + ", " + data.Items[0].fromAddress.M.locality.S;
+      }
+      if (data.Items[0].fromApart){
+        var addressApart = data.Items[0].fromApart.S;
+      }
+
       res.render('dashboard/dash-perfil', {
         title: name,
         companyId: req.user.user.replace("COMPANY#",""),
@@ -96,12 +113,45 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
-      const name = "Nuevo Envio";
+      if (!data.Items[0].fromAddress) {
+        return res.redirect('/dashboard/');
+      }
+      companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
+      companyAddressApart = data.Items[0].fromApart.S;
+      const name = "Nuevo Envío";
       console.log("Dashboard New Order Requested");
+      if (validator.isEmpty(data.Items[0].companyContactNumber.N)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRepresentative.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].lastName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].fromAddress.M.street.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyRut.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].email.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyEmail.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].firstName.S)) {
+        return res.redirect('/dashboard/');
+      }
+      if (validator.isEmpty(data.Items[0].companyTurn.S)) {
+        return res.redirect('/dashboard/');
+      }
       res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
+
     }
   });
 });
@@ -117,23 +167,65 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var docClient = new aws.DynamoDB();
   var companyAddress;
   var companyAddressApart;
-  params = {
-    "TableName": "NVIO",
-    "KeyConditionExpression": "#cd420 = :cd420 And #cd421 = :cd421",
-    "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
-    "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
+  const client = new Client({});
+
+
+  //FORM VALIDATION
+  if (validator.isEmpty(req.body.fromAddress)){
+    return res.redirect("/dashboard/nuevo-envio");
   }
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-    } else {
-      console.log("Query succeeded.");
-      console.log(data);
-      companyAddress = data.Items[0].fromAddress.S;
-      companyAddressApart = data.Items[0].fromAddressApart.S;
-      colcheck();
+
+  if (validator.isEmpty(req.body.toAddress)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.nameDest)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isLength(req.body.contactDest , {min:9, max: 9})){
+    return res.redirect('/dashboard/nuevo-envio')
+  }
+
+  if (validator.isEmpty(req.body.orderName)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (validator.isEmpty(req.body.orderDesc)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!validator.isNumeric(req.body.orderValue)){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  if (!req.body.tos){
+    return res.redirect("/dashboard/nuevo-envio");
+  }
+
+  client.geocode({params: {key: process.env.GAPI, address: req.body.fromAddress+", Santiago"}, timeout: 1000}).then(r => {
+    fromGeocodedData = r.data.results[0].address_components;
+    fromLocation = r.data.results[0].geometry.location;
+    if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
+      return res.redirect('/dashboard/nuevo-envio');
+      console.log("INVALID FROM ADDRESS");
     }
+    client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
+      console.log(r.data.results[0]);
+      toGeocodedData = r.data.results[0].address_components;
+      toLocation = r.data.results[0].geometry.location;
+      if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
+        console.log("INVALID TO ADDRESS");
+        return res.redirect('/dashboard/nuevo-envio');
+      }
+      colcheck();
+    }).catch(e => {
+      console.log(e);
+    });
+  }).catch(e => {
+    console.log(e);
   });
+
   function colcheck(){
     orderID = nanoid(6);
     //Check for ID colission
@@ -164,14 +256,30 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
             Item:{
                 "PK": req.user.user,
                 "SK": "ORDER#"+orderID,
-                "fromAddress": companyAddress,
-                "fromApart": companyAddressApart,
-                "toAddress": req.body.toAddress,
+                "fromAddress": {
+                  "locality": fromGeocodedData[3].long_name,
+                  "number": parseInt(fromGeocodedData[0].long_name),
+                  "street": fromGeocodedData[1].long_name,
+                  "latitude": fromLocation.lat,
+                  "longitude": fromLocation.lng
+                },
+                "fromApart": req.body.fromApart,
+                "toAddress": {
+                  "locality": toGeocodedData[3].long_name,
+                  "number": parseInt(toGeocodedData[0].long_name),
+                  "street": toGeocodedData[1].long_name,
+                  "latitude": toLocation.lat,
+                  "longitude": toLocation.lng
+                },
                 "toApart": req.body.toApart,
                 "orderName": req.body.orderName,
                 "orderDesc": req.body.orderDesc,
                 "orderValue": parseInt(req.body.orderValue),
-                "status": 0
+                "nameDest": req.body.nameDest,
+                "contactDest": req.body.contactDest,
+                "comment": req.body.comment,
+                "status": 0,
+                "createdAt": Date.now()
             }
           };
           console.log("Adding a new item...");
@@ -190,15 +298,39 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
       }
     });
   }
-
-
 });
 
 // Dashboard Order History
 router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
     const name = "Historial Pedidos";
     console.log("Dashboard Order History Requested");
-    res.render('dashboard/dash-hist-pedidos', {title: name});
+    var docClient = new aws.DynamoDB();
+    var params={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "ORDER"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
+    }
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        //res.json(data)
+        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
+      }
+    });
 });
 
 // Dashboard Payment History
@@ -360,7 +492,7 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
         "#6a214": "companyContactNumber",
         "#6a215": "companyEmail",
         "#6a216": "fromAddress",
-        "#6a217": "fromAddressApart"
+        "#6a217": "fromApart"
       },
       ReturnValues:"UPDATED_NEW"
     }

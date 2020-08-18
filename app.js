@@ -45,6 +45,14 @@ require('./passport');
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+//Prevents to check previous page after logout
+app.use(function (req, res, next) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next()
+});
+
 //Set index routes
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
