@@ -27,6 +27,17 @@
     cursor:pointer;
 }
 
+.orange-link {
+    color: coral;
+    text-decoration: none;
+}
+
+.orange-link:hover {
+    color: coral;
+    text-decoration:none;
+    cursor:pointer;
+}
+
 .logo-footer {
     display: block;
     margin-left: auto;
