@@ -8,20 +8,29 @@ append content
 	.container
 		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
-				label Dirección Remitente
-				input.form-control(type='text' readonly value=companyAddress)
-			.form-group
-				label Apartado Remitente
-				input.form-control(type='text' readonly value=companyAddressApart)
-			.form-group
-				label Dirección Destinatario
-				input.form-control#toAddress(type='text' name="toAddress" required)
-			.form-group
-				label Apartado Destinatario
-				input.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
-			.form-group
 				label Nombre Destinatario
 				input.form-control(type='text' name="nameDest" required)
+			.form-group
+				label Dirección Destinatario
+				input.form-control#toAddress(type='text' name="toAddress" required autocomplete='off')
+			.row
+				.col-sm-6
+					.form-group
+						label(for='toLocality') Comuna Destinatario
+						select.form-control#toLocality(type='text' name="localityList")
+							option(value = '' disabled selected hidden) Selecciona una comuna
+							option Cerrillos
+							option Cerro Navia
+							option Conchalí
+							option El Bosque
+							option Estación Central
+							option Huechuraba
+							option Independencia
+							option La Cisterna
+				.col-sm-6
+					.form-group
+						label Apartado Destinatario (Opcional)
+						input.form-control#toApart(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
 				label Teléfono Destinatario
 				.input-group
@@ -29,23 +38,50 @@ append content
 						.input-group-text +56
 					input.form-control(type='text' name="contactDest" required)
 			.form-group
+				label Dirección de Origen
+				input.form-control#fromAddress(type='text' name="fromAddress" value=companyAddress required autocomplete='off')
+			.row
+				.col-sm-6
+					.form-group
+						label Apartado Origen (Opcional)
+						input.form-control#fromApart(type='text' name="fromApart" value=companyAddressApart placeholder='Número Depto, Condominio, Piso, etc.')
+				.col-sm-6
+					.form-group
+						label(for='fromLocality') Comuna de Origen
+						select.form-control#fromLocality(type='text' name="localityList")
+							option(value = '' disabled selected hidden) Selecciona una comuna
+							option Cerrillos
+							option Cerro Navia
+							option Conchalí
+							option El Bosque
+							option Estación Central
+							option Huechuraba
+							option Independencia
+							option La Cisterna
+			.form-group
 				label Nombre de tu Pedido
 				input.form-control(type='text' name="orderName" required)
 				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
-				label ¿Qué es lo que envías?
-				input.form-control(type='text' name="orderDesc" required)
-				small Describe aquí tu paquete, recuerda seguir nuestras 
-					a(href='/recomendaciones' target='_blank') recomendaciones
+				.row
+					.col-sm-5
+						label ¿Qué es lo que contiene tu envío?
+						input.form-control(type='text' name="orderDesc" required)
+						small Describe aquí tu paquete, recuerda seguir nuestras 
+							a(href='/recomendaciones' target='_blank') recomendaciones
+					.col-sm-4
+						label Valor de lo que envías
+						.input-group
+							.input-group-prepend
+								.input-group-text $
+							input.form-control(type='number' name="orderValue" required)
+						small Valor en pesos chilenos
+					.col-sm-3
+						label Costo NVIO
+						input.form-control(type='text' name="shippingCost" disabled)
+						small Calculado según el destino y origen
 			.form-group
-				label Valor de lo que envías
-				.input-group
-					.input-group-prepend
-						.input-group-text $
-					input.form-control(type='number' name="orderValue" required)
-				small Valor en pesos chilenos
-			.form-group
-				label Comentarios adicionales
+				label Comentarios adicionales (Opcional)
 				input.form-control(type='text' name="comment")
 				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
@@ -53,9 +89,3 @@ append content
 				label.form-check-label(for='tosAgree') Acepto los 
 					a(href='/tos' target='_blank') términos y condiciones
 			button.btn.btn-primary(type='submit' style='margin-top: 20px;') Enviar
-			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
-			script(type="text/javascript")
-				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
-				|	var input = document.getElementById('toAddress');
-				| var options = {componentRestrictions: {country: 'cl'}};
-				| autocomplete = new google.maps.places.Autocomplete(input, options);
