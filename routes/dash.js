@@ -49,6 +49,9 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
+      if (data.Items[0].legalName) {
+        var legalName = data.Items[0].legalName.S;
+      }
       if (data.Items[0].companyName) {
         var companyName = data.Items[0].companyName.S;
       }
@@ -77,6 +80,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       res.render('dashboard/dash-perfil', {
         title: name,
         companyId: req.user.user.replace("COMPANY#",""),
+        legalName: legalName,
         companyName: companyName,
         companyRut: companyRut,
         companyTurn: companyTurn,
@@ -372,6 +376,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
+      var legalName = data.Items[0].legalName.S;
       var companyName = data.Items[0].companyName.S;
       var companyRut = data.Items[0].companyRut.S;
       var companyTurn = data.Items[0].companyTurn.S;
@@ -383,6 +388,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
+        legalName: legalName,
         companyName: companyName,
         companyRut: companyRut,
         companyTurn: companyTurn,
@@ -429,6 +435,10 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
   var location;
   const client = new Client({});
 
+  if (validator.isEmpty(req.body.legalName)){
+    return res.redirect('/dashboard/editar-perfil')
+  }
+
   if (validator.isEmpty(req.body.companyName)){
     return res.redirect('/dashboard/editar-perfil')
   }
@@ -468,8 +478,9 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
     params = {
       "TableName": "NVIO",
       "Key": {"PK": req.user.user, "SK": req.user.user.replace("COMPANY", "PROFILE")},
-      "UpdateExpression": "SET #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215, #6a216 = :6a216, #6a217 = :6a217",
+      "UpdateExpression": "SET #6a209 = :6a209, #6a210 = :6a210, #6a211 = :6a211, #6a212 = :6a212, #6a213 = :6a213, #6a214 = :6a214, #6a215 = :6a215, #6a216 = :6a216, #6a217 = :6a217",
       "ExpressionAttributeValues": {
+        ":6a209": req.body.legalName,
         ":6a210": req.body.companyName,
         ":6a211": req.body.companyRut,
         ":6a212": req.body.companyTurn,
@@ -485,6 +496,7 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
         ":6a217": req.body.addressApart
       },
       "ExpressionAttributeNames": {
+        "#6a209": "legalName",
         "#6a210": "companyName",
         "#6a211": "companyRut",
         "#6a212": "companyTurn",
