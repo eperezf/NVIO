@@ -1,4 +1,13 @@
 /* General use and Landing Page code */
+@media screen and (max-width: 667px) { /* This prevents lateral scroll on small screens */
+    body {
+        overflow-x: hidden !important;
+    }
+    .container {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+}
 .four-oh-four {
     color: #C00;
     text-align: center;
@@ -217,9 +226,14 @@
 }
 
 /* Override Primary Buttons */
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: coral !important;
-    border-color: #ff83e0 !important;
+.btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: #ff7f50 !important;
+    border-color: #ff9673 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ff5115 !important;
+    border-color: #ff9673 !important;
 }
 
 /* Dashboard General */
