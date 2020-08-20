@@ -6,18 +6,18 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	.container
-		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data' autocomplete='off')
+		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
 				label Nombre Destinatario
-				input.form-control(type='text' name="nameDest" required)
+				input#nameDest.form-control(type='text' name="nameDest" required)
 			.form-group
 				label Dirección Destinatario
-				input.form-control#toAddress(type='text' name="toAddress" required autocomplete='off')
+				input#toAddress.form-control(type='text' name="toAddress" required)
 			.row
 				.col-sm-6
 					.form-group
 						label(for='toLocality') Comuna Destinatario
-						select.form-control#toLocality(type='text' name="localityList")
+						select#toLocality.form-control(type='text' name="localityListTo" required)
 							option(value = '' disabled selected hidden) Selecciona una comuna
 							option Cerrillos
 							option Cerro Navia
@@ -30,25 +30,21 @@ append content
 				.col-sm-6
 					.form-group
 						label Apartado Destinatario (Opcional)
-						input.form-control#toApart(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
+						input#toApart.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
 				label Teléfono Destinatario
 				.input-group
 					.input-group-prepend
 						.input-group-text +56
-					input.form-control(type='text' name="contactDest" required)
+					input#toPhone.form-control(type='text' name="contactDest" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{9}')
 			.form-group
 				label Dirección de Origen
-				input.form-control#fromAddress(type='text' name="fromAddress" value=companyAddress required autocomplete='off')
+				input#fromAddress.form-control(type='text' name="fromAddress" value=companyAddress required)
 			.row
 				.col-sm-6
 					.form-group
-						label Apartado Origen (Opcional)
-						input.form-control#fromApart(type='text' name="fromApart" value=companyAddressApart placeholder='Número Depto, Condominio, Piso, etc.')
-				.col-sm-6
-					.form-group
 						label(for='fromLocality') Comuna de Origen
-						select.form-control#fromLocality(type='text' name="localityList")
+						select#fromLocality.form-control(type='text' name="localityListFrom" required)
 							option(value = '' disabled selected hidden) Selecciona una comuna
 							option Cerrillos
 							option Cerro Navia
@@ -58,15 +54,19 @@ append content
 							option Huechuraba
 							option Independencia
 							option La Cisterna
+				.col-sm-6
+					.form-group
+						label Apartado Origen (Opcional)
+						input#fromApart.form-control(type='text' name="fromApart" value=companyAddressApart placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
 				label Nombre de tu Pedido
-				input.form-control(type='text' name="orderName" required)
+				input#orderName.form-control(type='text' name="orderName" required)
 				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
 				.row
 					.col-sm-5
 						label ¿Qué es lo que contiene tu envío?
-						input.form-control(type='text' name="orderDesc" required)
+						input#orderDesc.form-control(type='text' name="orderDesc" required oninvalid='this.setCustomValidity("Debes rellenar este campo con al menos 4 caracteres")' onchange='try{setCustomValidity("")}catch(e){}' pattern='[\\p{L}\d\.\-\_ ]{4,}')
 						small Describe aquí tu paquete, recuerda seguir nuestras 
 							a(href='/recomendaciones' target='_blank') recomendaciones
 					.col-sm-4
@@ -74,18 +74,18 @@ append content
 						.input-group
 							.input-group-prepend
 								.input-group-text $
-							input.form-control(type='number' name="orderValue" required)
+							input#orderValue.form-control(type='number' name="orderValue" required oninvalid='this.setCustomValidity("El valor debe ser mayor a cero")' onchange='try{setCustomValidity("")}catch(e){}' pattern='^[1-9]\\d*$')
 						small Valor en pesos chilenos
 					.col-sm-3
 						label Costo NVIO
-						input.form-control(type='text' name="shippingCost" disabled)
+						input#shippingCost.form-control(type='text' name="shippingCost" disabled)
 						small Calculado según el destino y origen
 			.form-group
 				label Comentarios adicionales (Opcional)
-				input.form-control(type='text' name="comment")
+				input#extraComments.form-control(type='text' name="comment")
 				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
 				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
 				label.form-check-label(for='tosAgree') Acepto los 
 					a(href='/tos' target='_blank') términos y condiciones
-			button.btn.btn-primary(type='submit' style='margin-top: 20px;') Enviar
+			button#submitOrder.btn.btn-primary(type='submit' onclick='' style='margin-top: 20px;') Enviar
