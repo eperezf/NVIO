@@ -3,20 +3,25 @@ append content
 	script.
 		var topname = "linkEnvio-top";
 		var sidename = "linkEnvio-side";
-	h1.landing-head.text-center
-		| #{title}
+	h1.landing-head.text-center #{title}
+	h4.landing-head.text-center Los campos obligatorios están marcados con un asterisco (
+		i(style='font-size: 15px').fa.fa-asterisk
+		| )
 	.container
 		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
-				label Nombre Destinatario
-				input#nameDest.form-control(type='text' name="nameDest" required)
+				label Nombre Destinatario 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#nameDest.form-control(type='text' name="nameDest" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 			.form-group
-				label Dirección Destinatario
-				input#toAddress.form-control(type='text' name="toAddress" required)
+				label Dirección Destinatario 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#toAddress.form-control(type='text' name="toAddress" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 			.row
 				.col-sm-6
 					.form-group
-						label(for='toLocality') Comuna Destinatario
+						label(for='toLocality') Comuna Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
 						select#toLocality.form-control(type='text' name="localityListTo" required)
 							option(value = '' disabled selected hidden) Selecciona una comuna
 							option Cerrillos
@@ -29,21 +34,31 @@ append content
 							option La Cisterna
 				.col-sm-6
 					.form-group
-						label Apartado Destinatario (Opcional)
+						label Apartado Destinatario
 						input#toApart.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
-			.form-group
-				label Teléfono Destinatario
-				.input-group
-					.input-group-prepend
-						.input-group-text +56
-					input#toPhone.form-control(type='text' name="contactDest" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{9}')
-			.form-group
-				label Dirección de Origen
-				input#fromAddress.form-control(type='text' name="fromAddress" value=companyAddress required)
 			.row
 				.col-sm-6
 					.form-group
-						label(for='fromLocality') Comuna de Origen
+						label Teléfono Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
+						.input-group
+							.input-group-prepend
+								.input-group-text +56
+							input#toPhone.form-control(type='text' name="contactDest" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{9}')
+				.col-sm-6
+					.form-group
+						label(for='toEmail') Email del Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
+						input#toEmail.form-control(type='email' name='companyEmail' placeholder='ejemplo@correo.com' required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+			.form-group
+				label Dirección de Origen 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#fromAddress.form-control(type='text' name="fromAddress" required)
+			.row
+				.col-sm-6
+					.form-group
+						label(for='fromLocality') Comuna de Origen 
+							i(style='font-size: 10px').fa.fa-asterisk
 						select#fromLocality.form-control(type='text' name="localityListFrom" required)
 							option(value = '' disabled selected hidden) Selecciona una comuna
 							option Cerrillos
@@ -56,21 +71,24 @@ append content
 							option La Cisterna
 				.col-sm-6
 					.form-group
-						label Apartado Origen (Opcional)
-						input#fromApart.form-control(type='text' name="fromApart" value=companyAddressApart placeholder='Número Depto, Condominio, Piso, etc.')
+						label Apartado Origen
+						input#fromApart.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.')
 			.form-group
-				label Nombre de tu Pedido
-				input#orderName.form-control(type='text' name="orderName" required)
+				label Nombre de tu Pedido 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#orderName.form-control(type='text' name="orderName" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
 				.row
 					.col-sm-5
-						label ¿Qué es lo que contiene tu envío?
+						label ¿Qué es lo que contiene tu envío? 
+							i(style='font-size: 10px').fa.fa-asterisk
 						input#orderDesc.form-control(type='text' name="orderDesc" required oninvalid='this.setCustomValidity("Debes rellenar este campo con al menos 4 caracteres")' onchange='try{setCustomValidity("")}catch(e){}' pattern='[\\p{L}\d\.\-\_ ]{4,}')
 						small Describe aquí tu paquete, recuerda seguir nuestras 
 							a(href='/recomendaciones' target='_blank') recomendaciones
 					.col-sm-4
-						label Valor de lo que envías
+						label Valor de lo que envías 
+							i(style='font-size: 10px').fa.fa-asterisk
 						.input-group
 							.input-group-prepend
 								.input-group-text $
@@ -81,11 +99,12 @@ append content
 						input#shippingCost.form-control(type='text' name="shippingCost" disabled)
 						small Calculado según el destino y origen
 			.form-group
-				label Comentarios adicionales (Opcional)
+				label Comentarios adicionales
 				input#extraComments.form-control(type='text' name="comment")
 				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
 				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
 				label.form-check-label(for='tosAgree') Acepto los 
-					a(href='/tos' target='_blank') términos y condiciones
+					a(href='/tos' target='_blank') términos y condiciones 
+					i(style='font-size: 10px').fa.fa-asterisk
 			button#submitOrder.btn.btn-primary(type='submit' onclick='' style='margin-top: 20px;') Enviar
