@@ -38,6 +38,10 @@ append content
 			.form-group
 				label Dirección Comercial
 				input#address.form-control(type='text' readonly value=address)
+			.form-group#comuna-group
+				label(for='comuna') Comuna
+				select#comuna.form-control(readonly disabled name='comuna')
+					option(value=comuna selected) #{comuna}
 			.form-group
 				label Casa, Condominio o Departamento
 				input#addressApart.form-control(type='text' readonly value=addressApart)

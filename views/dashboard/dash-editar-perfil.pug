@@ -44,13 +44,44 @@ append content
 				label(for='address') Dirección Comercial
 				input#address.form-control(type="text" name='address' value=address required autocomplete='off')
 				small Si no agregas direcciones adicionales, esta será tu dirección de envío por defecto.
+			.form-group#comuna-group
+				label(for='comuna') Comuna
+				select#comuna.form-control(name='comuna')
+					each val in comunas
+						if val == comuna
+							option(value=val selected) #{val}
+						else
+							option(value=val) #{val}
 			.form-group#addressApart-group
 				label(for='addressApart') Casa, Condominio o Departamento
 				input#addressApart.form-control(type="text" name='addressApart' value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
-			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
-			script(type="text/javascript")
-				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
-				|	var input = document.getElementById('address');
-				| var options = {componentRestrictions: {country: 'cl'}};
-				| autocomplete = new google.maps.places.Autocomplete(input, options);
+			button.btn.btn-primary.ml-3(type='button', data-toggle='modal', data-target='#newAddressModal') Agregar dirección
+	#newAddressModal.modal.fade(tabindex='-1', aria-labelledby='newAddressLabel', aria-hidden='true')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5#newAddressLabel.modal-title Agregar nueva dirección
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form#newAddressForm(action='/dashboard/agregar-direccion' method='post' enctype='multipart/form-data' autocomplete='off')
+						.form-group#newAddressName-group
+							label(for='newAddressName') Nombre de tu nueva dirección
+							input#newAddressName.form-control(type='text' name='newAddressName' required autocomplete='off' placeholder='Ej.: Mi casa. Taller. Oficina.')
+						.form-group#newAddressStreet-group
+							label(for='newAddressStreet') Dirección (Calle y número)
+							input#newAddressStreet.form-control(type='text' name='newAddressStreet' required autocomplete='off' placeholder='Ej.:Gran Avenida 1234')
+						.form-group#newAddressComuna-group
+							label(for='newAddressComuna') Comuna
+							input#newAddressComuna.form-control(type='text' name='newAddressComuna' required autocomplete='off' placeholder='Ej.:Ñuñoa')
+						.form-group#newAddressApart-group
+							label(for='newAddressApart') Letra o número de depto o casa.
+							input#newAddressApart.form-control(type='text' name='newAddressApart' autocomplete='off' placeholder='Ej.:Casa F. Departamento 403')
+						.form-check
+							input#defaultCheck1.form-check-input(type='checkbox', value='')
+							label.form-check-label(for='defaultCheck1')
+							| Default checkbox
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+					button.btn.btn-primary(type='button') Save changes
