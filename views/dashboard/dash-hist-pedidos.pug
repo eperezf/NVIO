@@ -7,7 +7,7 @@ append content
 		var sidename = "linkHistPedidos-side";
 	h1.landing-head.text-center
 		| #{title}
-	h6.text-center Haz click en el número de tracking para copiar su enlace de rastreo
+	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
 	.container.mb-5.mt-3
 		table.display.table-responsive-lg.text-center#orderHistory
 			thead
@@ -26,7 +26,7 @@ append content
 				each ORD, index in orders
 					tr
 						//- Look into changing this later down the line (https://en.wikipedia.org/wiki/Unobtrusive_JavaScript)
-						th(scope='row' onclick='copyAsLink(this);copySnackbar();' id='TableHead_' + index)  #{companyId + ORD.SK.S.replace("ORDER#","")}
+						th.text-white.bg-info(scope='row' onclick='copyAsLink(this);copySnackbar();' id='TableHead_' + index)  #{companyId + ORD.SK.S.replace("ORDER#","")}
 						td #{ORD.orderName.S}
 						td #{ORD.orderDesc.S}
 						td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
