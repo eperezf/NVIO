@@ -9,11 +9,71 @@ append content
 	script.
 		var topname = "linkDash-top";
 		var sidename = "linkDash-side";
-	h1.landing-head.text-center
-		| #{title}
-	p.landing-paragraph.text-center
-		| Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-		| magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-		| consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-		| pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-		| est laborum.
+	.container.mb-5.mt-3
+		.row.landing-head
+			.col-md-4
+				h1.text-center.mb-3 Bienvenido a NVIO
+				img.img-fluid.mx-auto.d-none.d-md-block(src='/static/logo/placeholder-logo.png' style='max-height: 200px;')
+			.col-md-4
+				.card.m-auto
+					.card-body
+						h3.card-title.text-center Recuerda:
+						.card-text - Tus paquetes no pueden exceder las dimensiones de 50cm x 50cm x 50cm y el peso de 10kg.
+						.card-text - Los envíos serán entregados dentro de un plazo máximo de 48 horas desde que se registran en nuestra plataforma.
+						.card-text
+			.col-md-4
+				hr.d-md-none
+				h2.text-center.mb-3.mt-3 Costos de envío
+				table.table.table-bordered.text-center#shippingPrice
+					thead
+						tr
+							th(scope='col') Origen
+							th(scope='col') Destino
+							th(scope='col') Costo
+					//- each Locality in places
+					tbody
+						tr
+							th(scope='row') Origen
+							td Destino
+							td Costo
+						tr
+							th
+							td Destino
+							td Costo
+						tr
+							th
+							td Destino
+							td Costo
+		.row.landing-head
+			.col
+				hr.d-md-none
+				h2.text-center.mb-3.mt-3 Tus pedidos recientes
+				table.table.table-bordered.text-center#orderSummary
+					thead.thead-dark
+						tr
+							th(scope='col') N° Pedido
+							th(scope='col') Destino
+							th(scope='col') Estado
+							th(scope='col') Costo
+					//- each Locality in places
+					tbody
+						tr
+							td Tracking Number
+							td Destino
+							td Estado
+							td Costo
+						tr
+							td Tracking Number
+							td Destino
+							td Estado
+							td Costo
+						tr
+							td Tracking Number
+							td Destino
+							td Estado
+							td Costo
+						tr
+							td Tracking Number
+							td Destino
+							td Estado
+							td Costo
