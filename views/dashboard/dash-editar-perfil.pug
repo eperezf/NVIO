@@ -14,8 +14,11 @@ append content
 					label(for='logo') La imagen debe ser PNG:
 					p
 						input#logo(type='file' name='logo' accept="image/png")
+			.form-group#legalName-group
+				label(for='legalName') Nombre Legal
+				input#legalName.form-control(type='text' name='legalName' value=legalName required oninvalid='this.setCustomValidity("El nombre legal de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
 			.form-group#companyName-group
-				label(for='companyName') Nombre Empresa
+				label(for='companyName') Nombre de fantasía
 				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
 			.form-group#companyRut-group
 				label(for='companyRut') RUT Empresa
@@ -38,15 +41,47 @@ append content
 				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
 			.form-group#address-group
-				label(for='address') Dirección
+				label(for='address') Dirección Comercial
 				input#address.form-control(type="text" name='address' value=address required autocomplete='off')
+				small Si no agregas direcciones adicionales, esta será tu dirección de envío por defecto.
+			.form-group#comuna-group
+				label(for='comuna') Comuna
+				select#comuna.form-control(name='comuna')
+					each val in comunas
+						if val == comuna
+							option(value=val selected) #{val}
+						else
+							option(value=val) #{val}
 			.form-group#addressApart-group
-				label(for='addressApart') Casa, Condominio, Departamento
+				label(for='addressApart') Casa, Condominio o Departamento
 				input#addressApart.form-control(type="text" name='addressApart' value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
-			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
-			script(type="text/javascript")
-				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
-				|	var input = document.getElementById('address');
-				| var options = {componentRestrictions: {country: 'cl'}};
-				| autocomplete = new google.maps.places.Autocomplete(input, options);
+			button.btn.btn-primary.ml-3(type='button', data-toggle='modal', data-target='#newAddressModal') Agregar dirección
+	#newAddressModal.modal.fade(tabindex='-1', aria-labelledby='newAddressLabel', aria-hidden='true')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5#newAddressLabel.modal-title Agregar nueva dirección
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form#newAddressForm(action='/dashboard/agregar-direccion' method='post' enctype='multipart/form-data' autocomplete='off')
+						.form-group#newAddressName-group
+							label(for='newAddressName') Nombre de tu nueva dirección
+							input#newAddressName.form-control(type='text' name='newAddressName' required autocomplete='off' placeholder='Ej.: Mi casa. Taller. Oficina.')
+						.form-group#newAddressStreet-group
+							label(for='newAddressStreet') Dirección (Calle y número)
+							input#newAddressStreet.form-control(type='text' name='newAddressStreet' required autocomplete='off' placeholder='Ej.:Gran Avenida 1234')
+						.form-group#newAddressComuna-group
+							label(for='newAddressComuna') Comuna
+							input#newAddressComuna.form-control(type='text' name='newAddressComuna' required autocomplete='off' placeholder='Ej.:Ñuñoa')
+						.form-group#newAddressApart-group
+							label(for='newAddressApart') Letra o número de depto o casa.
+							input#newAddressApart.form-control(type='text' name='newAddressApart' autocomplete='off' placeholder='Ej.:Casa F. Departamento 403')
+						.form-check
+							input#defaultCheck1.form-check-input(type='checkbox', value='')
+							label.form-check-label(for='defaultCheck1')
+							| Default checkbox
+				.modal-footer
+					button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+					button.btn.btn-primary(type='button') Save changes
