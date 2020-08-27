@@ -30,7 +30,6 @@ append content
 							th(scope='col') Origen
 							th(scope='col') Destino
 							th(scope='col') Costo
-					//- each Locality in places
 					tbody
 						tr
 							th(scope='row') Origen
@@ -51,29 +50,17 @@ append content
 				table.table.table-bordered.text-center#orderSummary
 					thead.thead-dark
 						tr
-							th(scope='col') N° Pedido
+							th(scope='col') ID Pedido
 							th(scope='col') Destino
 							th(scope='col') Estado
 							th(scope='col') Costo
-					//- each Locality in places
 					tbody
-						tr
-							td Tracking Number
-							td Destino
-							td Estado
-							td Costo
-						tr
-							td Tracking Number
-							td Destino
-							td Estado
-							td Costo
-						tr
-							td Tracking Number
-							td Destino
-							td Estado
-							td Costo
-						tr
-							td Tracking Number
-							td Destino
-							td Estado
-							td Costo
+						each ORD in orders
+							tr
+								td #{ORD.SK.S.replace("ORDER#","")}
+								if ORD.toApart.S != ""
+									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}, #{ORD.toApart.S}
+								else
+									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
+								td #{ORD.status.N}
+								td DUMMY COST
