@@ -1,6 +1,4 @@
-console.log("Update cost running!");
 function getCosto(){
-  console.log("getCosto Runnin'!");
   var e = document.getElementById("toLocality");
   var toLocality = e.options[e.selectedIndex].text;
   if (toLocality == "Selecciona una comuna") {
@@ -16,8 +14,6 @@ function getCosto(){
     console.log("TO: " + toLocality);
     localities = [fromLocality, toLocality];
     localities.sort();
-    console.log("Desde " + fromLocality + " hacia " + toLocality);
-    console.log("Running Query");
     getCostoReq(localities);
 
   }
@@ -27,10 +23,8 @@ function getCosto(){
 
 const getCostoReq = async (localities) => {
   document.getElementById("shippingCost").value = "Calculando...";
-  console.log(localities);
   const response = await fetch(window.location.href + '/get-costo/' + localities[0] + "/" + localities[1]);
-  const myJson = await response.json(); //extract JSON from the http response
-  console.log(myJson);
-  document.getElementById("shippingCost").value = myJson.costo;
+  const resJson = await response.json();
+  document.getElementById("shippingCost").value = resJson.costo;
   // do something with myJson
 }

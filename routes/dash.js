@@ -545,40 +545,53 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
 });
 
 router.get('/nuevo-envio/get-costo/:c1/:c2', (req,res)=> {
-  // TODO: SANITIZE INPUT!!!!!!!!!!!!
-  var docClient = new aws.DynamoDB();
-  var params={
-    "TableName": "NVIO",
-    "ScanIndexForward": false,
-    "ConsistentRead": false,
-    "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
-    "ExpressionAttributeValues": {
-      ":cd420": {
-        "S": "COMUNA"
-      },
-      ":cd421": {
-        "S": "COSTO"
-      },
-      ":cd422": {
-        "S": req.params.c1
-      },
-      ":cd423": {
-        "S": req.params.c2
-      }
-    },
-    "ExpressionAttributeNames": {
-      "#cd420": "PK",
-      "#cd421": "SK"
-    },
-    FilterExpression: "comuna1 = :cd422 AND comuna2 = :cd423"
-  }
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-    } else {
-      res.json({costo: data.Items[0].costo.N});
+  var c1bad = true;
+  var c2bad = true;
+  comunas.forEach((item, i) => {
+    if (item == req.params.c1) {
+      c1bad = false;
+    }
+    if (item == req.params.c2) {
+      c2bad = false;
     }
   });
+  if (c1bad == true || c2bad == true){
+    res.json({costo: "Comunas inválidas..."});
+  } else {
+    var docClient = new aws.DynamoDB();
+    var params={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": "COMUNA"
+        },
+        ":cd421": {
+          "S": "COSTO"
+        },
+        ":cd422": {
+          "S": req.params.c1
+        },
+        ":cd423": {
+          "S": req.params.c2
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      },
+      FilterExpression: "comuna1 = :cd422 AND comuna2 = :cd423"
+    }
+    docClient.query(params, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        res.json({costo: data.Items[0].costo.N});
+      }
+    });
+  }
 })
 
 module.exports = router;
