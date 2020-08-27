@@ -24,9 +24,41 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
       return res.redirect('/');
     }
     else {
-      const name = "Dashboard";
-      console.log("Dashboard Index Requested");
-      res.render('dashboard/dashboard', {title: name});
+      var docClient = new aws.DynamoDB();
+      var params={
+        "TableName": "NVIO",
+        "ScanIndexForward": false,
+        "ConsistentRead": false,
+        "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+        "ExpressionAttributeValues": {
+          ":cd420": {
+            "S": req.user.user
+          },
+          ":cd421": {
+            "S": "ORDER"
+          }
+        },
+        "ExpressionAttributeNames": {
+          "#cd420": "PK",
+          "#cd421": "SK"
+        }
+      }
+      docClient.query(params, function(err, data) {
+        if (err) {
+          console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        } else {
+          const name = "Dashboard";
+          data.Items.sort(function(a, b) {
+            return parseFloat(b.createdAt.N) - parseFloat(a.createdAt.N);
+          });
+          var orders = [];
+          for (var i = 0; i < 5; i++) {
+            orders[i] = data.Items[i];
+          }
+          console.log(orders);
+          res.render('dashboard/dashboard', {title: name, orders: orders});
+        }
+      });
     }
 });
 
