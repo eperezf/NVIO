@@ -163,7 +163,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       if (validator.isEmpty(data.Items[0].companyTurn.S)) {
         return res.redirect('/dashboard/');
       }
-      res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart});
+      res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart, comunas: comunas});
 
     }
   });
@@ -487,6 +487,7 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
     return res.redirect('/dashboard/editar-perfil')
   }
   //Append comuna and Santiago to address
+  // NOTE: Fix when we expand to other cities!!!!!!!!!!!
   var completeAddress = req.body.address + ", " + req.body.comuna + ", Santiago";
   console.log(completeAddress);
   client.geocode({params: {key: process.env.GAPI, address: completeAddress}, timeout: 1000}).then(r => {
@@ -541,8 +542,43 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
   }).catch(e => {
     console.log(e);
   });
-
-
 });
+
+router.get('/nuevo-envio/get-costo/:c1/:c2', (req,res)=> {
+  // TODO: SANITIZE INPUT!!!!!!!!!!!!
+  var docClient = new aws.DynamoDB();
+  var params={
+    "TableName": "NVIO",
+    "ScanIndexForward": false,
+    "ConsistentRead": false,
+    "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+    "ExpressionAttributeValues": {
+      ":cd420": {
+        "S": "COMUNA"
+      },
+      ":cd421": {
+        "S": "COSTO"
+      },
+      ":cd422": {
+        "S": req.params.c1
+      },
+      ":cd423": {
+        "S": req.params.c2
+      }
+    },
+    "ExpressionAttributeNames": {
+      "#cd420": "PK",
+      "#cd421": "SK"
+    },
+    FilterExpression: "comuna1 = :cd422 AND comuna2 = :cd423"
+  }
+  docClient.query(params, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      res.json({costo: data.Items[0].costo.N});
+    }
+  });
+})
 
 module.exports = router;

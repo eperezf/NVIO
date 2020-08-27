@@ -22,16 +22,10 @@ append content
 					.form-group
 						label(for='toLocality') Comuna Destinatario 
 							i(style='font-size: 10px').fa.fa-asterisk
-						select#toLocality.form-control(type='text' name="localityListTo" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}')
+						select#toLocality.form-control(type='text' name="localityListTo" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}; getCosto()')
 							option(value = '' disabled selected hidden) Selecciona una comuna
-							option Cerrillos
-							option Cerro Navia
-							option Conchalí
-							option El Bosque
-							option Estación Central
-							option Huechuraba
-							option Independencia
-							option La Cisterna
+							each val in comunas
+								option(value=val) #{val}
 				.col-sm-6
 					.form-group
 						label Apartado Destinatario
@@ -59,16 +53,10 @@ append content
 					.form-group
 						label(for='fromLocality') Comuna de Origen 
 							i(style='font-size: 10px').fa.fa-asterisk
-						select#fromLocality.form-control(type='text' name="localityListFrom" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}')
+						select#fromLocality.form-control(type='text' name="localityListFrom" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){} getCosto()')
 							option(value = '' disabled selected hidden) Selecciona una comuna
-							option Cerrillos
-							option Cerro Navia
-							option Conchalí
-							option El Bosque
-							option Estación Central
-							option Huechuraba
-							option Independencia
-							option La Cisterna
+							each val in comunas
+								option(value=val) #{val}
 				.col-sm-6
 					.form-group
 						label Apartado Origen
@@ -108,3 +96,5 @@ append content
 					a(href='/tos' target='_blank') términos y condiciones 
 					i(style='font-size: 10px').fa.fa-asterisk
 			button#submitOrder.btn.btn-primary(type='submit' onclick='' style='margin-top: 20px;') Enviar
+	//- Datatable declaration
+	script(src='/static/js/update-cost.js')
