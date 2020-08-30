@@ -38,7 +38,7 @@ append content
 								th #{locality}
 								td #{CO.locality}
 								td #{CO.cost}
-	//-
+	
 		.row.landing-head
 			.col
 				hr.d-md-none
@@ -59,7 +59,7 @@ append content
 								else
 									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
 								td #{ORD.status.N}
-								td DUMMY COST
+								td $#{ORD.shippingCost.N}
 append dash-viewscript
 	//- Datatables
 	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')

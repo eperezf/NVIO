@@ -15,7 +15,13 @@ const fs = require('fs');
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
 
-// Dashboard Index
+/**
+ * Name: Dashboard Index
+ * Desc: Shows the dashboard index. Recent 5 orders and shipping cost table.
+ * URL: /dashboard
+ * Method: GET
+ */
+
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req, res, next) => {
   if (req.user.user.includes("ADMIN")){
     return res.redirect('/');
@@ -70,7 +76,7 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
         "#cd421": "SK"
       }
     }
-    //Get recent 5 orders
+    //Get recent 5 orders (or less)
     docClient.query(orderParams, function(err, data) {
       if (err) {
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
@@ -81,7 +87,9 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
         });
         //Put first 5 orders in array
         for (var i = 0; i < 5; i++) {
-          orders[i] = data.Items[i];
+          if(data.Items[i]){
+            orders[i] = data.Items[i];
+          }
         }
         //Get locality
         docClient.query(userParams, function(err, data) {
