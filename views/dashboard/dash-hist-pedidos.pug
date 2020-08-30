@@ -8,6 +8,7 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
+	form#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data') 
 	.container.mb-5.mt-3
 		table.display.table-responsive-lg.text-center#orderHistory
 			thead
@@ -97,6 +98,9 @@ append content
 								.modal-footer
 									button.btn.btn-secondary(type='button' data-dismiss='modal') Cerrar
 									input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#","") + "';")
+									if ORD.status.N == 0
+											button.btn.btn-danger(type='submit' name='order' id='order' value=ORD.SK.S form='cancelOrder') Cancelar Orden
+											
 	#snackbar Enlace copiado!
 append dash-viewscript
 	script(src='/static/js/copy-on-click.js')

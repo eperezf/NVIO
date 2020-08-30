@@ -354,7 +354,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
  * URL: /dashboard/hist-pedidos
  * Method: GET
  */
- 
+
 router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
     const name = "Historial Pedidos";
     console.log("Dashboard Order History Requested");
@@ -632,6 +632,57 @@ router.get('/nuevo-envio/get-costo/:c1/:c2', (req,res)=> {
       }
     });
   }
+})
+
+router.post('/cancelar-envio', upload.none(), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req,res)=> {
+  //Validate in backend if status != 0
+  var docClient = new aws.DynamoDB();
+  var getParams={
+    "TableName": "NVIO",
+    "ScanIndexForward": false,
+    "ConsistentRead": false,
+    "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+    "ExpressionAttributeValues": {
+      ":cd420": {
+        "S": req.user.user
+      },
+      ":cd421": {
+        "S": req.body.order
+      }
+    },
+    "ExpressionAttributeNames": {
+      "#cd420": "PK",
+      "#cd421": "SK"
+    }
+  }
+  docClient.query(getParams, function(err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    } else {
+      if (parseInt(data.Items[0].status.N) == 0) {
+        var delParams = {
+          "TableName": "NVIO",
+          Key:{
+            "PK": req.user.user,
+            "SK": req.body.order
+          },
+          ReturnValues: "ALL_OLD"
+        }
+        var docClient = new aws.DynamoDB.DocumentClient();
+        docClient.delete(delParams, function(err, data) {
+          if (err) {
+            console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
+          } else {
+            console.log("DeleteItem succeeded:", JSON.stringify(data, null, 2));
+            res.redirect('/dashboard/hist-pedidos');
+          }
+        });
+      }
+      else {
+        res.redirect('/dashboard/hist-pedidos');
+      }
+    }
+  });
 })
 
 module.exports = router;
