@@ -54,7 +54,7 @@ append content
 								td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
 							else
 								td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
-						td #{ORD.orderValue.N}
+						td $#{ORD.shippingCost.N}
 						td
 							button.btn.btn-outline-info(id='InfoButton_' + index data-toggle='modal' data-target='#InfoModal_' + index) Detalle
 					.modal.fade(tabindex='-1' role='dialog' aria-labelledby='infoModal_' + + index aria-hidden='true' id='InfoModal_' + index)
@@ -89,7 +89,8 @@ append content
 											p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
 										else
 											p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
-									p Valor de la orden: #{ORD.orderValue.N}
+									p Valor de la orden: $#{ORD.orderValue.N}
+									p Costo de envío: $#{ORD.shippingCost.N}
 									p Nombre del repartidor: Aún no asignado
 									if ORD.comment.S != ""
 										p Información Adicional: #{ORD.comment.S}

@@ -129,7 +129,8 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       if (!data.Items[0].fromAddress) {
         return res.redirect('/dashboard/');
       }
-      companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}, ${data.Items[0].fromAddress.M.locality.S}`;
+      companyAddress = `${data.Items[0].fromAddress.M.street.S} ${data.Items[0].fromAddress.M.number.N}`;
+      companyLocality = data.Items[0].fromAddress.M.locality.S;
       companyAddressApart = data.Items[0].fromApart.S;
       const name = "Nuevo Envío";
       console.log("Dashboard New Order Requested");
@@ -163,7 +164,7 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       if (validator.isEmpty(data.Items[0].companyTurn.S)) {
         return res.redirect('/dashboard/');
       }
-      res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart, comunas: comunas});
+      res.render('dashboard/dash-envio', {title: name, uuid: uuidv4(), companyAddress: companyAddress, companyAddressApart: companyAddressApart, companyLocality: companyLocality, comunas: comunas});
 
     }
   });
@@ -181,7 +182,6 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   var companyAddress;
   var companyAddressApart;
   const client = new Client({});
-
 
   //FORM VALIDATION
   if (validator.isEmpty(req.body.fromAddress)){
@@ -216,14 +216,14 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
     return res.redirect("/dashboard/nuevo-envio");
   }
 
-  client.geocode({params: {key: process.env.GAPI, address: req.body.fromAddress+", Santiago"}, timeout: 1000}).then(r => {
+  client.geocode({params: {key: process.env.GAPI, address: req.body.fromAddress + " " + req.body.fromLocality + ", Santiago"}, timeout: 1000}).then(r => {
     fromGeocodedData = r.data.results[0].address_components;
     fromLocation = r.data.results[0].geometry.location;
     if (r.data.results[0].partial_match || r.data.results[0].address_components[0].types != "street_number") {
       return res.redirect('/dashboard/nuevo-envio');
       console.log("INVALID FROM ADDRESS");
     }
-    client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress+", Santiago"}, timeout: 1000}).then(r => {
+    client.geocode({params: {key: process.env.GAPI, address: req.body.toAddress + " " + req.body.toLocality + ", Santiago"}, timeout: 1000}).then(r => {
       console.log(r.data.results[0]);
       toGeocodedData = r.data.results[0].address_components;
       toLocation = r.data.results[0].geometry.location;
@@ -258,50 +258,85 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
         console.log(data);
         if (data.Count == 0) {
           console.log("No collision. Creating Order.");
-          uoid = req.user.user.replace("COMPANY#", "")+orderID;
-          console.log(req.body);
-          console.log(req.user.user);
-          console.log("ORDER#"+orderID);
-          console.log("UNIQUE ORDER ID: " + uoid);
-          docClient = new aws.DynamoDB.DocumentClient();
-          params = {
-            TableName:'NVIO',
-            Item:{
-                "PK": req.user.user,
-                "SK": "ORDER#"+orderID,
-                "fromAddress": {
-                  "locality": fromGeocodedData[3].long_name,
-                  "number": parseInt(fromGeocodedData[0].long_name),
-                  "street": fromGeocodedData[1].long_name,
-                  "latitude": fromLocation.lat,
-                  "longitude": fromLocation.lng
-                },
-                "fromApart": req.body.fromApart,
-                "toAddress": {
-                  "locality": toGeocodedData[3].long_name,
-                  "number": parseInt(toGeocodedData[0].long_name),
-                  "street": toGeocodedData[1].long_name,
-                  "latitude": toLocation.lat,
-                  "longitude": toLocation.lng
-                },
-                "toApart": req.body.toApart,
-                "orderName": req.body.orderName,
-                "orderDesc": req.body.orderDesc,
-                "orderValue": parseInt(req.body.orderValue),
-                "nameDest": req.body.nameDest,
-                "contactDest": req.body.contactDest,
-                "comment": req.body.comment,
-                "status": 0,
-                "createdAt": Date.now()
-            }
-          };
-          console.log("Adding a new item...");
-          docClient.put(params, function(err, data) {
+          localities = [req.body.fromLocality, req.body.toLocality];
+          localities.sort();
+          console.log(localities);
+
+          var costParams={
+            "TableName": "NVIO",
+            "ScanIndexForward": false,
+            "ConsistentRead": false,
+            "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+            "ExpressionAttributeValues": {
+              ":cd420": {
+                "S": "COMUNA"
+              },
+              ":cd421": {
+                "S": "COSTO"
+              },
+              ":cd422": {
+                "S": localities[0]
+              },
+              ":cd423": {
+                "S": localities[1]
+              }
+            },
+            "ExpressionAttributeNames": {
+              "#cd420": "PK",
+              "#cd421": "SK"
+            },
+            FilterExpression: "comuna1 = :cd422 AND comuna2 = :cd423"
+          }
+          docClient.query(costParams, function(err, data) {
             if (err) {
-              console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+              console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
             } else {
-              console.log("Added item:", JSON.stringify(data, null, 2));
-              return res.redirect("/dashboard/hist-pedidos");
+              console.log(req.body);
+              console.log(req.user.user);
+              console.log("COSTO ENVIO " + data.Items[0].costo.N);
+              console.log("ORDER#"+orderID);
+              docClient = new aws.DynamoDB.DocumentClient();
+              params = {
+                TableName:'NVIO',
+                Item:{
+                  "PK": req.user.user,
+                  "SK": "ORDER#"+orderID,
+                  "fromAddress": {
+                    "locality": fromGeocodedData[3].long_name,
+                    "number": parseInt(fromGeocodedData[0].long_name),
+                    "street": fromGeocodedData[1].long_name,
+                    "latitude": fromLocation.lat,
+                    "longitude": fromLocation.lng
+                  },
+                  "fromApart": req.body.fromApart,
+                  "toAddress": {
+                    "locality": toGeocodedData[3].long_name,
+                    "number": parseInt(toGeocodedData[0].long_name),
+                    "street": toGeocodedData[1].long_name,
+                    "latitude": toLocation.lat,
+                    "longitude": toLocation.lng
+                  },
+                  "toApart": req.body.toApart,
+                  "orderName": req.body.orderName,
+                  "orderDesc": req.body.orderDesc,
+                  "orderValue": parseInt(req.body.orderValue),
+                  "nameDest": req.body.nameDest,
+                  "contactDest": req.body.contactDest,
+                  "comment": req.body.comment,
+                  "shippingCost": parseInt(data.Items[0].costo.N),
+                  "status": 0,
+                  "createdAt": Date.now()
+                }
+              };
+              console.log("Adding a new item...");
+              docClient.put(params, function(err, data) {
+                if (err) {
+                  console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                } else {
+                  console.log("Added item:", JSON.stringify(data, null, 2));
+                  return res.redirect("/dashboard/hist-pedidos");
+                }
+              });
             }
           });
         }
@@ -313,7 +348,13 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
   }
 });
 
-// Dashboard Order History
+/**
+ * Name: Order history GET
+ * Desc: Lists order history
+ * URL: /dashboard/hist-pedidos
+ * Method: GET
+ */
+ 
 router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
     const name = "Historial Pedidos";
     console.log("Dashboard Order History Requested");
@@ -340,7 +381,6 @@ router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failur
       if (err) {
         console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
       } else {
-        //res.json(data)
         res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
       }
     });

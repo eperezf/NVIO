@@ -22,7 +22,7 @@ append content
 					.form-group
 						label(for='toLocality') Comuna Destinatario 
 							i(style='font-size: 10px').fa.fa-asterisk
-						select#toLocality.form-control(type='text' name="localityListTo" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}; getCosto()')
+						select#toLocality.form-control(type='text' name="toLocality" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}; getCosto()')
 							option(value = '' disabled selected hidden) Selecciona una comuna
 							each val in comunas
 								option(value=val) #{val}
@@ -47,20 +47,23 @@ append content
 			.form-group
 				label Dirección de Origen 
 					i(style='font-size: 10px').fa.fa-asterisk
-				input#fromAddress.form-control(type='text' name="fromAddress" required oninvalid='this.setCustomValidity("La dirección no puede estar vacía")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+				input#fromAddress.form-control(type='text' name="fromAddress" value=companyAddress required oninvalid='this.setCustomValidity("La dirección no puede estar vacía")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 			.row
 				.col-sm-6
 					.form-group
 						label(for='fromLocality') Comuna de Origen 
 							i(style='font-size: 10px').fa.fa-asterisk
-						select#fromLocality.form-control(type='text' name="localityListFrom" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){} getCosto()')
-							option(value = '' disabled selected hidden) Selecciona una comuna
+						select#fromLocality.form-control(type='text' name="fromLocality" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){} getCosto()')
+							option(value = '' disabled hidden) Selecciona una comuna
 							each val in comunas
-								option(value=val) #{val}
+								if val == companyLocality
+									option(value=val selected) #{val}
+								else
+									option(value=val) #{val}
 				.col-sm-6
 					.form-group
 						label Apartado Origen
-						input#fromApart.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.')
+						input#fromApart.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.' value=companyAddressApart)
 			.form-group
 				label Nombre de tu Pedido 
 					i(style='font-size: 10px').fa.fa-asterisk
