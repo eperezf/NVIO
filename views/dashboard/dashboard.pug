@@ -1,4 +1,6 @@
 extends ../includes/dashbar
+append dash-postHead
+	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
 	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
 	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
@@ -11,43 +13,37 @@ append content
 		var sidename = "linkDash-side";
 	.container.mb-5.mt-3
 		.row.landing-head
-			.col-md-4
+			.col-lg-4
 				h1.text-center.mb-3 Bienvenido a NVIO
-				img.img-fluid.mx-auto.d-none.d-md-block(src='/static/logo/placeholder-logo.png' style='max-height: 200px;')
-			.col-md-4
+				img.img-fluid.mx-auto.d-none.d-lg-block(src='/static/logo/placeholder-logo.png' style='max-height: 200px;')
+			.col-lg-4
 				.card.m-auto
 					.card-body
 						h3.card-title.text-center Recuerda:
 						.card-text - Tus paquetes no pueden exceder las dimensiones de 50cm x 50cm x 50cm y el peso de 10kg.
 						.card-text - Los envíos serán entregados dentro de un plazo máximo de 48 horas desde que se registran en nuestra plataforma.
 						.card-text
-			.col-md-4
+			.col-lg-4
 				hr.d-md-none
-				h2.text-center.mb-3.mt-3 Costos de envío
-				table.table.table-bordered.text-center#shippingPrice
+				h2.text-center Costos de envío
+				table.table.table-bordered.table-striped.text-center#shippingPrice
 					thead
 						tr
 							th(scope='col') Origen
 							th(scope='col') Destino
 							th(scope='col') Costo
 					tbody
-						tr
-							th(scope='row') Origen
-							td Destino
-							td Costo
-						tr
-							th
-							td Destino
-							td Costo
-						tr
-							th
-							td Destino
-							td Costo
+						each CO in costs
+							tr
+								th #{locality}
+								td #{CO.locality}
+								td #{CO.cost}
+	//-
 		.row.landing-head
 			.col
 				hr.d-md-none
 				h2.text-center.mb-3.mt-3 Tus pedidos recientes
-				table.table.table-bordered.text-center#orderSummary
+				table.table.table-sm.table-bordered.text-center#orderSummary
 					thead.thead-dark
 						tr
 							th(scope='col') ID Pedido
@@ -64,3 +60,8 @@ append content
 									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
 								td #{ORD.status.N}
 								td DUMMY COST
+append dash-viewscript
+	//- Datatables
+	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+	//- Declaration
+	script(src='/static/js/declare-ship-price.js')
