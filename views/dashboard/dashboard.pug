@@ -1,6 +1,4 @@
 extends ../includes/dashbar
-append dash-postHead
-	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
 	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
 	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
@@ -26,18 +24,19 @@ append content
 			.col-lg-4
 				hr.d-md-none
 				h2.text-center Costos de envío
-				table.table.table-bordered.table-striped.text-center#shippingPrice
-					thead
-						tr
-							th(scope='col') Origen
-							th(scope='col') Destino
-							th(scope='col') Costo
-					tbody
-						each CO in costs
+				.d-block.scroll-table
+					table.table.table-sm.table-bordered.table-striped.text-center#shippingPrice
+						thead.scroll-table-header
 							tr
-								th #{locality}
-								td #{CO.locality}
-								td #{CO.cost}
+								th(scope='col') Origen
+								th(scope='col') Destino
+								th(scope='col') Costo
+						tbody
+							each CO in costs
+								tr
+									th #{locality}
+									td #{CO.locality}
+									td $#{CO.cost}
 	
 		.row.landing-head
 			.col
@@ -60,8 +59,3 @@ append content
 									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
 								td #{ORD.status.N}
 								td $#{ORD.shippingCost.N}
-append dash-viewscript
-	//- Datatables
-	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
-	//- Declaration
-	script(src='/static/js/declare-ship-price.js')
