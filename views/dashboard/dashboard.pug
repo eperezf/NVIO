@@ -52,7 +52,7 @@ append content
 					tbody
 						each ORD in orders
 							tr
-								td #{ORD.SK.S.replace("ORDER#","")}
+								td #{ORD.orderName.S}
 								if ORD.toApart.S != ""
 									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}, #{ORD.toApart.S}
 								else
