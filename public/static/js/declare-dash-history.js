@@ -1,11 +1,11 @@
 $(document).ready(function () {
-    $('#orderSummary').DataTable({
+    $('#shippingPrice').DataTable({
         "searching": false,
         "paging": false,
         "columnDefs": [
             {
                 "orderable": false,
-                "targets": [0, 1, 2, 3, 4, 5]
+                "targets": [0, 2]
             }
         ],
         "order": [[ 1, "asc" ]],
