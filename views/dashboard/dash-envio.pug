@@ -3,61 +3,101 @@ append content
 	script.
 		var topname = "linkEnvio-top";
 		var sidename = "linkEnvio-side";
-	h1.landing-head.text-center
-		| #{title}
+	h1.landing-head.text-center #{title}
+	h4.landing-head.text-center Los campos obligatorios están marcados con un asterisco (
+		i(style='font-size: 15px').fa.fa-asterisk
+		| )
 	.container
-		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data' autocomplete='off')
+		form(action='/dashboard/nuevo-envio' method='POST' enctype='multipart/form-data')
 			.form-group
-				label Dirección Remitente
-				input.form-control#fromAddress(type='text' name="fromAddress" value=companyAddress required autocomplete='off')
+				label Nombre Destinatario 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#nameDest.form-control(type='text' name="nameDest" required oninvalid='this.setCustomValidity("El nombre no puede estar vacío")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 			.form-group
-				label Apartado Remitente
-				input.form-control#fromApart(type='text' name="fromApart" value=companyAddressApart)
+				label Dirección Destinatario 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#toAddress.form-control(type='text' name="toAddress" required oninvalid='this.setCustomValidity("La dirección no puede estar vacía")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+			.row
+				.col-sm-6
+					.form-group
+						label(for='toLocality') Comuna Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
+						select#toLocality.form-control(type='text' name="toLocality" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){}; getCosto()')
+							option(value = '' disabled selected hidden) Selecciona una comuna
+							each val in comunas
+								option(value=val) #{val}
+				.col-sm-6
+					.form-group
+						label Apartado Destinatario
+						input#toApart.form-control(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
+			.row
+				.col-sm-6
+					.form-group
+						label Teléfono Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
+						.input-group
+							.input-group-prepend
+								.input-group-text +56
+							input#toPhone.form-control(type='text' name="contactDest" required oninvalid='this.setCustomValidity("El número debe tener 9 números")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[0-9]{9}')
+				.col-sm-6
+					.form-group
+						label(for='toEmail') Email del Destinatario 
+							i(style='font-size: 10px').fa.fa-asterisk
+						input#toEmail.form-control(type='email' name='companyEmail' placeholder='ejemplo@correo.com' required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
 			.form-group
-				label Dirección Destinatario
-				input.form-control#toAddress(type='text' name="toAddress" required autocomplete='off')
+				label Dirección de Origen 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#fromAddress.form-control(type='text' name="fromAddress" value=companyAddress required oninvalid='this.setCustomValidity("La dirección no puede estar vacía")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+			.row
+				.col-sm-6
+					.form-group
+						label(for='fromLocality') Comuna de Origen 
+							i(style='font-size: 10px').fa.fa-asterisk
+						select#fromLocality.form-control(type='text' name="fromLocality" required oninvalid='this.setCustomValidity("Por favor selecciona una comuna")' onchange='try{setCustomValidity("")}catch(e){} getCosto()')
+							option(value = '' disabled hidden) Selecciona una comuna
+							each val in comunas
+								if val == companyLocality
+									option(value=val selected) #{val}
+								else
+									option(value=val) #{val}
+				.col-sm-6
+					.form-group
+						label Apartado Origen
+						input#fromApart.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.' value=companyAddressApart)
 			.form-group
-				label Apartado Destinatario
-				input.form-control#toApart(type='text' name="toApart" placeholder='Número Depto, Condominio, Piso, etc.')
+				label Número Pedido 
+					i(style='font-size: 10px').fa.fa-asterisk
+				input#orderName.form-control(type='text' name="orderName" required oninvalid='this.setCustomValidity("El nombre del pedido no puede estar vacío")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
+				small Este número es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
-				label Nombre Destinatario
-				input.form-control(type='text' name="nameDest" required)
-			.form-group
-				label Teléfono Destinatario
-				.input-group
-					.input-group-prepend
-						.input-group-text +56
-					input.form-control(type='text' name="contactDest" required)
-			.form-group
-				label Nombre de tu Pedido
-				input.form-control(type='text' name="orderName" required)
-				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
-			.form-group
-				label ¿Qué es lo que envías?
-				input.form-control(type='text' name="orderDesc" required)
-				small Describe aquí tu paquete, recuerda seguir nuestras 
-					a(href='/recomendaciones' target='_blank') recomendaciones
-			.form-group
-				label Valor de lo que envías
-				.input-group
-					.input-group-prepend
-						.input-group-text $
-					input.form-control(type='number' name="orderValue" required)
-				small Valor en pesos chilenos
+				.row
+					.col-sm-5
+						label ¿Qué es lo que contiene tu envío? 
+							i(style='font-size: 10px').fa.fa-asterisk
+						input#orderDesc.form-control(type='text' name="orderDesc" required oninvalid='this.setCustomValidity("Debes describir tu pedido")' onchange='try{setCustomValidity("")}catch(e){}')
+						small Describe aquí tu paquete, recuerda seguir nuestras 
+							a(href='/recomendaciones' target='_blank') recomendaciones
+					.col-sm-4
+						label Valor de lo que envías 
+							i(style='font-size: 10px').fa.fa-asterisk
+						.input-group
+							.input-group-prepend
+								.input-group-text $
+							input#orderValue.form-control(type='number' name="orderValue" min="1" required oninvalid='this.setCustomValidity("El valor debe ser mayor a cero")' onchange='try{setCustomValidity("")}catch(e){}')
+						small Valor en pesos chilenos
+					.col-sm-3
+						label Costo NVIO
+						input#shippingCost.form-control(type='text' name="shippingCost" disabled)
+						small Calculado según el destino y origen
 			.form-group
 				label Comentarios adicionales
-				input.form-control(type='text' name="comment")
+				input#extraComments.form-control(type='text' name="comment")
 				small Puedes ingresar algún comentario en caso de necesitarlo
 			.form-check
-				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required)
+				input#tosAgree.form-check-input(type='checkbox' name="tos" value="true" required oninvalid='this.setCustomValidity("Debes aceptar los términos y condiciones (recuerda revisarlos si tienes alguna duda!)")' onchange='try{setCustomValidity("")}catch(e){}')
 				label.form-check-label(for='tosAgree') Acepto los 
-					a(href='/tos' target='_blank') términos y condiciones
-			button.btn.btn-primary(type='submit' style='margin-top: 20px;') Enviar
-			script(type="text/javascript" src='https://maps.googleapis.com/maps/api/js?key='+process.env.GAPI+'&sessiontoken='+uuid+'&libraries=places&region=cl')
-			script(type="text/javascript")
-				| let sessionToken = new google.maps.places.AutocompleteSessionToken();
-				|	var toInput = document.getElementById('toAddress');
-				| var fromInput = document.getElementById('fromAddress');
-				| var options = {componentRestrictions: {country: 'cl'}};
-				| fromAutocomplete = new google.maps.places.Autocomplete(fromInput, options);
-				| toAutocomplete = new google.maps.places.Autocomplete(toInput, options);
+					a(href='/tos' target='_blank') términos y condiciones 
+					i(style='font-size: 10px').fa.fa-asterisk
+			button#submitOrder.btn.btn-primary(type='submit' onclick='' style='margin-top: 20px;') Enviar
+	//- Datatable declaration
+	script(src='/static/js/update-cost.js')

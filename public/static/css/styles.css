@@ -1,4 +1,13 @@
 /* General use and Landing Page code */
+@media screen and (max-width: 667px) { /* This prevents lateral scroll on small screens */
+    body {
+        overflow-x: hidden !important;
+    }
+    .container {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+}
 .four-oh-four {
     color: #C00;
     text-align: center;
@@ -23,6 +32,17 @@
 
 .grey-link:hover {
     color: #AAA;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.orange-link {
+    color: coral;
+    text-decoration: none;
+}
+
+.orange-link:hover {
+    color: coral;
     text-decoration:none;
     cursor:pointer;
 }
@@ -217,9 +237,14 @@
 }
 
 /* Override Primary Buttons */
-.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-    background-color: coral !important;
-    border-color: #ff83e0 !important;
+.btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: #ff7f50 !important;
+    border-color: #ff9673 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ff5115 !important;
+    border-color: #ff9673 !important;
 }
 
 /* Dashboard General */
@@ -246,7 +271,7 @@
 }
 
 .dash-sidebar a.active {
-    background-color: #F859D7;
+    background-color: #ff7f50;
     color: white;
 }
 
@@ -259,7 +284,7 @@
 div.dash-content {
     margin-top: 60px;
     margin-left: 200px;
-    padding: 1px 16px 75px;
+    padding: 1px 16px 20px;
     height: 100%;
 }
 
@@ -368,6 +393,20 @@ div.dash-content {
 
 .profile-container {
     margin-top: 40px;
+}
+
+/* Scrolling Table */
+.scroll-table{
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+
+.scroll-table-header{
+    position: sticky;
+    top: 0;
+    background:#fff;
+    border: 1px #aaa;
 }
 
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
