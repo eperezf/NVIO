@@ -68,11 +68,11 @@ append content
 								.modal-dialog(role='document')
 									.modal-content
 										.modal-header
-											h5.modal-title(id='InfoModalLabel_' + index) Pedido ##{companyId + ORD.SK.S.replace("ORDER#", "")}
+											h5.modal-title(id='InfoModalLabel_' + index) Pedido ##{ORD.PK.S.replace("COMPANY#", "") + ORD.SK.S.replace("ORDER#", "")}
 											button.close(type='button' data-dismiss='modal' aria-label='Close')
 												span(aria-hidden='true') ×
 										.modal-body
-											p Tracking ##{companyId + ORD.SK.S.replace("ORDER#", "")}
+											p Tracking ##{ORD.PK.S.replace("COMPANY#", "") + ORD.SK.S.replace("ORDER#", "")}
 											p Nombre Pedido: #{ORD.orderName.S}
 											p Descripción: #{ORD.orderDesc.S}
 											p Dirección Remitente: #{ORD.fromAddress.M.street.S} #{ORD.fromAddress.M.number.N}
