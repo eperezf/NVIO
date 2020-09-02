@@ -1,4 +1,6 @@
 extends ../includes/dashbar
+append dash-postHead
+	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
 	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
 	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
@@ -43,7 +45,7 @@ append content
 			.col
 				hr.d-md-none
 				h2.text-center.mb-3.mt-3 Tus pedidos recientes
-				table.table.table-sm.table-bordered.text-center#orderSummary
+				table.table.table-responsive-lg.table-sm.table-bordered.text-center#orderSummary
 					thead.thead-dark
 						tr
 							th(scope='col') ID Pedido
@@ -107,3 +109,8 @@ append content
 											input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#", "") + "';")
 											if ORD.status.N == 0
 												button.btn.btn-danger(type='submit' name='order' id='order' value=ORD.SK.S form='cancelOrder') Cancelar Orden
+append dash-viewscript
+	//- Datatables scripts
+	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+	//- Datatable declaration
+	script(src='/static/js/declare-dash-history.js')
