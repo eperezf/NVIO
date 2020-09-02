@@ -395,6 +395,20 @@ div.dash-content {
     margin-top: 40px;
 }
 
+/* Scrolling Table */
+.scroll-table{
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+
+.scroll-table-header{
+    position: sticky;
+    top: 0;
+    background:#fff;
+    border: 1px #aaa;
+}
+
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
 .footer-bs {
     background-color: #333;

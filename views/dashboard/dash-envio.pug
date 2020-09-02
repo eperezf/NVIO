@@ -65,10 +65,10 @@ append content
 						label Apartado Origen
 						input#fromApart.form-control(type='text' name="fromApart" placeholder='Número Depto, Condominio, Piso, etc.' value=companyAddressApart)
 			.form-group
-				label Nombre de tu Pedido 
+				label Número Pedido 
 					i(style='font-size: 10px').fa.fa-asterisk
 				input#orderName.form-control(type='text' name="orderName" required oninvalid='this.setCustomValidity("El nombre del pedido no puede estar vacío")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
-				small Este nombre es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
+				small Este número es para que puedas llevar registro por tu cuenta a la par con nuestro sistema
 			.form-group
 				.row
 					.col-sm-5
