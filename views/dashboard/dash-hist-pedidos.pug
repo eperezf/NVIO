@@ -67,7 +67,7 @@ append content
 										span(aria-hidden='true') ×
 								.modal-body
 									p Tracking ##{companyId + ORD.SK.S.replace("ORDER#","")}
-									p Número Pedido: #{ORD.orderName.S}
+									p Nombre Pedido: #{ORD.orderName.S}
 									p Descripción: #{ORD.orderDesc.S}
 									p Dirección Remitente: #{ORD.fromAddress.M.street.S} #{ORD.fromAddress.M.number.N}
 										if ORD.fromApart.S != ""
