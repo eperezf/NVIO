@@ -8,7 +8,7 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
-	form#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data') 
+	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
 	.container.mb-5.mt-3
 		table.display.table-responsive.text-center#orderHistory
 			thead
