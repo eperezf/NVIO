@@ -15,19 +15,144 @@ const fs = require('fs');
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
 
-// Dashboard Index
-router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
-    if (req.user.user.includes("ADMIN")){
-      return res.redirect('/');
+/**
+ * Name: Dashboard Index
+ * Desc: Shows the dashboard index. Recent 5 orders and shipping cost table.
+ * URL: /dashboard
+ * Method: GET
+ */
+
+router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req, res, next) => {
+  if (req.user.user.includes("ADMIN")){
+    return res.redirect('/');
+  }
+  else if (req.user.user.includes("DRIVER")) {
+    return res.redirect('/');
+  }
+  else {
+    //Define orders array
+    var orders = [];
+    //Define locality
+    var locality = "";
+    //Define costs array
+    var costs = [];
+    //Define DynamoDB
+    var docClient = new aws.DynamoDB();
+    //Define order query params
+    var orderParams={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "ORDER"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
     }
-    else if (req.user.user.includes("DRIVER")) {
-      return res.redirect('/');
+    //Define user data params
+    var userParams={
+      "TableName": "NVIO",
+      "ScanIndexForward": false,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "PROFILE"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
     }
-    else {
-      const name = "Dashboard";
-      console.log("Dashboard Index Requested");
-      res.render('dashboard/dashboard', {title: name});
-    }
+    //Get recent 5 orders (or less)
+    docClient.query(orderParams, function(err, data) {
+      if (err) {
+        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      } else {
+        //Sort orders
+        data.Items.sort(function(a, b) {
+          return parseFloat(b.createdAt.N) - parseFloat(a.createdAt.N);
+        });
+        //Put first 5 orders in array
+        for (var i = 0; i < 5; i++) {
+          if(data.Items[i]){
+            orders[i] = data.Items[i];
+          }
+        }
+        //Get locality
+        docClient.query(userParams, function(err, data) {
+          if (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+          } else {
+            if (!data.Items[0].fromAddress) {
+              res.redirect('/dashboard/perfil');
+              return 0;
+            }
+            locality = data.Items[0].fromAddress.M.locality.S
+            //Define shipping prices params
+            var pricesParams={
+              "TableName": "NVIO",
+              "ScanIndexForward": false,
+              "ConsistentRead": false,
+              "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+              "FilterExpression": "#cd422 = :cd422 Or #cd423 = :cd423",
+              "ExpressionAttributeValues": {
+                ":cd420": {
+                  "S": "COMUNA"
+                },
+                ":cd421": {
+                  "S": "COSTO"
+                },
+                ":cd422": {
+                  "S": data.Items[0].fromAddress.M.locality.S
+                },
+                ":cd423": {
+                  "S": data.Items[0].fromAddress.M.locality.S
+                }
+              },
+              "ExpressionAttributeNames": {
+                "#cd420": "PK",
+                "#cd421": "SK",
+                "#cd422": "comuna1",
+                "#cd423": "comuna2"
+              }
+            }
+            docClient.query(pricesParams, function(err, data) {
+              if (err) {
+                console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+              } else {
+                data.Items.forEach((item, i) => {
+                  costs[i] = {};
+                  if (item.comuna1.S == locality) {
+                    costs[i].locality = item.comuna2.S;
+                    costs[i].cost = item.costo.N
+                  }
+                  else {
+                    costs[i].locality = item.comuna1.S;
+                    costs[i].cost = item.costo.N
+                  }
+                });
+                const name = "Dashboard"
+                res.render('dashboard/dashboard', {title: name, orders: orders, locality: locality, costs: costs});
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 });
 
 /**
@@ -77,14 +202,13 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
       }
       if (data.Items[0].fromAddress) {
         var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N;
+        if (data.Items[0].fromAddress.M.locality.S){
+          var comuna = data.Items[0].fromAddress.M.locality.S;
+        }
       }
       if (data.Items[0].fromApart){
         var addressApart = data.Items[0].fromApart.S;
       }
-      if (data.Items[0].fromAddress.M.locality.S){
-        var comuna = data.Items[0].fromAddress.M.locality.S;
-      }
-
       res.render('dashboard/dash-perfil', {
         title: name,
         companyId: req.user.user.replace("COMPANY#",""),
@@ -425,17 +549,36 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
       console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
     } else {
       console.log("Query succeeded.");
-      var legalName = data.Items[0].legalName.S;
-      var companyName = data.Items[0].companyName.S;
-      var companyRut = data.Items[0].companyRut.S;
-      var companyTurn = data.Items[0].companyTurn.S;
-      var companyRepresentative = data.Items[0].companyRepresentative.S;
-      var companyContactNumber = data.Items[0].companyContactNumber.N;
-      var companyEmail = data.Items[0].companyEmail.S;
-      var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N;
-      var comuna = data.Items[0].fromAddress.M.locality.S;
-      var addressApart = data.Items[0].fromApart.S;
-
+      if (data.Items[0].legalName) {
+        var legalName = data.Items[0].legalName.S;
+      }
+      if (data.Items[0].companyName) {
+        var companyName = data.Items[0].companyName.S;
+      }
+      if (data.Items[0].companyRut) {
+        var companyRut = data.Items[0].companyRut.S;
+      }
+      if (data.Items[0].companyTurn) {
+        var companyTurn = data.Items[0].companyTurn.S;
+      }
+      if (data.Items[0].companyRepresentative) {
+        var companyRepresentative = data.Items[0].companyRepresentative.S;
+      }
+      if (data.Items[0].companyContactNumber) {
+        var companyContactNumber = data.Items[0].companyContactNumber.N;
+      }
+      if (data.Items[0].companyEmail) {
+        var companyEmail = data.Items[0].companyEmail.S;
+      }
+      if (data.Items[0].fromAddress) {
+        var address = data.Items[0].fromAddress.M.street.S + " " + data.Items[0].fromAddress.M.number.N;
+        if (data.Items[0].fromAddress.M.locality.S){
+          var comuna = data.Items[0].fromAddress.M.locality.S;
+        }
+      }
+      if (data.Items[0].fromApart){
+        var addressApart = data.Items[0].fromApart.S;
+      }
 
       res.render('dashboard/dash-editar-perfil', {
         title: name,
