@@ -377,7 +377,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
         if (data.Count == 0) {
           console.log("No collision. Creating Order.");
           localities = [req.body.fromLocality, req.body.toLocality];
-          localities.sort();
+          localities.sort((a, b) => a.localeCompare(b, 'es', {sensitivity: 'base'}))
           console.log(localities);
 
           var costParams={
