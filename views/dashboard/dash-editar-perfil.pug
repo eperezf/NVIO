@@ -14,12 +14,12 @@ append content
 					label(for='logo') La imagen debe ser PNG:
 					p
 						input#logo(type='file' name='logo' accept="image/png")
+			.form-group#companyName-group
+				label(for='companyName') Nombre Empresa
+				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la empresa debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
 			.form-group#legalName-group
 				label(for='legalName') Nombre Legal
 				input#legalName.form-control(type='text' name='legalName' value=legalName required oninvalid='this.setCustomValidity("El nombre legal de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
-			.form-group#companyName-group
-				label(for='companyName') Nombre de fantasía
-				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
 			.form-group#companyRut-group
 				label(for='companyRut') RUT Empresa
 				input#companyRut.form-control(type='text' name='companyRut' value=companyRut required oninvalid='this.setCustomValidity("El formato del RUT no es válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='^0*(\\d{1,3}(\\.?\\d{3})*)\\-?([\\dkK])$')
@@ -39,11 +39,10 @@ append content
 			.form-group#email-group
 				label(for='email') Email de Contacto
 				input#email.form-control(type='email' name='companyEmail' value=companyEmail required oninvalid='this.setCustomValidity("Por favor ingresa un formato de correo válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")')
-				small Este correo de contacto puede distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
+				small Este correo de contacto puede ser distinto a tu correo para ingresar a NVIO, cambiar esto no afecta el correo que usas para iniciar sesión aquí
 			.form-group#address-group
 				label(for='address') Dirección Comercial
 				input#address.form-control(type="text" name='address' value=address required autocomplete='off')
-				small Si no agregas direcciones adicionales, esta será tu dirección de envío por defecto.
 			.form-group#comuna-group
 				label(for='comuna') Comuna
 				select#comuna.form-control(name='comuna')
@@ -53,7 +52,7 @@ append content
 						else
 							option(value=val) #{val}
 			.form-group#addressApart-group
-				label(for='addressApart') Casa, Condominio o Departamento
+				label(for='addressApart') Apartado dirección
 				input#addressApart.form-control(type="text" name='addressApart' value=addressApart)
 			button.btn.btn-primary(type='submit') Guardar Cambios
 			button.btn.btn-primary.ml-3(type='button', data-toggle='modal', data-target='#newAddressModal') Agregar dirección
@@ -61,7 +60,7 @@ append content
 		.modal-dialog
 			.modal-content
 				.modal-header
-					h5#newAddressLabel.modal-title Agregar nueva dirección
+					h5#newAddressLabel.modal-title.d-none Agregar nueva dirección
 					button.close(type='button', data-dismiss='modal', aria-label='Close')
 						span(aria-hidden='true') ×
 				.modal-body

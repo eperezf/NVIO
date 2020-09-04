@@ -10,11 +10,11 @@ append content
 		img#profilePicture.rounded.mx-auto.d-block.img-fluid(src=logo alt='Tu Logo')
 		form#profileInfo(style='margin-top: 30px;')
 			.form-group
+				label Nombre Empresa
+				input#companyName.form-control(type='text' readonly value=companyName)
+			.form-group
 				label Nombre Legal
 				input#legalName.form-control(type='text' readonly value=legalName)
-			.form-group
-				label Nombre de fantasía
-				input#companyName.form-control(type='text' readonly value=companyName)
 			.form-group
 				label RUT Empresa
 				input#companyRut.form-control(type='text' readonly value=companyRut)
