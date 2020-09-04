@@ -97,7 +97,7 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
           } else {
             if (!data.Items[0].fromAddress) {
-              res.redirect('/dashboard/perfil');
+              res.redirect('/dashboard/editar-perfil');
               return 0;
             }
             locality = data.Items[0].fromAddress.M.locality.S
