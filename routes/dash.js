@@ -267,9 +267,6 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       if (validator.isEmpty(data.Items[0].companyName.S)) {
         return res.redirect('/dashboard/');
       }
-      if (validator.isEmpty(data.Items[0].lastName.S)) {
-        return res.redirect('/dashboard/');
-      }
       if (validator.isEmpty(data.Items[0].fromAddress.M.street.S)) {
         return res.redirect('/dashboard/');
       }
@@ -280,9 +277,6 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
         return res.redirect('/dashboard/');
       }
       if (validator.isEmpty(data.Items[0].companyEmail.S)) {
-        return res.redirect('/dashboard/');
-      }
-      if (validator.isEmpty(data.Items[0].firstName.S)) {
         return res.redirect('/dashboard/');
       }
       if (validator.isEmpty(data.Items[0].companyTurn.S)) {
