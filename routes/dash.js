@@ -446,6 +446,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                   "orderValue": parseInt(req.body.orderValue),
                   "nameDest": req.body.nameDest,
                   "contactDest": req.body.contactDest,
+                  "emailDest": req.body.emailDest,
                   "comment": req.body.comment,
                   "shippingCost": parseInt(data.Items[0].costo.N),
                   "status": 0,
