@@ -97,7 +97,7 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
           } else {
             if (!data.Items[0].fromAddress) {
-              res.redirect('/dashboard/perfil');
+              res.redirect('/dashboard/editar-perfil');
               return 0;
             }
             locality = data.Items[0].fromAddress.M.locality.S
@@ -171,7 +171,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
-  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
   var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
@@ -267,9 +267,6 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
       if (validator.isEmpty(data.Items[0].companyName.S)) {
         return res.redirect('/dashboard/');
       }
-      if (validator.isEmpty(data.Items[0].lastName.S)) {
-        return res.redirect('/dashboard/');
-      }
       if (validator.isEmpty(data.Items[0].fromAddress.M.street.S)) {
         return res.redirect('/dashboard/');
       }
@@ -280,9 +277,6 @@ router.get('/nuevo-envio', passport.authenticate('jwt', {session: false, failure
         return res.redirect('/dashboard/');
       }
       if (validator.isEmpty(data.Items[0].companyEmail.S)) {
-        return res.redirect('/dashboard/');
-      }
-      if (validator.isEmpty(data.Items[0].firstName.S)) {
         return res.redirect('/dashboard/');
       }
       if (validator.isEmpty(data.Items[0].companyTurn.S)) {
@@ -383,7 +377,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
         if (data.Count == 0) {
           console.log("No collision. Creating Order.");
           localities = [req.body.fromLocality, req.body.toLocality];
-          localities.sort();
+          localities.sort((a, b) => a.localeCompare(b, 'es', {sensitivity: 'base'}))
           console.log(localities);
 
           var costParams={
@@ -446,6 +440,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                   "orderValue": parseInt(req.body.orderValue),
                   "nameDest": req.body.nameDest,
                   "contactDest": req.body.contactDest,
+                  "emailDest": req.body.emailDest,
                   "comment": req.body.comment,
                   "shippingCost": parseInt(data.Items[0].costo.N),
                   "status": 0,
@@ -541,7 +536,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
-  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
   var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
@@ -607,9 +602,9 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
 
     if (req.file.mimetype == "image/png") {
 
-      var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+      var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
       var params = {
-        Bucket: "nviostatic",
+        Bucket: process.env.AWS_S3_BUCKET,
         Key: req.user.user.replace("COMPANY#","")+".png",
         ACL: 'public-read',
         Body: req.file.buffer
