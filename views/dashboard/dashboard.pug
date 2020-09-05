@@ -55,7 +55,7 @@ append content
 							th(scope='col') Costo
 							th(scope='col') Detalle
 					tbody
-						each ORD in orders
+						each ORD, index in orders
 							tr
 								td #{ORD.orderName.S}
 								if ORD.toApart.S != ""
