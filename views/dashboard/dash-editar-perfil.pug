@@ -16,10 +16,10 @@ append content
 						input#logo(type='file' name='logo' accept="image/png")
 			.form-group#companyName-group
 				label(for='companyName') Nombre Empresa
-				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la empresa debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
+				input#companyName.form-control(type='text' name='companyName' value=companyName required oninvalid='this.setCustomValidity("El nombre de la empresa debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='{2,}')
 			.form-group#legalName-group
 				label(for='legalName') Nombre Legal
-				input#legalName.form-control(type='text' name='legalName' value=legalName required oninvalid='this.setCustomValidity("El nombre legal de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\d\.\-\_ ]{2,}')
+				input#legalName.form-control(type='text' name='legalName' value=legalName required oninvalid='this.setCustomValidity("El nombre legal de la compañía debe tener al menos dos caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='{2,}')
 			.form-group#companyRut-group
 				label(for='companyRut') RUT Empresa
 				input#companyRut.form-control(type='text' name='companyRut' value=companyRut placeholder="12345678-9" required oninvalid='this.setCustomValidity("El formato del RUT no es válido")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='^0*(\\d{1,3}(\\.?\\d{3})*)\\-?([\\dkK])$')
