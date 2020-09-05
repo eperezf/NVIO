@@ -536,7 +536,7 @@ router.get('/editar-perfil', passport.authenticate('jwt', {session: false, failu
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
-  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
   var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
@@ -602,9 +602,9 @@ router.post('/editar-perfil', upload.single('logo'), passport.authenticate('jwt'
 
     if (req.file.mimetype == "image/png") {
 
-      var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+      var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
       var params = {
-        Bucket: "nviostatic",
+        Bucket: process.env.AWS_S3_BUCKET,
         Key: req.user.user.replace("COMPANY#","")+".png",
         ACL: 'public-read',
         Body: req.file.buffer
