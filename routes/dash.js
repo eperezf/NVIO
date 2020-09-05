@@ -171,7 +171,7 @@ router.get('/perfil', passport.authenticate('jwt', {session: false, failureRedir
     "ExpressionAttributeNames": {"#cd420":"PK","#cd421":"SK"},
     "ExpressionAttributeValues": {":cd420": {"S": req.user.user},":cd421": {"S": req.user.user.replace("COMPANY", "PROFILE")}}
   }
-  var s3 = new aws.S3({params: {Bucket: "nviostatic"}, endpoint: s3Endpoint});
+  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: s3Endpoint});
   var logo = s3.getSignedUrl('getObject', {Key: req.user.user.replace("COMPANY#","")+".png", Expires: 60});
   var docClient = new aws.DynamoDB();
   docClient.query(params, function(err, data) {
