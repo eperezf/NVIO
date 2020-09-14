@@ -101,6 +101,7 @@ typings/
 .idea/vcs.xml
 .idea/codeStyles/codeStyleConfig.xml
 .idea/codeStyles/Project.xml
+.idea/watcherTasks.xml
 
 # Generated files
 .idea/**/contentModel.xml
@@ -117,3 +118,5 @@ typings/
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+
+.DS_Store
