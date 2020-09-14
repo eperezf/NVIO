@@ -22,6 +22,7 @@ passport.use(new LocalStrategy({
 },
 function (email, password, cb) {
   console.log("====STARTED PASSPORT AUTH====");
+  email = email.toLowerCase();
   console.log(email);
   console.log(password);
   var userID;
@@ -39,6 +40,10 @@ function (email, password, cb) {
         console.error("Unable to query. Error JSON:", JSON.stringify(err, null, 2));
     } else {
       console.log("Email Query succeeded.");
+      if (data.Count == 0) {
+        console.log("User does not exist.");
+        return cb(null, false, {message: 'Incorrect email or password.'});
+      }
       data.Items.forEach(function(item) {
         userID = item.userID.S;
         console.log("userID is: " + userID);
@@ -89,20 +94,20 @@ function (email, password, cb) {
 }));
 
 var cookieExtractor = function(req) {
-    var token = null;
-    if (req && req.cookies)
-    {
-      token = req.cookies['token'];
-    }
-    return token;
+  var token = null;
+  if (req && req.cookies){
+    token = req.cookies['token'];
+  }
+  return token;
 };
 
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey   : process.env.JWT_SECRET
+        secretOrKey   : process.env.JWT_SECRET,
+        ignoreExpiration: false
     },
     function (jwtPayload, cb) {
-      console.log(jwtPayload);
+      //console.log(jwtPayload);
       return cb(null, jwtPayload, {message: 'Logged In Successfully'});
     }
 ));

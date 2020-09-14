@@ -12,9 +12,11 @@ const dashRoutes = require('./routes/dash');
 //Check if DynamoDB is running at endpoint
 aws.config.update({
   region: process.env.DBREGION,
-  endpoint: process.env.ENDPOINT
+  accessKeyId: process.env.AWS_ID,
+  secretAccessKey: process.env.AWS_SECRET
 });
-var dynamodb = new aws.DynamoDB();
+var dynamodbEndpoint = new aws.Endpoint(process.env.AWS_DYNAMODB_ENDPOINT);
+var dynamodb = new aws.DynamoDB({endpoint:dynamodbEndpoint});
 console.log("Waiting for database...");
 dynamodb.listTables((err, data)=>{
   if (err) {
@@ -42,6 +44,14 @@ require('./passport');
 //Set view engine and views route
 app.set('view engine', 'pug');
 app.set('views', './views');
+
+//Prevents to check previous page after logout
+app.use(function (req, res, next) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next()
+});
 
 //Set index routes
 app.use('/', mainRoutes);
