@@ -1,0 +1,18 @@
+include includes/header.pug
+body
+	include includes/navbar.pug
+	.container-fluid
+		.row.justify-content-center
+			h1.text-center.login-title
+				| Contáctanos
+				form.login-form.form-signin(action='https://formspree.io/contacto@nvio.cl' method='POST' enctype='multipart/form-data')
+					input#contactEmail.form-control.contact-email(type='email' name='email' placeholder='Tu Email' required)
+					input#subjectEmail.form-control.contact-subject(type='text' name='subject' placeholder='Asunto' required)
+					textarea#messageText.form-control.contact-text(name='message' placeholder='Tu Mensaje' required rows='10' cols='100' oninvalid='this.setCustomValidity("El mensaje debe tener entre 30 y 2500 caracteres")' onchange='try{setCustomValidity("")}catch(e){}' oninput='setCustomValidity("")' pattern='[\\p{L}\- ]{30,2500}')
+					button#submitMessage.btn.btn-lg.btn-outline-secondary.btn-block(type='submit') Enviar
+		#snackbar.snack-red
+	include includes/footer.pug
+	include includes/bodyscript.pug
+		//- jQuery
+	script(src='https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js')
+	script(src='/static/js/contact-mail.js')
