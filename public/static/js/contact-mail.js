@@ -1,5 +1,3 @@
-console.log('we got here');
-
 $(document).ready( function() {
     $('#submitMessage').click(function (e) {
         var email = $('#contactEmail').val();

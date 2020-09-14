@@ -8,12 +8,13 @@ append content
 	h1.landing-head.text-center
 		| #{title}
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
+	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
 	.container.mb-5.mt-3
-		table.display.table-responsive-lg.text-center#orderHistory
+		table.display.table-responsive.text-center#orderHistory
 			thead
 				tr
 					th(scope='col') Tracking #
-					th(scope='col') Nombre Pedido
+					th(scope='col') Número Pedido
 					th(scope='col') Descripción
 					th(scope='col') Despacho hacia
 					th(scope='col') Comuna
@@ -54,7 +55,7 @@ append content
 								td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
 							else
 								td #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
-						td #{ORD.orderValue.N}
+						td $#{ORD.shippingCost.N}
 						td
 							button.btn.btn-outline-info(id='InfoButton_' + index data-toggle='modal' data-target='#InfoModal_' + index) Detalle
 					.modal.fade(tabindex='-1' role='dialog' aria-labelledby='infoModal_' + + index aria-hidden='true' id='InfoModal_' + index)
@@ -89,13 +90,17 @@ append content
 											p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
 										else
 											p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
-									p Valor de la orden: #{ORD.orderValue.N}
+									p Valor de la orden: $#{ORD.orderValue.N}
+									p Costo de envío: $#{ORD.shippingCost.N}
 									p Nombre del repartidor: Aún no asignado
 									if ORD.comment.S != ""
 										p Información Adicional: #{ORD.comment.S}
 								.modal-footer
 									button.btn.btn-secondary(type='button' data-dismiss='modal') Cerrar
 									input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#","") + "';")
+									if ORD.status.N == 0
+											button.btn.btn-danger(type='submit' name='order' id='order' value=ORD.SK.S form='cancelOrder') Cancelar Orden
+											
 	#snackbar Enlace copiado!
 append dash-viewscript
 	script(src='/static/js/copy-on-click.js')
