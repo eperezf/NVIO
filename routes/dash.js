@@ -23,13 +23,6 @@ let comunas = JSON.parse(rawComunas);
  */
 
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req, res, next) => {
-  if (req.user.user.includes("ADMIN")){
-    return res.redirect('/');
-  }
-  else if (req.user.user.includes("DRIVER")) {
-    return res.redirect('/');
-  }
-  else {
     //Define orders array
     var orders = [];
     //Define locality
@@ -152,7 +145,6 @@ router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '
         });
       }
     });
-  }
 });
 
 /**

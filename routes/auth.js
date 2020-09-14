@@ -40,7 +40,7 @@ router.post('/login', upload.none(), function (req, res, next) {
       const token = jwt.sign({user, iat: Math.floor(Date.now()/1000)}, process.env.JWT_SECRET, {expiresIn: expiresIn, });
       res.cookie('token', token, {maxAge: maxAge, secure: false, httpOnly: true,});
       if (user.includes("ADMIN")){
-        return res.redirect('/');
+        return res.redirect('/admin');
       }
       else if (user.includes("DRIVER")) {
         return res.redirect('/');
