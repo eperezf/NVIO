@@ -1,5 +1,71 @@
-html
-  head
-    title= "NVIO"
-  body
-    h1= "Bienvenido!"
+include includes/header.pug
+body
+  include includes/navbar.pug
+  //- #jumbodiv is equivalent to setting the id normally <div id="jumbodiv"></div>
+  #jumbodiv(style='background-image: url("static/background.jpg"); background-attachment: fixed; background-repeat: no-repeat; background-size: cover;')
+    .jumbotron.sharp-jumbotron.mx-auto
+      header.py-5.mb-5
+        .container-fluid.h-100.pr-5.pl-5
+          .row.h-100.align-items-center
+            .col-lg-8
+              h1.display-4.mb-2.d-none.d-sm-block El delivery lo hacemos todos
+              h1.display-6.mb-2.d-sm-none El delivery lo hacemos todos
+              hr
+              p.lead.mb-5.text-50
+                | NVIO te permite llevar productos a tus clientes de manera fácil, óptima y con un servicio de calidad a un precio justo y fijo. Nos preocupamos de la calidad del servicio que entregan nuestros repartidores porque sabemos que este es el último paso de tu cadena de valor
+              a.btn.btn-primary.btn-lg(href='#info', role='button') Más Información
+            .col-lg-4.text-right#landing-image
+              //- i.fas.fa-route(style="font-size:20em")
+              img.img-fluid(src='/static/logo/placeholder-logo.png')
+  .container.landing-container
+    h1.landing-head#info Con NVIO ganamos todos
+    hr
+    .row
+      #pyme.col-lg-6.landing-info
+        h3 PYME
+        p Ahorra tiempo y despreocúpate del proceso de despacho al tener todo organizado en un solo lugar. Mejora el nivel de servicio de tus clientes gracias al rastreo en tiempo real y la disposición de nuestros repartidores. Obten un sistema de costos simple y claro que depende del radio de reparto.
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/landing-page/pyme.jpg')
+    .row
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/landing-page/repartidor.jpg')
+      #repartidor.col-lg-6.landing-info
+        h3 Repartidores
+        p Elimina la incertidumbre en tu jornada laboral, ten conocimiento previo cuanto vas a trabajar y a ganar cada día. Mejora tus condiciones de trabajo con mejores beneficios al elegirnos como tu empleador (Te contratamos!).
+    .row
+      #clienteFinal.col-lg-6.landing-info
+        h3 Cliente Final
+        p Rastrea tus pedidos en tiempo real con la capacidad de contactar al repartidor mientras el despacho esté en curso. Recibe tiempos estimados de llegada más certeros y más cortos.
+      .col-lg-6.landing-info-image
+        img.img-fluid(src='/static/landing-page/clientes-finales.jpg')
+  .fluid-container(style='background-color: coral; padding-bottom: 80px;')
+    .container.landing-container.text-white
+      h1.landing-head ¿Cómo lo hacemos?
+      hr.mb-5
+      .row
+        .col-lg-3
+          i.fas.fa-user-alt(style='font-size: 80px')
+          h4.mt-3 Registra tu pedido
+          p.mb-5 Dirección de retiro, entrega y otros datos
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fa.fa-tasks(style='font-size: 80px')
+          h4.mt-3 Asignamos tu pedido
+          p.mb-5 Sabrás qué repartidor y a qué hora pasará por tu pedido
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fa.fa-truck(style='font-size: 80px')
+          h4.mt-3 Retiramos tu pedido
+          p.mb-5 Tú y tu cliente podrán acceder al tracking en cualquier momento
+          hr.how-hr.m-5
+        .col-lg-3
+          i.fas.fa-hand-holding-heart(style='font-size: 80px')
+          h4.mt-3 Entregamos al cliente
+          p.mb-5 Aseguramos entregas en 48 horas y una gran experiencia de compra
+  .container-fluid
+    .row
+      .col-md-12.text-center
+        h1.mt-5 ¿Estás interesado?
+        a.btn.btn-primary.btn-lg.mt-2(href='/contacto', role='button') Contáctanos
+  include includes/footer.pug
+  include includes/bodyscript.pug

@@ -1,0 +1,523 @@
+/* General use and Landing Page code */
+@media screen and (max-width: 667px) { /* This prevents lateral scroll on small screens */
+    body {
+        overflow-x: hidden !important;
+    }
+    .container {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+}
+.four-oh-four {
+    color: #C00;
+    text-align: center;
+    font-size: 80px;
+}
+
+.white-link {
+    color: #FFF;
+    text-decoration: none;
+}
+
+.white-link:hover {
+    color: #FFF;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.grey-link {
+    color: #AAA;
+    text-decoration: none;
+}
+
+.grey-link:hover {
+    color: #AAA;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.orange-link {
+    color: coral;
+    text-decoration: none;
+}
+
+.orange-link:hover {
+    color: coral;
+    text-decoration:none;
+    cursor:pointer;
+}
+
+.logo-footer {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-width: 80px;
+    height: auto;
+}
+
+.logo-navbar {
+    width: 30px;
+    height: 30px;
+}
+
+.logo-text-navbar {
+    width: auto;
+    height: 30px;
+}
+
+.jumbo-img{
+    width: 100%;
+    max-width: 315px;
+    min-width: 50px;
+    height: auto;
+}
+
+.landing-container {
+    text-align: center;
+    padding: 60px 0 60px;
+}
+
+.landing-head {
+    font-weight: normal;
+    margin-bottom: 30px;
+    margin-top: 50px;
+}
+
+.landing-paragraph {
+    font-size: 20px;
+    margin: auto 30px;
+}
+
+.sharp-jumbotron {
+    display: block;
+    max-width: 1500px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.85);
+}
+
+@media screen and (max-width: 991.98px) {
+    #jumbodiv {
+        text-align: center;
+        padding: 30px;
+        background-color: #aaa;
+    }
+    #landing-image {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .landing-info-image {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .landing-info {
+        margin: 20px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    #jumbodiv {
+        text-align: left;
+        padding: 30px;
+        background-color: #aaa;
+    }
+    #landing-image {
+        width: inherit;
+        max-height: 340px;
+    }
+    .landing-info {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .how-hr {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    #pyme {
+        transform: translate(0%, 18%);
+    }
+    #repartidor {
+        transform: translate(0%, 25%);
+    }
+    #clienteFinal {
+        transform: translate(0%, 30%);
+    }
+}
+
+.hidden { /* Screenreader-friendly hide class */
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+}
+
+/* Contact Form Styles */
+.contact-email {
+    margin: 80px 0 0;
+}
+
+.contact-subject {
+    margin: 10px 0px;
+}
+
+.contact-text {
+    margin: 10px 0px;
+    min-height: 270px;
+    max-height: 2000px
+}
+
+/* Login Responsiveness */
+@media screen and (max-width: 991.98px) { /* This decimal number abides by Bootstrap Responsiveness from their Docs */
+    .login-title {
+        margin: 40px 80px 200px;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .login-title{
+        margin: 40px 0 200px;
+    }
+}
+
+.login-container {
+    max-width: 500px;
+    padding: 0 20px 0;
+}
+
+.login-button {
+    margin-top: 5px;
+}
+
+/* Responsive Cards (for 'quienes-somos.pug') */
+@media screen and (max-width: 575.98px) { /* below 576 */
+    .landing-card-columns {
+        -webkit-column-count:1;
+        -moz-column-count:1;
+        column-count:1;
+    }
+    .card {
+        margin: 0;
+        padding: 0;
+        width: 270px;
+    }
+    .landing-card-img {
+        max-width: 500px !important;
+        max-height: 500px !important;
+        min-width: 100px;
+        min-height: 100px;
+        height: auto;
+        width:auto;
+    }
+}
+
+@media screen and (min-width: 576px) { /* 576 and above */
+    .landing-card-columns {
+        -webkit-column-count:2;
+        -moz-column-count:2;
+        column-count:2;
+    }
+}
+
+@media screen and (min-width: 992px) { /* 992 and above */
+    .landing-card-columns {
+        -webkit-column-count:3;
+        -moz-column-count:3;
+        column-count:3;
+    }
+}
+
+@media screen and (min-width: 1200px) { /* 1200 and above */
+    .landing-card-columns {
+        -webkit-column-count:5;
+        -moz-column-count:5;
+        column-count:5;
+    }
+}
+
+/* Override Primary Buttons */
+.btn-primary, .btn-primary:active, .btn-primary:visited {
+    background-color: #ff7f50 !important;
+    border-color: #ff9673 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ff5115 !important;
+    border-color: #ff9673 !important;
+}
+
+/* Dashboard General */
+#dashBody {
+    height: 100%;
+}
+
+/* Dashboard Sidebar */
+.dash-sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.dash-sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.dash-sidebar a.active {
+    background-color: #ff7f50;
+    color: white;
+}
+
+.dash-sidebar a:hover:not(.active) {
+    background-color: #333;
+    color: white;
+}
+
+    /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
+div.dash-content {
+    margin-top: 60px;
+    margin-left: 200px;
+    padding: 1px 16px 20px;
+    height: 100%;
+}
+
+    /* Screen size differences (for dashbar.pug)*/
+@media screen and (max-width: 1109.98px) {
+    .dash-sidebar {
+        width: 100%;
+        height: auto;
+        position: absolute !important; /* Hide below 991px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .dash-sidebar a {
+        text-align: center;
+        float: none;
+    }
+    div.dash-content {
+        margin-left: 0;
+    }
+    .hidden-if-small { /* Screenreader-friendly hide class */
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+}
+
+@media screen and (min-width: 1110px) {
+    .navbar-nav-dash { /* This will control only the dashboard navbar */
+        width: 100%;
+        height: auto;
+    }
+    .nav-dash-top {
+        position: absolute !important; /* Hide above 1110px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+    .sandwich-big { /* This will hide the sandwich menu view */
+        position: absolute !important; /* Hide above 1110px */
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+}
+
+/* Snackbar (this is the default snackbar, it will work in other places) */
+#snackbar {
+    visibility: hidden;
+    min-width: 200px;
+    max-width: 500px;
+    background-color: #62b859;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 10px;
+    position: fixed;
+    display: block;
+    z-index: 1;
+    font-size: 17px;
+    right: 10px;
+    bottom: 10px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {right: 0; opacity: 0;}
+    to {right: 10px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {right: 0; opacity: 0;}
+    to {right: 10px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {right: 10px; opacity: 1;}
+    to {right: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {right: 10px; opacity: 1;}
+    to {right: 0; opacity: 0;}
+}
+
+.snack-red { /* This is to override non-confirmation snackbars */
+    background-color: #f8532c !important;
+}
+
+/* Profile View */
+#profilePicture {
+    max-width:300px !important;
+    max-height:300px !important;
+    min-width: 100px;
+    min-height: 100px;
+    height: auto;
+    width:auto;
+    margin: 0 auto;
+}
+
+#profileEdit {
+    font-size: 25px;
+}
+
+.profile-container {
+    margin-top: 40px;
+}
+
+/* Scrolling Table */
+.scroll-table{
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+
+.scroll-table-header{
+    position: sticky;
+    top: 0;
+    background:#fff;
+    border: 1px #aaa;
+}
+
+/* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */
+.footer-bs {
+    background-color: #333;
+    padding: 60px 40px;
+    color: rgba(255,255,255,1.00);
+    margin-bottom: 0;
+    border-top-left-radius: 0;
+}
+.footer-bs .footer-brand, .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+    padding:10px 25px;
+}
+
+.footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+    border-color: transparent;
+}
+
+.footer-bs .footer-brand h2 {
+    margin:0 0 10px;
+}
+
+.footer-bs .footer-brand p {
+    font-size:12px; color:rgba(255,255,255,0.70);
+}
+
+.footer-bs .footer-nav ul.pages {
+    list-style:none; padding:0;
+}
+
+.footer-bs .footer-nav ul.pages li {
+    padding:5px 0;
+}
+
+.footer-bs .footer-nav ul.pages a {
+    color:rgba(255,255,255,1.00); font-weight:bold; text-transform:uppercase;
+}
+
+.footer-bs .footer-nav ul.pages a:hover {
+    color:rgba(255,255,255,0.80); text-decoration:none;
+}
+
+.footer-bs .footer-nav h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom:10px;
+}
+
+.footer-bs .footer-nav ul.list {
+    list-style:none;
+    padding:0;
+}
+
+.footer-bs .footer-nav ul.list li {
+    padding:5px 0;
+}
+
+.footer-bs .footer-nav ul.list a {
+    color:rgba(255,255,255,0.80);
+}
+
+.footer-bs .footer-nav ul.list a:hover {
+    color:rgba(255,255,255,0.60);
+    text-decoration:none;
+}
+
+.footer-bs .footer-social ul {
+    list-style:none;
+    padding:0;
+}
+
+.footer-bs .footer-social h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.footer-bs .footer-social li {
+    padding:5px 4px;
+}
+.footer-bs .footer-social a {
+    color:rgba(255,255,255,1.00);
+}
+.footer-bs .footer-social a:hover {
+    color:rgba(255,255,255,0.80); text-decoration:none;
+}
+
+.footer-bs .footer-ns h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom:10px;
+}
+
+.footer-bs .footer-ns p {
+    font-size:12px; color:rgba(255,255,255,0.70);
+}
+
+@media (min-width: 768px) {
+    .footer-bs .footer-nav, .footer-bs .footer-social, .footer-bs .footer-ns {
+        border-left:solid 1px rgba(255,255,255,0.10);
+    }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#info {
+  padding-top: 2em;
+  margin-top: -2em;
+}
+/* End of Footer */

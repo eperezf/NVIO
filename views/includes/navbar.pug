@@ -1,0 +1,22 @@
+nav.navbar.navbar-expand-lg.sticky-top.navbar-light.bg-light
+  //- 'sticky-top' browser support: https://caniuse.com/#feat=css-sticky
+  a.navbar-brand(href='/')
+    img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
+    //- the following line has a blank character, ALT-255
+    | 
+    img.logo-text-navbar(src='/static/logo/text-black.png', alt='')
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarSupportedContent.collapse.navbar-collapse
+    ul.navbar-nav.ml-auto
+      li.nav-item
+        a.nav-link(href='/')
+          | Inicio 
+          span.sr-only (current)
+      li.nav-item
+        a.nav-link(href='/quienes-somos') Quienes somos
+      li.nav-item
+        a.nav-link(href='/contacto') Contacto
+    ul.navbar-nav
+      li.nav-item
+        a.nav-link(href='/login') Iniciar Sesión
