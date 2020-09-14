@@ -1,0 +1,116 @@
+extends ../includes/dashbar
+append dash-postHead
+	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
+append content
+	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
+	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
+		Inheritance works like this:
+			{dashboard-element-name}.pug <- dashbar.pug <- [header.pug, bodyscript.pug, dashscript.pug]
+		This is also all contained inside a dash-content class div
+	//- Define ID names here to change active tab style, these IDs are defined in dashbar.pug
+	script.
+		var topname = "linkDash-top";
+		var sidename = "linkDash-side";
+	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
+	.container.mb-5.mt-3
+		.row.landing-head
+			.col-lg-4
+				h1.text-center.mb-3 Bienvenido a NVIO
+				img.img-fluid.mx-auto.d-none.d-lg-block(src='/static/logo/placeholder-logo.png' style='max-height: 200px;')
+			.col-lg-4
+				.card.m-auto
+					.card-body
+						h3.card-title.text-center Recuerda:
+						.card-text - Tus paquetes no pueden exceder las dimensiones de 50cm x 50cm x 50cm y el peso de 10kg.
+						.card-text - Los envíos serán entregados dentro de un plazo máximo de 48 horas desde que se registran en nuestra plataforma.
+						.card-text
+			.col-lg-4
+				hr.d-md-none
+				h2.text-center Costos de envío
+				.d-block.scroll-table
+					table.table.table-sm.table-bordered.table-striped.text-center#shippingPrice
+						thead.scroll-table-header
+							tr
+								th(scope='col') Origen
+								th(scope='col') Destino
+								th(scope='col') Costo
+						tbody
+							each CO in costs
+								tr
+									th #{locality}
+									td #{CO.locality}
+									td $#{CO.cost}
+	
+		.row.landing-head
+			.col
+				hr.d-md-none
+				h2.text-center.mb-3.mt-3 Tus pedidos recientes
+				table.table.table-responsive-lg.table-sm.table-bordered.text-center#orderSummary
+					thead.thead-dark
+						tr
+							th(scope='col') ID Pedido
+							th(scope='col') Destino
+							th(scope='col') Nombre Destinatario
+							th(scope='col') Estado
+							th(scope='col') Costo
+							th(scope='col') Detalle
+					tbody
+						each ORD in orders
+							tr
+								td #{ORD.orderName.S}
+								if ORD.toApart.S != ""
+									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}, #{ORD.toApart.S}
+								else
+									td #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
+								td #{ORD.nameDest.S}
+								td #{ORD.status.N}
+								td $#{ORD.shippingCost.N}
+								td
+									button.btn.btn-outline-info(id='InfoButton_' + index data-toggle='modal' data-target='#InfoModal_' + index) Detalle
+							.modal.fade(tabindex='-1' role='dialog' aria-labelledby='infoModal_' + +index aria-hidden='true' id='InfoModal_' + index)
+								.modal-dialog(role='document')
+									.modal-content
+										.modal-header
+											h5.modal-title(id='InfoModalLabel_' + index) Pedido ##{ORD.PK.S.replace("COMPANY#", "") + ORD.SK.S.replace("ORDER#", "")}
+											button.close(type='button' data-dismiss='modal' aria-label='Close')
+												span(aria-hidden='true') ×
+										.modal-body
+											p Tracking ##{ORD.PK.S.replace("COMPANY#", "") + ORD.SK.S.replace("ORDER#", "")}
+											p Nombre Pedido: #{ORD.orderName.S}
+											p Descripción: #{ORD.orderDesc.S}
+											p Dirección Remitente: #{ORD.fromAddress.M.street.S} #{ORD.fromAddress.M.number.N}
+												if ORD.fromApart.S != ""
+													| , #{ORD.fromApart.S}
+												| , #{ORD.fromAddress.M.locality.S}
+											p Dirección Destinatario: #{ORD.toAddress.M.street.S} #{ORD.toAddress.M.number.N}
+												if ORD.toApart.S != ""
+													| , #{ORD.toApart.S}
+												| , #{ORD.toAddress.M.locality.S}
+											p Teléfono Destinatario: +56 #{ORD.contactDest.S}
+											if new Date(parseInt(ORD.createdAt.N)).getMinutes() < 10
+												p Fecha Creación: #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
+											else
+												p Fecha Creación: #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
+											p Status Code: #{ORD.status.N}
+											if notDelivered
+												p Aún no entregado
+											else
+												if new Date(parseInt(ORD.createdAt.N)).getMinutes() < 10
+													p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:0#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
+												else
+													p Fecha Entrega (NOT IMPLEMENTED): #{new Date(parseInt(ORD.createdAt.N)).getDate()}/#{new Date(parseInt(ORD.createdAt.N)).getMonth() + 1}/#{new Date(parseInt(ORD.createdAt.N)).getFullYear()} #{new Date(parseInt(ORD.createdAt.N)).getHours()}:#{new Date(parseInt(ORD.createdAt.N)).getMinutes()}
+											p Valor de la orden: $#{ORD.orderValue.N}
+											p Costo de envío: $#{ORD.shippingCost.N}
+											p Nombre del repartidor: Aún no asignado
+											if ORD.comment.S != ""
+												p Información Adicional: #{ORD.comment.S}
+										.modal-footer
+											button.btn.btn-secondary(type='button' data-dismiss='modal') Cerrar
+											input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#", "") + "';")
+											if ORD.status.N == 0
+												button.btn.btn-danger(type='submit' name='order' id='order' value=ORD.SK.S form='cancelOrder') Cancelar Orden
+append dash-viewscript
+	//- Datatables scripts
+	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
+	//- Datatable declaration
+	script(src='/static/js/declare-dash-history.js')

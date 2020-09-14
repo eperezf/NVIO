@@ -1,9 +1,10 @@
 nav.navbar.navbar-expand-lg.sticky-top.navbar-light.bg-light
   //- 'sticky-top' browser support: https://caniuse.com/#feat=css-sticky
   a.navbar-brand(href='/')
-    //- Fix image not appearing
-    img(src='/static/logo/placeholder-logo.png', width='30', height='30', alt='')
-    |   NVIO
+    img.logo-navbar(src='/static/logo/placeholder-logo.png', alt='')
+    //- the following line has a blank character, ALT-255
+    | 
+    img.logo-text-navbar(src='/static/logo/text-black.png', alt='')
   button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
     span.navbar-toggler-icon
   #navbarSupportedContent.collapse.navbar-collapse
@@ -16,3 +17,6 @@ nav.navbar.navbar-expand-lg.sticky-top.navbar-light.bg-light
         a.nav-link(href='/quienes-somos') Quienes somos
       li.nav-item
         a.nav-link(href='/contacto') Contacto
+    ul.navbar-nav
+      li.nav-item
+        a.nav-link(href='/login') Iniciar Sesión
