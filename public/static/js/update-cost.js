@@ -13,7 +13,7 @@ function getCosto(){
     console.log("FROM: " + fromLocality);
     console.log("TO: " + toLocality);
     localities = [fromLocality, toLocality];
-    localities.sort();
+    localities.sort((a, b) => a.localeCompare(b, 'es', {sensitivity: 'base'}))
     getCostoReq(localities);
 
   }
