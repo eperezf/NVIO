@@ -1,15 +1,14 @@
-
 section(style='height:80px;')
 //- --------- Footer ----------
 footer.footer-bs#footer
   .row
-    .col-md-4.footer-brand.animated.fadeInLeft
+    .col-md-4.footer-brand
       a.white-link(href='/')
         img.logo-footer(src='/static/logo/placeholder-logo.png', alt='')
-        h4.center-text.footer-brand NVIO
-      p.center-text El envío lo hacemos todos
-      p © #{year} NVIO
-    .col-md-6.footer-nav.animated.fadeInUp
+        img.logo-footer(src='/static/logo/text-white.png', alt='')
+      p.text-center El delivery lo hacemos todos
+      p.text-center Copyright © #{new Date().getFullYear()} NVIO
+    .col-md-6.footer-nav
       h4 Acerca de nosotros
       .col-md-6
         ul.pages
@@ -23,7 +22,7 @@ footer.footer-bs#footer
             a(href='/tos') Términos y Condiciones
           li
             a(href='/privacidad') Política de Privacidad
-    .col-md-2.footer-social.animated.fadeInDown
+    .col-md-2.footer-social
       h4 Siguenos
       ul
         li

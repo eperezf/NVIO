@@ -6,100 +6,86 @@ body
       .col-12.text-center
         h1.landing-head Quienes Somos
       .col-md-8.col-sm-12
-        p.landing-paragraph
-          | Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-          | sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-          | nisi ut aliquip ex ea commodo consequat.
-          | Duis aute irure dolor in reprehenderit in voluptate velit esse
-          | cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-          | cupidatat non proident, sunt in culpa qui officia deserunt mollit
-          | anim id est laborum.
+        p.landing-paragraph Somos un equipo apasionado y enamorado del problema de la última milla. Ofrecemos envíos programados de calidad con precios fijos y conocidos, donde todos los involucrados se sienten cómodos y satisfechos durante todo el proceso.
+        p.landing-paragraph  
+        p.landing-paragraph Nuestro compromiso es entregar un servicio de calidad para toda la cadena de reparto, desde que se crea un pedido hasta que llega a las manos del cliente final
       .col-12.text-center(style='padding-top: 80px; padding-bottom: 40px;')
         h1.landing-head El equipo
   .container
     .centered
       .row
-        .col
+        .card-columns.landing-card-columns.text-center(style='margin: auto;')
           .card
-            img.card-img-top(src="https://via.placeholder.com/150")
+            img.card-img-top.img-fluid(src="/static/landing-page/team/max.jpg")
             .card-body
               h5.card-title Max Quilodrán
                 //- Don't print his full name or it will mess with the card sizes, I spent 30 minutes trying to fix it
                   but it's not worth bothering with right now
-                h6.card-text Cargo
-                p.card-text Breve descripción
+                h6.card-text Operaciones
                 ul.list-unstyled
                   li
                     a(href="https://twitter.com/maxquilodran")
-                      i.fab.fa-twitter
+                      i.fa.fa-twitter
                       .d-inline-block.ml-1 @MaxQuilodran
                   li
-                    a(href="mailto:eduardo@nvio.cl")
-                      i.fas.fa-envelope
-                      .d-inline-block.ml-1 maximiliano@nvio.cl
-        .col
+                    a(href="mailto:max@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 max@nvio.cl
           .card
-            img.card-img-top(src="https://via.placeholder.com/150")
-            .card-body
-              h5.card-title Gonzalo Vidal
-                h6.card-text Cargo
-                p.card-text Breve descripción
-                ul.list-unstyled
-                  li
-                    a(href="https://twitter.com/#")
-                      i.fab.fa-twitter
-                      .d-inline-block.ml-1 @arroba
-                  li
-                    a(href="mailto:gonzalo@nvio.cl")
-                      i.fas.fa-envelope
-                      .d-inline-block.ml-1 gonzalo@nvio.cl
-        .col
-          .card
-            img.card-img-top(src="https://via.placeholder.com/150")
+            img.card-img-top.img-fluid(src="/static/landing-page/team/pia.jpg")
             .card-body
               h5.card-title Pía Moreau
-                h6.card-text Cargo
-                p.card-text Breve descripción
+                h6.card-text Marketing y Ventas
                 ul.list-unstyled
                   li
                     a(href="https://twitter.com/#")
-                      i.fab.fa-twitter
+                      i.fa.fa-twitter
                       .d-inline-block.ml-1 @arroba
                   li
-                    a(href="mailto:eduardo@nvio.cl")
-                      i.fas.fa-envelope
+                    a(href="mailto:pia@nvio.cl")
+                      i.fa.fa-envelope
                       .d-inline-block.ml-1 pia@nvio.cl
-        .col
           .card
-            img.card-img-top(src="https://via.placeholder.com/150")
+            img.card-img-top.img-fluid(src="/static/landing-page/team/angelo.jpg")
             .card-body
               h5.card-title Angelo Romano
-                h6.card-text Cargo
-                p.card-text Breve descripción
+                h6.card-text Desarrollo
                 ul.list-unstyled
                   li
-                    a(href="https://twitter.com/#")
-                      i.fab.fa-twitter
-                      .d-inline-block.ml-1 @arroba
+                    a(href="https://twitter.com/AngeRomanoJara")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @AngeRomanoJara
                   li
                     a(href="mailto:angelo@nvio.cl")
-                      i.fas.fa-envelope
+                      i.fa.fa-envelope
                       .d-inline-block.ml-1 angelo@nvio.cl
-        .col
           .card
-            img.card-img-top(src="https://via.placeholder.com/150")
+            img.card-img-top.img-fluid(src="/static/landing-page/team/eduardo.jpg")
             .card-body
               h5.card-title Eduardo Pérez
-                h6.card-text Cargo
-                p.card-text Breve descripción
+                h6.card-text Desarrollo
                 ul.list-unstyled
                   li
                     a(href="https://twitter.com/eperezf")
-                      i.fab.fa-twitter
+                      i.fa.fa-twitter
                       .d-inline-block.ml-1 @eperezf
                   li
                     a(href="mailto:eduardo@nvio.cl")
-                      i.fas.fa-envelope
+                      i.fa.fa-envelope
                       .d-inline-block.ml-1 eduardo@nvio.cl
+          .card
+            img.card-img-top.img-fluid(src="/static/landing-page/team/gonzalo.jpg")
+            .card-body
+              h5.card-title Gonzalo Vidal
+                h6.card-text Desarrollo
+                ul.list-unstyled
+                  li
+                    a(href="https://twitter.com/#")
+                      i.fa.fa-twitter
+                      .d-inline-block.ml-1 @arroba
+                  li
+                    a(href="mailto:gonzalo@nvio.cl")
+                      i.fa.fa-envelope
+                      .d-inline-block.ml-1 gonzalo@nvio.cl
   include includes/footer.pug
+  include includes/bodyscript.pug
