@@ -36,6 +36,17 @@
     cursor:pointer;
 }
 
+.orange-link {
+    color: coral;
+    text-decoration: none;
+}
+
+.orange-link:hover {
+    color: coral;
+    text-decoration:none;
+    cursor:pointer;
+}
+
 .logo-footer {
     display: block;
     margin-left: auto;
@@ -260,7 +271,7 @@
 }
 
 .dash-sidebar a.active {
-    background-color: #F859D7;
+    background-color: #ff7f50;
     color: white;
 }
 
@@ -273,7 +284,7 @@
 div.dash-content {
     margin-top: 60px;
     margin-left: 200px;
-    padding: 1px 16px 75px;
+    padding: 1px 16px 20px;
     height: 100%;
 }
 
@@ -382,6 +393,20 @@ div.dash-content {
 
 .profile-container {
     margin-top: 40px;
+}
+
+/* Scrolling Table */
+.scroll-table{
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+
+.scroll-table-header{
+    position: sticky;
+    top: 0;
+    background:#fff;
+    border: 1px #aaa;
 }
 
 /* Footer Template css (https://codepen.io/umidbek96/pen/rNavBEx) */

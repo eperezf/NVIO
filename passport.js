@@ -22,6 +22,7 @@ passport.use(new LocalStrategy({
 },
 function (email, password, cb) {
   console.log("====STARTED PASSPORT AUTH====");
+  email = email.toLowerCase();
   console.log(email);
   console.log(password);
   var userID;
