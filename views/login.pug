@@ -2,18 +2,20 @@ include includes/header.pug
 body
   include includes/navbar.pug
   block content
-    .container.landing-container
-      .row
-        .col
-          h1.text-center.login-title
-            | Iniciar sesión en NVIO
-            .account-wall
-              form.login-form.form-signin(action='/login' method='POST' enctype='multipart/form-data')
-                input.form-control(type='text' name='email' placeholder='Email' required autofocus style='margin: 80px 0 0')
-                input.form-control(type='password' name='password' placeholder='Password' required style='margin: 10px 0;')
-                input.form-control(type='checkbox' name='remember_me' value='true')
-                label(for='remember_me')  Recuérdame
-                button.btn.btn-lg.btn-outline-primary.btn-block(type='submit') Ingresar
+    .container.login-container.text-center
+      h1.text-center.mb-5.mt-5
+        | Iniciar sesión en NVIO
+      h1
+        i.fas.fa-user-circle.mt-4(style="font-size:5em; color:coral")
+      .account-wall
+        form(action='/login' method='POST' enctype='multipart/form-data')
+          .form-group
+            input.form-control(type='text' name='email' placeholder='Email' required autofocus style='margin: 80px 0 0')
+            input.form-control(type='password' name='password' placeholder='Contraseña' required style='margin: 10px 0;')
+          .form-check
+            input#remember_me.form-check-input(type='checkbox' value='true')
+            label.form-check-label(for='remember_me')  Mantener mi sesión iniciada
+          button.btn.btn-lg.btn-primary.btn-block.login-button(type='submit') Ingresar
           //-
             a.text-center.new-account(href='/signup') Create an account
             #message
