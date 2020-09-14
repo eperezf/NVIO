@@ -4,6 +4,7 @@ const router = express.Router();
 const aws = require("aws-sdk");
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const { v4: uuidv4 } = require('uuid');
+const xlsx = require("xlsx");
 var validator = require('validator');
 const { validate, clean, format } = require('rut.js')
 var { nanoid } = require("nanoid");
@@ -11,7 +12,7 @@ var multer  = require('multer');
 var upload = multer();
 var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 const fs = require('fs');
-
+const {Worker, workerData} = require('worker_threads');
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
 
@@ -821,6 +822,94 @@ router.post('/cancelar-envio', upload.none(), passport.authenticate('jwt', {sess
       }
     }
   });
+});
+
+router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+
+  if (req.file) {
+    console.log("FILE SAVING REQUESTED!!");
+    var workers = [];
+    var workbook = xlsx.read(req.file.buffer);
+    var sheetNameList = workbook.SheetNames;
+    var orderList = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {range: 2});
+    res.json(orderList);
+    var params ={
+      "TableName": "NVIO",
+      "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ExpressionAttributeValues": {
+        ":cd420": {
+          "S": req.user.user
+        },
+        ":cd421": {
+          "S": "PROFILE"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#cd420": "PK",
+        "#cd421": "SK"
+      }
+    }
+    companyData = await query(params);
+    orderList.forEach(async (item, i) => {
+      workers[i] = new Worker('./workers/importExcel.js', {workerData: {companyData: companyData.Items, orderData:item, id: i, gapi: process.env.GAPI}});
+    });
+  }
 })
+
+
+
+//DB functions
+
+async function query(params) {
+  console.log("RUNNING QUERY");
+  try {
+    var dynamoDbClient = new aws.DynamoDB();
+    const queryOutput = await dynamoDbClient.query(params).promise();
+    console.info('Query successful.');
+    return queryOutput;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+async function scan(params) {
+  console.log("RUNNING SCAN");
+  try {
+    var dynamoDbClient = new aws.DynamoDB();
+    const scanOutput = await dynamoDbClient.scan(params).promise();
+    console.info('Scan successful.');
+    return scanOutput;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+async function update(params){
+  console.log("RUNNING UPDATE");
+  try {
+    var dynamoDbClient = new aws.DynamoDB();
+    const updateOutput = await docClient.update(params).promise();
+    console.info('Update successful.');
+    return updateOutput;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+async function put(params){
+  console.log("RUNNING PUT");
+  try {
+    var dynamoDbClient = new aws.DynamoDB();
+    const putOutput = await docClient.put(params).promise();
+    console.info('Update successful.');
+    return putOutput;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
 
 module.exports = router;

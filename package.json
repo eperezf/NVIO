@@ -32,10 +32,11 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "uuid": "^8.3.0",
     "pug": "^3.0.0",
+    "rut.js": "^1.0.2",
+    "uuid": "^8.3.0",
     "validator": "^13.1.1",
-    "rut.js": "^1.0.2"
+    "xlsx": "^0.16.7"
   },
   "devDependencies": {}
 }

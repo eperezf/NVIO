@@ -4,6 +4,7 @@ append content
 		var topname = "linkEnvio-top";
 		var sidename = "linkEnvio-side";
 	h1.landing-head.text-center #{title}
+	button.btn.btn-primary.btn-lg.btn-block.text-center(type='button', data-toggle='modal', data-target='#excelModal') Importar Excel
 	h4.landing-head.text-center Los campos obligatorios están marcados con un asterisco (
 		i(style='font-size: 15px').fa.fa-asterisk
 		| )
@@ -99,5 +100,20 @@ append content
 					a(href='/tos' target='_blank') términos y condiciones 
 					i(style='font-size: 10px').fa.fa-asterisk
 			button#submitOrder.btn.btn-primary(type='submit' onclick='' style='margin-top: 20px;') Enviar
+	#excelModal.modal.fade(tabindex='-1', aria-labelledby='exampleModalLabel', aria-hidden='true')
+		.modal-dialog
+			.modal-content
+				.modal-header
+					h5#exampleModalLabel.modal-title Modal title
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form(action='/dashboard/subir-excel' method='POST' enctype='multipart/form-data')
+						.form-group
+							label(for='planilla') Sube tu planilla Excel aquí
+							input#planilla.form-control-file(type='file' name='planilla')
+						button.btn.btn-primary.mr-2(type='submit') Subir
+						button.btn.btn-secondary(type='button', data-dismiss='modal') Cerrar
+
 	//- Datatable declaration
 	script(src='/static/js/update-cost.js')
