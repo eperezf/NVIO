@@ -6,20 +6,22 @@ const aws = require("aws-sdk");
 const app = express();
 const port = process.env.PORT;
 const { UI, createQueues } = require('bull-board');
-const queues = createQueues();
 const mainRoutes = require('./routes/main');
 const authRoutes = require('./routes/auth');
 const dashRoutes = require('./routes/dash');
 
-//Check if DynamoDB is running at endpoint
+//Configure AWS
 aws.config.update({
   region: process.env.DBREGION,
   accessKeyId: process.env.AWS_ID,
   secretAccessKey: process.env.AWS_SECRET
 });
+
+//Check if DynamoDB is running at endpoint
 var dynamodbEndpoint = new aws.Endpoint(process.env.AWS_DYNAMODB_ENDPOINT);
 var dynamodb = new aws.DynamoDB({endpoint:dynamodbEndpoint});
 console.log("Waiting for database...");
+//List the tables in the DB
 dynamodb.listTables((err, data)=>{
   if (err) {
     console.log("DB connection ERROR:");
@@ -35,16 +37,28 @@ dynamodb.listTables((err, data)=>{
   }
 });
 
+//Configure Redis
+const redisConfig = {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_URL,
+    auth: null
+  },
+}
+//Setup queues
+const queues = createQueues(redisConfig);
+
+
 // Create Excel Redis queue
-const excelQueue = queues.add(
+console.log("Connecting to Redis");
+excelQueue = queues.add(
   'excelQueue',
   {
-    limiter: {
-      max: 20,
-      duration: 5000
-    }
+    redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
+    limiter: {max: 1,duration: 2000}
   }
-);
+)
+
 excelQueue.process('excelJob',__dirname+'/jobs/excelJob.js');
 
 //Use cookieParser

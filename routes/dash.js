@@ -12,11 +12,21 @@ var multer  = require('multer');
 var upload = multer();
 var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 const fs = require('fs');
-const {Worker, workerData} = require('worker_threads');
+//const {Worker, workerData} = require('worker_threads');
 const { setQueues, createQueues } = require('bull-board')
-const queues = createQueues();
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
+
+//Configure Redis
+const redisConfig = {
+  redis: {
+    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_URL,
+    auth: null
+  },
+}
+//Setup queues
+const queues = createQueues(redisConfig);
 
 /**
  * Name: Dashboard Index
@@ -872,10 +882,8 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
 const excelQueue = queues.add(
   'excelQueue',
   {
-    limiter: {
-      max: 1,
-      duration: 2000
-    }
+    redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
+    limiter: {max: 1,duration: 2000}
   }
 )
 
