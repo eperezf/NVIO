@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const aws = require("aws-sdk");
 const app = express();
 const port = process.env.PORT;
+const { UI, createQueues } = require('bull-board');
+const queues = createQueues();
 const mainRoutes = require('./routes/main');
 const authRoutes = require('./routes/auth');
 const dashRoutes = require('./routes/dash');
@@ -31,8 +33,19 @@ dynamodb.listTables((err, data)=>{
       console.log(`NVIO running @ ${port}`);
     });
   }
-
 });
+
+// Create Excel Redis queue
+const excelQueue = queues.add(
+  'excelQueue',
+  {
+    limiter: {
+      max: 20,
+      duration: 5000
+    }
+  }
+);
+excelQueue.process('excelJob',__dirname+'/jobs/excelJob.js');
 
 //Use cookieParser
 app.use(cookieParser());
@@ -57,6 +70,7 @@ app.use(function (req, res, next) {
 app.use('/', mainRoutes);
 app.use('/', authRoutes);
 app.use('/dashboard/', dashRoutes);
+app.use('/admin/queues', UI);
 
 //Static content pathing
 app.use(express.static('public'));

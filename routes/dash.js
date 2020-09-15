@@ -13,6 +13,8 @@ var upload = multer();
 var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 const fs = require('fs');
 const {Worker, workerData} = require('worker_threads');
+const { setQueues, createQueues } = require('bull-board')
+const queues = createQueues();
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
 
@@ -825,15 +827,20 @@ router.post('/cancelar-envio', upload.none(), passport.authenticate('jwt', {sess
 });
 
 router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
-
   if (req.file) {
     console.log("FILE SAVING REQUESTED!!");
-    var workers = [];
+    //Reserve order IDs array initialize
+    var reservedOrderIds = [];
+    var scanFilterExpression = "";
     var workbook = xlsx.read(req.file.buffer);
     var sheetNameList = workbook.SheetNames;
     var orderList = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {range: 2});
     res.json(orderList);
-    var params ={
+    //Pre-reserve order IDs to reduce colission chance.
+    await orderList.forEach((item, i) => {
+      reservedOrderIds[i] = nanoid(6);
+    });
+    var companyDataParams ={
       "TableName": "NVIO",
       "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
       "ExpressionAttributeValues": {
@@ -849,14 +856,28 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
         "#cd421": "SK"
       }
     }
-    companyData = await query(params);
+    companyData = await query(companyDataParams);
     orderList.forEach(async (item, i) => {
-      workers[i] = new Worker('./workers/importExcel.js', {workerData: {companyData: companyData.Items, orderData:item, id: i, gapi: process.env.GAPI}});
+      excelQueue.add(
+        'excelJob',
+        {companyData:companyData, orderData:item},
+        {attempts: 1, jobId: req.user.user.replace("COMPANY#", "") + reservedOrderIds[i]}
+      );
     });
   }
 })
 
 
+// Create Excel Redis queue
+const excelQueue = queues.add(
+  'excelQueue',
+  {
+    limiter: {
+      max: 1,
+      duration: 2000
+    }
+  }
+)
 
 //DB functions
 
