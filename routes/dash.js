@@ -25,8 +25,18 @@ const redisConfig = {
     auth: null
   },
 }
+
 //Setup queues
 const queues = createQueues(redisConfig);
+
+// Create Excel Redis queue
+const excelQueue = queues.add(
+  'excelQueue',
+  {
+    redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
+    limiter: {max: 1,duration: 2000}
+  }
+)
 
 /**
  * Name: Dashboard Index
@@ -876,16 +886,6 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     });
   }
 })
-
-
-// Create Excel Redis queue
-const excelQueue = queues.add(
-  'excelQueue',
-  {
-    redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
-    limiter: {max: 1,duration: 2000}
-  }
-)
 
 //DB functions
 

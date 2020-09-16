@@ -1,6 +1,7 @@
 // excelJob.js
 const {Client, Status} = require("@googlemaps/google-maps-services-js");
 const aws = require("aws-sdk");
+var validator = require('validator');
 aws.config.update({
   region: process.env.DBREGION,
   accessKeyId: process.env.AWS_ID,
@@ -10,6 +11,54 @@ var dynamodbEndpoint = new aws.Endpoint(process.env.AWS_DYNAMODB_ENDPOINT);
 var dynamodb = new aws.DynamoDB({endpoint:dynamodbEndpoint});
 
 module.exports = async (job) =>{
+  //Check required variables are not empty
+  var notValid = [];
+  if (!job.data.orderData.nombre_dest){
+    console.log("#" + job.id + ": DESTINATION NAME IS EMPTY!");
+    notValid.push("Nombre")
+  }
+  if (!validator.isLength(job.data.orderData.tel_dest.toString() , {min:9, max: 9})){
+    console.log("#" + job.id + ": MALFORMED PHONE!");
+    notValid.push("Teléfono")
+  }
+  if (!validator.isEmail(job.data.orderData.email_dest)){
+    console.log("#" + job.id + ": MALFORMED EMAIL!");
+    notValid.push("Correo")
+  }
+  if (validator.isEmpty(job.data.orderData.dir_dest)){
+    console.log("#" + job.id + ": DESTINATION ADDRESS IS EMPTY!");
+    notValid.push("Dirección de destino")
+  }
+  if (validator.isEmpty(job.data.orderData.comuna_dest)){
+    console.log("#" + job.id + ": DESTINATION LOCALITY IS EMPTY!");
+    notValid.push("Comuna")
+  }
+  if (validator.isEmpty(job.data.orderData.numero_order)){
+    console.log("#" + job.id + ": ORDER NAME IS EMPTY!");
+    notValid.push("Nombre o número de orden")
+  }
+  if (validator.isEmpty(job.data.orderData.cont_order)){
+    console.log("#" + job.id + ": ORDER DESCRIPTION IS EMPTY!");
+    notValid.push("Descripción de orden")
+  }
+  if (!validator.isNumeric(job.data.orderData.valor_order)){
+    console.log("#" + job.id + ": ORDER VALUE IS EMPTY OR NOT NUMBER!");
+    notValid.push("Valor de orden")
+  }
+  job.progress(10);
+  if (notValid.length > 0){
+    nvString = "";
+    notValid.forEach((item, i) => {
+      nvString = nvString + item + " ";
+    });
+    return Promise.reject(new Error('One or more fields are invalid: ' + nvString));
+  }
+
+
+
+
+
+  //Init necesarry variables
   var fromAddress = {};
   fromAddress.apart = "";
   var toAddress = {};
@@ -143,7 +192,6 @@ module.exports = async (job) =>{
   job.progress(100);
   console.log("#" + job.id + ": Completed!");
   return Promise.resolve({status:"ok"});
-
 }
 
 async function put(params){
