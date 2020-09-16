@@ -448,7 +448,7 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
                     "longitude": toLocation.lng
                   },
                   "toApart": req.body.toApart,
-                  "orderName": req.body.orderName,
+                  "orderName": req.body.orderName.toString(),
                   "orderDesc": req.body.orderDesc,
                   "orderValue": parseInt(req.body.orderValue),
                   "nameDest": req.body.nameDest,
