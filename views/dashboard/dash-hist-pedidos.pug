@@ -7,6 +7,11 @@ append content
 		var sidename = "linkHistPedidos-side";
 	h1.landing-head.text-center
 		| #{title}
+	h3.text-center hay #{totalJobList.length} trabajos.
+	h3.text-center #{waitingJobList.length} pendientes.
+	h3.text-center hay #{activeJobList.length} procesando.
+	h3.text-center #{completedJobList.length} agregados correctamente.
+	h3.text-center #{failedJobList.length} no se pudieron agregar.
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
 	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
 	.container.mb-5.mt-3
@@ -93,8 +98,9 @@ append content
 									p Valor de la orden: $#{ORD.orderValue.N}
 									p Costo de envío: $#{ORD.shippingCost.N}
 									p Nombre del repartidor: Aún no asignado
-									if ORD.comment.S != ""
-										p Información Adicional: #{ORD.comment.S}
+									if ORD.comment
+										if ORD.comment.S != ""
+											p Información Adicional: #{ORD.comment.S}
 								.modal-footer
 									button.btn.btn-secondary(type='button' data-dismiss='modal') Cerrar
 									input.btn.btn-success(type='button' value='Ver Tracking' onclick="location.href='/track/" + companyId + ORD.SK.S.replace("ORDER#","") + "';")

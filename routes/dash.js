@@ -497,11 +497,47 @@ router.post('/nuevo-envio', upload.none(), passport.authenticate('jwt', {session
  * Method: GET
  */
 
-router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), (req, res) => {
+router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req, res) => {
     const name = "Historial Pedidos";
-    console.log("Dashboard Order History Requested");
-    var docClient = new aws.DynamoDB();
-    var params={
+    let [
+      totalJobList,
+      activeJobList,
+      waitingJobList,
+      completedJobList,
+      failedJobList
+    ] = await Promise.allSettled([
+      excelQueue.getJobs(),
+      excelQueue.getJobs(['active']),
+      excelQueue.getJobs(['waiting']),
+      excelQueue.getJobs(['completed']),
+      excelQueue.getJobs(['failed'])
+    ]);
+    totalJobList.value.forEach((item, i) => {
+      if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+        totalJobList.value.splice(i,1);
+      }
+    });
+    activeJobList.value.forEach((item, i) => {
+      if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+        activeJobList.value.splice(i,1);
+      }
+    });
+    waitingJobList.value.forEach((item, i) => {
+      if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+        waitingJobList.value.splice(i,1);
+      }
+    });
+    completedJobList.value.forEach((item, i) => {
+      if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+        completedJobList.value.splice(i,1);
+      }
+    });
+    failedJobList.value.forEach((item, i) => {
+      if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+        failedJobList.value.splice(i,1);
+      }
+    });
+    var ordersParams={
       "TableName": "NVIO",
       "ScanIndexForward": false,
       "ConsistentRead": false,
@@ -519,13 +555,9 @@ router.get('/hist-pedidos', passport.authenticate('jwt', {session: false, failur
         "#cd421": "SK"
       }
     }
-    docClient.query(params, function(err, data) {
-      if (err) {
-        console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-      } else {
-        res.render('dashboard/dash-hist-pedidos', {title: name, orders: data.Items, companyId: req.user.user.replace("COMPANY#","")});
-      }
-    });
+    ordersResults = await query(ordersParams);
+    console.log(failedJobList.value.length);
+    res.render('dashboard/dash-hist-pedidos', {title: name, orders: ordersResults.Items, companyId: req.user.user.replace("COMPANY#",""), totalJobList: totalJobList.value, completedJobList: completedJobList.value, failedJobList: failedJobList.value, waitingJobList: waitingJobList.value, activeJobList: activeJobList.value});
 });
 
 // Dashboard Payment History
@@ -855,11 +887,12 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     var workbook = xlsx.read(req.file.buffer);
     var sheetNameList = workbook.SheetNames;
     var orderList = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {range: 2});
-    res.json(orderList);
     //Pre-reserve order IDs to reduce colission chance.
     await orderList.forEach((item, i) => {
       reservedOrderIds[i] = nanoid(6);
+      orderList[i].orderId = reservedOrderIds[i];
     });
+    res.redirect('/dashboard/hist-pedidos');
     var companyDataParams ={
       "TableName": "NVIO",
       "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
@@ -878,6 +911,7 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     }
     companyData = await query(companyDataParams);
     orderList.forEach(async (item, i) => {
+      item.excelRow = i+4;
       excelQueue.add(
         'excelJob',
         {companyData:companyData, orderData:item},
@@ -886,6 +920,16 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     });
   }
 })
+
+router.get('/get-jobs', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+  var jobList = await excelQueue.getJobs();
+  jobList.forEach((item, i) => {
+    if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+      jobList.splice(i,1);
+    }
+  });
+  res.json(jobList);
+});
 
 //DB functions
 

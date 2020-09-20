@@ -11,7 +11,7 @@ var dynamodbEndpoint = new aws.Endpoint(process.env.AWS_DYNAMODB_ENDPOINT);
 var dynamodb = new aws.DynamoDB({endpoint:dynamodbEndpoint});
 
 module.exports = async (job) =>{
-  //Check required variables are not empty
+  //Check required variables are not empty and/or invalid
   var notValid = [];
   if (!job.data.orderData.nombre_dest){
     console.log("#" + job.id + ": DESTINATION NAME IS EMPTY!");
@@ -41,7 +41,7 @@ module.exports = async (job) =>{
     console.log("#" + job.id + ": ORDER DESCRIPTION IS EMPTY!");
     notValid.push("Descripción de orden")
   }
-  if (!validator.isNumeric(job.data.orderData.valor_order)){
+  if (!validator.isNumeric(job.data.orderData.valor_order.toString())){
     console.log("#" + job.id + ": ORDER VALUE IS EMPTY OR NOT NUMBER!");
     notValid.push("Valor de orden")
   }
@@ -49,14 +49,11 @@ module.exports = async (job) =>{
   if (notValid.length > 0){
     nvString = "";
     notValid.forEach((item, i) => {
-      nvString = nvString + item + " ";
+      nvString = nvString + item + ", ";
     });
-    return Promise.reject(new Error('One or more fields are invalid: ' + nvString));
+    nvString = nvString.substring(0, nvString.length - 2);
+    return Promise.reject(new Error('Uno o más campos son inválidos: ' + nvString));
   }
-
-
-
-
 
   //Init necesarry variables
   var fromAddress = {};
@@ -154,7 +151,9 @@ module.exports = async (job) =>{
     console.log("#" + job.id + ": ERROR IN COST CALCULATION!");
     return Promise.reject(new Error('Error in cost calculation for order ' + job.id.substring(6)));
   }
-
+  if (!job.data.orderData.coment_order) {
+    job.data.orderData.coment_order = "";
+  }
   var orderParams = {
     TableName:'NVIO',
     Item:{
