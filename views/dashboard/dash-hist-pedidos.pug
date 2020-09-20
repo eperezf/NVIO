@@ -7,11 +7,11 @@ append content
 		var sidename = "linkHistPedidos-side";
 	h1.landing-head.text-center
 		| #{title}
-	h3.text-center hay #{totalJobList.length} trabajos.
-	h3.text-center #{waitingJobList.length} pendientes.
-	h3.text-center hay #{activeJobList.length} procesando.
-	h3.text-center #{completedJobList.length} agregados correctamente.
-	h3.text-center #{failedJobList.length} no se pudieron agregar.
+	.row.justify-content-md-center
+		.col-md-4.text-center
+			.alert.alert-primary#notifAlert(role='alert')
+				.spinner-border.spinner-border-sm.mr-2(role='status')
+				| Revisando notificaciones
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
 	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
 	.container.mb-5.mt-3
@@ -114,3 +114,5 @@ append dash-viewscript
 	script(src='//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js')
 	//- Datatable declaration
 	script(src='/static/js/declare-order-history.js')
+	//- Get realtime notifications from Redis
+	script(src='/static/js/get-notif.js')
