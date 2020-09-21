@@ -15,7 +15,9 @@
     button.ml-2.mb-1.close(type='button', data-dismiss='toast', aria-label='Close')
       span(aria-hidden='true') ×
   .toast-body#notifFailedBody
-    p Hay X pedidos importados con problemas. Has click aquí para revisarlos.
+    p Hay X pedidos importados con problemas.
+  .toast-body
+    a.btn.btn-primary(href='/dashboard/hist-pedidos/error' role='button') Revisar
     
     
 .toast.hide#notifCopiedToast(data-autohide='true' data-delay='3000' role="alert" aria-live="assertive" aria-atomic="true")

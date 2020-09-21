@@ -6,6 +6,7 @@ const aws = require("aws-sdk");
 const app = express();
 const port = process.env.PORT;
 const { UI, createQueues } = require('bull-board');
+const Queue = require('bull');
 const mainRoutes = require('./routes/main');
 const authRoutes = require('./routes/auth');
 const dashRoutes = require('./routes/dash');
@@ -45,21 +46,33 @@ const redisConfig = {
     auth: null
   },
 }
+// Create Excel Redis queue
+const excelQueue = new Queue(
+  'excelQueue',
+  {
+    redisConfig,
+    limiter: {max: 2,duration: 500}
+  }
+);
+
 //Setup queues
 const queues = createQueues(redisConfig);
 
-
 // Create Excel Redis queue
-console.log("Connecting to Redis");
-excelQueue = queues.add(
+
+const excelQueueBoard = queues.add(
   'excelQueue',
   {
     redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
-    limiter: {max: 1,duration: 2000}
   }
 )
 
 excelQueue.process('excelJob',__dirname+'/jobs/excelJob.js');
+
+
+console.log("Connecting to Redis");
+
+
 
 //Use cookieParser
 app.use(cookieParser());
@@ -71,6 +84,10 @@ require('./passport');
 //Set view engine and views route
 app.set('view engine', 'pug');
 app.set('views', './views');
+
+//Use JSON parser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 //Prevents to check previous page after logout
 app.use(function (req, res, next) {

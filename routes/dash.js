@@ -13,7 +13,7 @@ var upload = multer();
 var s3Endpoint = new aws.Endpoint(process.env.AWS_S3_ENDPOINT);
 const fs = require('fs');
 //const {Worker, workerData} = require('worker_threads');
-const { setQueues, createQueues } = require('bull-board')
+var Queue = require('bull');
 let rawComunas = fs.readFileSync('./data/comunas.json');
 let comunas = JSON.parse(rawComunas);
 
@@ -26,17 +26,13 @@ const redisConfig = {
   },
 }
 
-//Setup queues
-const queues = createQueues(redisConfig);
-
-// Create Excel Redis queue
-const excelQueue = queues.add(
+const excelQueue = new Queue(
   'excelQueue',
   {
     redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
-    limiter: {max: 1,duration: 2000}
+    limiter: {max: 4, duration: 200}
   }
-)
+);
 
 /**
  * Name: Dashboard Index
@@ -845,6 +841,7 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     //Reserve order IDs array initialize
     var reservedOrderIds = [];
     var scanFilterExpression = "";
+    //read Excel file
     var workbook = xlsx.read(req.file.buffer);
     var sheetNameList = workbook.SheetNames;
     var orderList = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNameList[0]], {range: 2});
@@ -853,6 +850,7 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
       reservedOrderIds[i] = nanoid(6);
       orderList[i].orderId = reservedOrderIds[i];
     });
+    //Redirect to order history meanwhile everything is processed in the background
     res.redirect('/dashboard/hist-pedidos');
     var companyDataParams ={
       "TableName": "NVIO",
@@ -872,6 +870,14 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
       }
     }
     companyData = await query(companyDataParams);
+    //Remove previous completed jobs
+    var completedJobList = await excelQueue.getJobs(['completed']);
+    completedJobList.forEach(async (item, i) => {
+      if (item.id.startsWith(req.user.user.replace("COMPANY#", "")) == true) {
+        await item.remove();
+      }
+    });
+    //Add new jobs to the queue
     orderList.forEach(async (item, i) => {
       item.excelRow = i+4;
       excelQueue.add(
@@ -889,13 +895,15 @@ router.get('/hist-pedidos/get-notif', passport.authenticate('jwt', {session: fal
     activeJobList,
     waitingJobList,
     completedJobList,
-    failedJobList
+    failedJobList,
+    delayedJobList
   ] = await Promise.allSettled([
     excelQueue.getJobs(),
     excelQueue.getJobs(['active']),
     excelQueue.getJobs(['waiting']),
     excelQueue.getJobs(['completed']),
-    excelQueue.getJobs(['failed'])
+    excelQueue.getJobs(['failed']),
+    excelQueue.getJobs(['delayed'])
   ]);
   totalJobList.value.forEach((item, i) => {
     if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
@@ -922,29 +930,49 @@ router.get('/hist-pedidos/get-notif', passport.authenticate('jwt', {session: fal
       failedJobList.value.splice(i,1);
     }
   });
-  res.json({activeJobList: activeJobList.value.length, waitingJobList: waitingJobList.value.length, completedJobList: completedJobList.value.length, failedJobList: failedJobList.value.length});
+  delayedJobList.value.forEach((item, i) => {
+    if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+      delayedJobList.value.splice(i,1);
+    }
+  });
+  res.json({activeJobList: activeJobList.value.length, waitingJobList: waitingJobList.value.length, completedJobList: completedJobList.value.length, failedJobList: failedJobList.value.length, delayedJobList: delayedJobList.value.length});
 });
 
-router.get('/testq', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
-  var companyDataParams ={
-    "TableName": "NVIO",
-    "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
-    "ProjectionExpression": 'PK, fromAddress, fromApart',
-    "ExpressionAttributeValues": {
-      ":cd420": {
-        "S": req.user.user
-      },
-      ":cd421": {
-        "S": "PROFILE"
-      }
-    },
-    "ExpressionAttributeNames": {
-      "#cd420": "PK",
-      "#cd421": "SK"
+router.get('/hist-pedidos/error', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+  var failedJobList = await excelQueue.getJobs(['failed']);
+  failedJobList.forEach((item, i) => {
+    if (item.id.indexOf(req.user.user.replace("COMPANY#", "")) === -1) {
+      failedJobList.value.splice(i,1);
     }
+  });
+  const title = "Errores de importación";
+  res.render('dashboard/import-errors', {title: title, failedJobList: failedJobList})
+});
+
+router.post('/hist-pedidos/delete-error', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+  if (req.body.jobId.startsWith(req.user.user.replace("COMPANY#", ""))) {
+    job = await excelQueue.getJob(req.body.jobId)
+    if (typeof(job)=='undefined') {
+      res.status(404).json({status:"Order not found"});
+    }
+    else {
+      try {
+        await job.remove();
+        res.status(200).json({status:"OK"});
+      } catch (e) {
+        res.status(500).json({status:"Error deleting order"});
+      }
+    }
+
   }
-  companyData = await query(companyDataParams);
-  res.json(companyData);
+  else {
+    res.status(403).json({status: "not authrized"});
+  }
+});
+
+router.get('/test', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+  var failedJobList = await excelQueue.getJobs(['failed']);
+  res.json(failedJobList);
 });
 
 //DB functions

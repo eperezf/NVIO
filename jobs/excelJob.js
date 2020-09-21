@@ -31,7 +31,7 @@ module.exports = async (job) =>{
   }
   if (validator.isEmpty(job.data.orderData.comuna_dest)){
     console.log("#" + job.id + ": DESTINATION LOCALITY IS EMPTY!");
-    notValid.push("Comuna")
+    notValid.push("Comuna de destino")
   }
   if (validator.isEmpty(job.data.orderData.numero_order)){
     console.log("#" + job.id + ": ORDER NAME IS EMPTY!");
@@ -78,7 +78,7 @@ module.exports = async (job) =>{
     job.progress(20);
     if (geocodedData.partial_match == true) {
       console.log("#" + job.id + ": ORIGIN ADDRESS DOES NOT EXIST!");
-      return Promise.reject(new Error('Origin address '+job.data.orderData.dir_orig + ", " + job.data.orderData.comuna_orig + ", Santiago "+'does not exist'));
+      return Promise.reject(new Error('Dirección de origen '+job.data.orderData.dir_orig + ", " + job.data.orderData.comuna_orig + ", Santiago "+' no existe.'));
     }
     fromAddress.locality = geocodedData.address_components[3].long_name
     fromAddress.number = geocodedData.address_components[0].long_name;
@@ -95,7 +95,7 @@ module.exports = async (job) =>{
   job.progress(40);
   if (geocodedData.partial_match == true) {
     console.log("#" + job.id + ": DESTINATION ADDRESS DOES NOT EXIST!");
-    return Promise.reject(new Error('Destination address '+job.data.orderData.dir_dest + ", " + job.data.orderData.comuna_dest + ", Santiago "+'does not exist'));
+    return Promise.reject(new Error('Dirección de destino '+job.data.orderData.dir_dest + ", " + job.data.orderData.comuna_dest + ", Santiago "+' no existe.'));
   }
   else {
     toAddress.locality = geocodedData.address_components[3].long_name
@@ -144,12 +144,12 @@ module.exports = async (job) =>{
   let [colissionResult, costResult] = await Promise.allSettled([query(colissionParams), query(costParams)]);
   if (colissionResult.value.Count != 0) {
     console.log("#" + job.id + ": COLISSION DETECTED!");
-    return Promise.reject(new Error('Colission detected for order ' + job.id.substring(6)));
+    return Promise.reject(new Error('Colisión detectada para ' + job.id.substring(6) + ". Contactar a Soporte."));
   }
   job.progress(80)
   if (costResult.value.Count != 1){
     console.log("#" + job.id + ": ERROR IN COST CALCULATION!");
-    return Promise.reject(new Error('Error in cost calculation for order ' + job.id.substring(6)));
+    return Promise.reject(new Error('Error calculando costo para ' + job.id.substring(6) + '. Contactar a Soporte.'));
   }
   if (!job.data.orderData.coment_order) {
     job.data.orderData.coment_order = "";

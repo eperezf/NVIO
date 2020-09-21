@@ -1,0 +1,33 @@
+extends ../includes/dashbar
+append dash-postHead
+	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
+append content
+	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
+	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
+		Inheritance works like this:
+			{dashboard-element-name}.pug <- dashbar.pug <- [header.pug, bodyscript.pug, dashscript.pug]
+		This is also all contained inside a dash-content class div
+	//- Define ID names here to change active tab style, these IDs are defined in dashbar.pug
+	script.
+		var topname = "linkDash-top";
+		var sidename = "linkDash-side";
+	.container
+		h1.text-center Errores de importación
+		.row
+			.col-12
+				table.table-hover.table-responsive-lg.table-sm.table-bordered
+					thead
+						tr.text-center
+							th(scope='col') Fila Excel
+							th(scope='col') Error
+							th(scope='col') Acciones
+					tbody
+						each job in failedJobList
+							tr(id=job.id)
+								th(scope='row').text-center #{job.data.orderData.excelRow}
+								th(scope='row') #{job.failedReason}
+								th(scope='row')
+									.btn.btn-warning(href='#' role='button' onclick="deleteFailedJob('" + job.id + "')")
+										i.fas.fa-times.mr-2
+										| Eliminar
+	script(src='/static/js/delete-error.js')
