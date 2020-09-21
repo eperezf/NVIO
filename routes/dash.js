@@ -857,6 +857,7 @@ router.post('/subir-excel', upload.single('planilla'), passport.authenticate('jw
     var companyDataParams ={
       "TableName": "NVIO",
       "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+      "ProjectionExpression": 'PK, fromAddress, fromApart',
       "ExpressionAttributeValues": {
         ":cd420": {
           "S": req.user.user
@@ -921,7 +922,29 @@ router.get('/hist-pedidos/get-notif', passport.authenticate('jwt', {session: fal
       failedJobList.value.splice(i,1);
     }
   });
-  res.json({activeJobList: activeJobList.value, waitingJobList: waitingJobList.value, completedJobList: completedJobList.value, failedJobList: failedJobList.value});
+  res.json({activeJobList: activeJobList.value.length, waitingJobList: waitingJobList.value.length, completedJobList: completedJobList.value.length, failedJobList: failedJobList.value.length});
+});
+
+router.get('/testq', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), async (req,res) => {
+  var companyDataParams ={
+    "TableName": "NVIO",
+    "KeyConditionExpression": "#cd420 = :cd420 And begins_with(#cd421, :cd421)",
+    "ProjectionExpression": 'PK, fromAddress, fromApart',
+    "ExpressionAttributeValues": {
+      ":cd420": {
+        "S": req.user.user
+      },
+      ":cd421": {
+        "S": "PROFILE"
+      }
+    },
+    "ExpressionAttributeNames": {
+      "#cd420": "PK",
+      "#cd421": "SK"
+    }
+  }
+  companyData = await query(companyDataParams);
+  res.json(companyData);
 });
 
 //DB functions

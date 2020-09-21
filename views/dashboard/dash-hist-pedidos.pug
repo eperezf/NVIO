@@ -2,6 +2,8 @@ extends ../includes/dashbar
 append dash-postHead
 	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
+	.mt-2.mr-1.ml-1.position-absolute(aria-live='polite', aria-atomic='true' style="right:0;")
+		include ../includes/toasts.pug
 	script.
 		var topname = "linkHistPedidos-top";
 		var sidename = "linkHistPedidos-side";
@@ -10,8 +12,8 @@ append content
 	.row.justify-content-md-center
 		.col-md-4.text-center
 			.alert.alert-primary#notifAlert(role='alert')
-				.spinner-border.spinner-border-sm.mr-2(role='status')
-				| Revisando notificaciones
+				.spinner-border.spinner-border-sm.mr-2#notifSpinner(role='status')
+				#notifText.d-inline Revisando notificaciones
 	h6.bg-info.text-center.text-white.mx-5 Haz click en el número de tracking para copiar su enlace de rastreo
 	form.hidden#cancelOrder(action="/dashboard/cancelar-envio/" method="POST" enctype='multipart/form-data')
 	.container.mb-5.mt-3
