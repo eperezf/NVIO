@@ -16,3 +16,11 @@
       span(aria-hidden='true') ×
   .toast-body#notifFailedBody
     p Hay X pedidos importados con problemas. Has click aquí para revisarlos.
+    
+    
+.toast.hide#notifCopiedToast(data-autohide='true' data-delay='3000' role="alert" aria-live="assertive" aria-atomic="true")
+  .toast-header.bg-success.text-white
+    //- img.rounded.mr-2(src='...', alt='...')
+    strong.mr-auto Copiar enlace
+  .toast-body#notifCopiedBody
+    p Enlace de X copiado!
