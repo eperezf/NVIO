@@ -22,6 +22,7 @@ aws.config.update({
 var dynamodbEndpoint = new aws.Endpoint(process.env.AWS_DYNAMODB_ENDPOINT);
 var dynamodb = new aws.DynamoDB({endpoint:dynamodbEndpoint});
 console.log("Waiting for database...");
+
 //List the tables in the DB
 dynamodb.listTables((err, data)=>{
   if (err) {
@@ -54,32 +55,18 @@ const excelQueue = new Queue(
     limiter: {max: 2,duration: 500}
   }
 );
-
-//Setup queues
-const queues = createQueues(redisConfig);
-
-// Create Excel Redis queue
-
-const excelQueueBoard = queues.add(
-  'excelQueue',
-  {
-    redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL},
-  }
-)
-
 excelQueue.process('excelJob',__dirname+'/jobs/excelJob.js');
 
-
+//Setup queues for Bull
+const queues = createQueues(redisConfig);
+const excelQueueBoard = queues.add('excelQueue', {redis: {port: process.env.REDIS_PORT, host: process.env.REDIS_URL}});
 console.log("Connecting to Redis");
-
-
 
 //Use cookieParser
 app.use(cookieParser());
 
 //Require Passport
 require('./passport');
-
 
 //Set view engine and views route
 app.set('view engine', 'pug');

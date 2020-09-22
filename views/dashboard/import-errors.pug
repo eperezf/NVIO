@@ -2,12 +2,6 @@ extends ../includes/dashbar
 append dash-postHead
 	link(rel='stylesheet' href='//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css')
 append content
-	//- Since this is the index for all dashboard-style pages, relevant info has been stored here as comments
-	//- content goes here, dashbar.pug should have all relevant headers, styles and scripts so just put code in here
-		Inheritance works like this:
-			{dashboard-element-name}.pug <- dashbar.pug <- [header.pug, bodyscript.pug, dashscript.pug]
-		This is also all contained inside a dash-content class div
-	//- Define ID names here to change active tab style, these IDs are defined in dashbar.pug
 	script.
 		var topname = "linkDash-top";
 		var sidename = "linkDash-side";

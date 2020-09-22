@@ -25,7 +25,6 @@ const redisConfig = {
     auth: null
   },
 }
-
 const excelQueue = new Queue(
   'excelQueue',
   {
